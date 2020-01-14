@@ -3,10 +3,12 @@
 #include <glad/glad.h>
 #include "Debugging/glException.hpp"
 
+#include <gtx/matrix_transform_2d.hpp>
+
+#include "Helper/DisplayInfos.hpp"
+
 #include "Components/Translation.hpp"
 #include "Components/Scale.hpp"
-
-#include <gtx/matrix_transform_2d.hpp>
 
 unsigned int RenderSystem::m1to1QuadVBOid;
 unsigned int RenderSystem::m1to1QuadVAOid;
@@ -56,7 +58,7 @@ void RenderSystem::update() {
 	m_registry.view<Cmp::Translation, Cmp::Scale>().each([](auto entity, auto& translation, auto& scale) {
 		glm::mat3 model = glm::translate(glm::mat3(1.0f), translation.val);
 		model = glm::scale(model, scale.val);
-		shader.setUniformMat3f("u_modelMat", model);
+		shader.setUniformMat3f("u_mat", DisplayInfos::Matrix() * model);
 		glBindVertexArray(m1to1QuadVAOid);
 		glDrawArrays(GL_TRIANGLES,0 , 6);
 	});

@@ -27,9 +27,16 @@ App::App(SDL_Window* window)
 }
 
 void App::onInit() {
-	auto id = m_registry.create();
-	m_registry.assign<Cmp::Translation>(id, 0.0f, 0.0f);
-	m_registry.assign<Cmp::Scale>(id, 0.5f, 0.5f);
+	{
+		auto id = m_registry.create();
+		m_registry.assign<Cmp::Translation>(id, 1.0f, 0.0f);
+		m_registry.assign<Cmp::Scale>(id, 0.6f, 0.3f);
+	}
+	{
+		auto id = m_registry.create();
+		m_registry.assign<Cmp::Translation>(id, 0.0f, 0.0f);
+		m_registry.assign<Cmp::Scale>(id, 1.0f, 1.0f);
+	} 
 }
 
 void App::onLoopIteration() {

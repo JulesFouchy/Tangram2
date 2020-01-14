@@ -22,6 +22,7 @@ App::App(SDL_Window* window)
 	  m_window(window), m_running(true)
 {
 	onWindowResize();
+	createDrawingBoard();
 	//glEnable(GL_BLEND);
 	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
@@ -52,6 +53,12 @@ void App::onLoopIteration() {
 	//
 	glClear(GL_COLOR_BUFFER_BIT);
 	m_renderSystem.update();
+}
+
+void App::createDrawingBoard() {
+	auto id = m_registry.create();
+	m_registry.assign<Cmp::Translation>(id, 0.0f, 0.0f);
+	m_registry.assign<Cmp::Scale>(id, 16.0f / 9.0f * 0.8f, 0.8f);
 }
 
 void App::onEvent(const SDL_Event& e) {

@@ -18,6 +18,8 @@ private:
 	void onLoopIteration();
 	void onEvent(const SDL_Event& e);
 
+	void createDrawingBoard();
+
 	void onWindowResize();
 	void switchFullScreenMode();
 

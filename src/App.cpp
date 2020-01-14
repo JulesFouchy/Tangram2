@@ -80,10 +80,10 @@ void App::onEvent(const SDL_Event& e) {
 	case SDL_MOUSEBUTTONDOWN:
 		if (!ImGui::GetIO().WantCaptureMouse) {
 			if (e.button.button == SDL_BUTTON_LEFT) {
-
+				m_inputSystem.onLeftClicDown();
 			}
 			else if (e.button.button == SDL_BUTTON_RIGHT) {
-
+				m_inputSystem.onRightClicDown();
 			}
 			else if (e.button.button == SDL_BUTTON_MIDDLE) {
 
@@ -93,7 +93,15 @@ void App::onEvent(const SDL_Event& e) {
 
 	case SDL_MOUSEBUTTONUP:
 		if (!ImGui::GetIO().WantCaptureMouse) {
+			if (e.button.button == SDL_BUTTON_LEFT) {
+				m_inputSystem.onLeftClicUp();
+			}
+			else if (e.button.button == SDL_BUTTON_RIGHT) {
+				m_inputSystem.onRightClicUp();
+			}
+			else if (e.button.button == SDL_BUTTON_MIDDLE) {
 
+			}
 		}
 		break;
 

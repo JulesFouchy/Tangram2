@@ -12,7 +12,6 @@ InputState_DBTranslation::InputState_DBTranslation(InputSystem* inputSystem)
 	spdlog::warn("DB");
 }
 
-void InputState_DBTranslation::onKeyUp(SDL_Scancode key) {
-	if (key == SDL_SCANCODE_SPACE)
-		m_inputSystem->setState<InputState_Rest>();
+void InputState_DBTranslation::onLeftClicUp() {
+	m_inputSystem->setState<InputState_Rest>();
 }

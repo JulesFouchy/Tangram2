@@ -6,12 +6,19 @@
 
 #include <memory>
 
+#include <glm/glm.hpp>
+
 class InputSystem : public ISystem {
 friend class InputState_Rest;
 friend class InputState_DBTranslation;
 public:
 	InputSystem(entt::registry& registry);
 	~InputSystem() = default;
+	static void Initialize();
+
+	static glm::vec2 MousePositionInPixels();
+	static glm::vec2 MousePositionInInches();
+	static bool KeyIsDown(SDL_Scancode key);
 
 	inline void update() override { m_currentState->update(); }
 
@@ -28,4 +35,7 @@ private:
 
 private:
 	std::unique_ptr<IInputState> m_currentState;
+
+	static float HorizontalDPI;
+	static float VerticalDPI;
 };

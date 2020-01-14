@@ -12,7 +12,7 @@ InputState_Rest::InputState_Rest(InputSystem* inputSystem)
 	spdlog::warn("REST");
 }
 
-void InputState_Rest::onKeyDown(SDL_Scancode key) {
-	if (key == SDL_SCANCODE_SPACE)
+void InputState_Rest::onLeftClicDown() {
+	if (InputSystem::KeyIsDown(SDL_SCANCODE_SPACE))
 		m_inputSystem->setState<InputState_DBTranslation>();
 }

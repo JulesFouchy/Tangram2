@@ -12,6 +12,7 @@
 #include "Debugging/Log.hpp"
 
 #include "Render/RenderSystem.hpp"
+#include "Input/InputSystem.hpp"
 
 #ifdef _WIN32
 	#define _CRTDBG_MAP_ALLOC
@@ -106,6 +107,7 @@ int main(int argc, char *argv[]) {
 
 		App::Initialize(window);
 		RenderSystem::Initialize();
+		InputSystem::Initialize();
 
 		// ------ Actual App
 		App::Get().onInit();

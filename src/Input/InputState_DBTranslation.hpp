@@ -7,5 +7,5 @@ public:
 	InputState_DBTranslation(InputSystem* inputSystem);
 	~InputState_DBTranslation() = default;
 
-	void onKeyUp(SDL_Scancode key) override;
+	void onLeftClicUp() override;
 };

@@ -7,5 +7,5 @@ public:
 	InputState_Rest(InputSystem* inputSystem);
 	~InputState_Rest() = default;
 
-	void onKeyDown(SDL_Scancode key) override;
+	void onLeftClicDown() override;
 };

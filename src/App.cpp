@@ -19,6 +19,7 @@ App::App(SDL_Window* window)
 	  m_bFullScreen(false),
 	  m_registry(),
 	  m_renderSystem(m_registry),
+	  m_inputSystem(m_registry),
 	  m_window(window), m_running(true)
 {
 	onWindowResize();
@@ -102,14 +103,15 @@ void App::onEvent(const SDL_Event& e) {
 			switchFullScreenMode();
 		if (e.key.keysym.scancode == SDL_SCANCODE_ESCAPE && m_bFullScreen)
 			switchFullScreenMode();
-		if (!ImGui::GetIO().WantCaptureKeyboard) {
 
+		if (!ImGui::GetIO().WantCaptureKeyboard) {
+			m_inputSystem.onKeyDown(e.key.keysym.scancode);
 		}
 		break;
 
 	case SDL_KEYUP:
 		if (!ImGui::GetIO().WantCaptureKeyboard) {
-
+			m_inputSystem.onKeyUp(e.key.keysym.scancode);
 		}
 		break;
 

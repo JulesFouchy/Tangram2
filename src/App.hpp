@@ -6,6 +6,7 @@ union SDL_Event;
 #include <entt/entt.hpp>
 
 #include "Render/RenderSystem.hpp"
+#include "Input/InputSystem.hpp"
 
 class App {
 private:
@@ -28,6 +29,7 @@ private:
 	bool m_bFullScreen;
 	entt::registry m_registry;
 	RenderSystem m_renderSystem;
+	InputSystem m_inputSystem;
 
 /********************
   * INTERNAL CODE *

@@ -34,12 +34,14 @@ App::App(SDL_Window* window)
 }
 
 void App::onInit() {
+	entt::entity id1;
 	{
 		entt::entity id = m_layersManager.addLayer();
 		glm::mat3& mat = m_registry.get<Cmp::TransformMatrix>(id).val;
 		mat = glm::translate(mat, glm::vec2(1.3f, 0.0f));
 		mat = glm::scale(mat, glm::vec2(0.15f));
 		m_registry.get<Cmp::AspectRatio>(id).val = 2.0f;
+		id1 = id;
 	}
 
 	{
@@ -47,6 +49,7 @@ void App::onInit() {
 		glm::mat3& mat = m_registry.get<Cmp::TransformMatrix>(id).val;
 		mat = glm::translate(mat, glm::vec2(1.0f, 0.0f));
 		mat = glm::scale(mat, glm::vec2(0.3f));
+		m_registry.get<Cmp::Parent>(id).id = id1;
 	}
 }
 
@@ -64,7 +67,6 @@ void App::onLoopIteration() {
 	glClear(GL_COLOR_BUFFER_BIT);
 	m_renderSystem.update();
 	m_inputSystem.update();
-	m_layersManager.hoveredLayer(m_inputSystem.MousePositionInNormalizedDeviceCoordinates());
 }
 
 void App::createDrawingBoard() {

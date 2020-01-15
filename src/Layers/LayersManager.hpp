@@ -15,7 +15,8 @@ public:
 	entt::entity addLayer();
 
 public:
-	entt::entity hoveredLayer(const glm::vec2& posInNDC);
+	entt::entity layerHoveredBy(const glm::vec2& posInNDC);
+	entt::entity layerHoveredByMouse();
 
 private:
 	std::vector<entt::entity> m_layersOrdered;

@@ -2,7 +2,7 @@
 
 #include "InputSystem.hpp"
 
-#include "InputState_DBTranslation.hpp"
+#include "InputState_Translate.hpp"
 
 #include "Debugging/Log.hpp"
 
@@ -17,7 +17,12 @@ InputState_Rest::InputState_Rest(InputSystem* inputSystem)
 
 void InputState_Rest::onLeftClicDown() {
 	if (InputSystem::KeyIsDown(SDL_SCANCODE_SPACE))
-		m_inputSystem->setState<InputState_DBTranslation>();
+		m_inputSystem->m_currentState = std::make_unique<InputState_Translate>(m_inputSystem, App::Get().m_drawingBoardId);
+	else {
+		entt::entity hoveredLayer = App::Get().m_layersManager.layerHoveredByMouse();
+		if (App::Get().m_registry.valid(hoveredLayer))
+			m_inputSystem->m_currentState = std::make_unique<InputState_Translate>(m_inputSystem, hoveredLayer);
+	}
 }
 
 void InputState_Rest::onWheelScroll(float dl) {

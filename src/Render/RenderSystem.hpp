@@ -20,6 +20,7 @@ public:
 
 public:
 	glm::mat3 getMatrix(entt::entity id, bool bIncludeRatio = true);
+	glm::mat3 getParentModelMatrix(entt::entity id);
 
 private:
 	static unsigned int m1to1QuadVBOid;

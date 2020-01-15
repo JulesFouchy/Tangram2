@@ -10,7 +10,7 @@
 
 class InputSystem : public ISystem {
 friend class InputState_Rest;
-friend class InputState_DBTranslation;
+friend class InputState_Translate;
 public:
 	InputSystem(entt::registry& registry);
 	~InputSystem() = default;
@@ -33,7 +33,7 @@ public:
 	inline void onWheelScroll(float dl)     { m_currentState->onWheelScroll(dl); }
 
 private:
-	template <typename T> 
+	template <typename T>
 	inline void setState() { m_currentState = std::make_unique<T>(this); }
 
 private:

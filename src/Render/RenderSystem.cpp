@@ -75,9 +75,13 @@ glm::mat3 RenderSystem::getMatrix(entt::entity id, bool bIncludeRatio) {
 	glm::mat3 model = m_registry.get<Cmp::TransformMatrix>(id).val;
 	if (bIncludeRatio)
 		model = glm::scale(model, glm::vec2(m_registry.get<Cmp::AspectRatio>(id).val, 1.0f));
+	return DisplayInfos::Matrix() * getParentModelMatrix(id) * model;
+}
+
+glm::mat3 RenderSystem::getParentModelMatrix(entt::entity id) {
 	Cmp::Parent* parent = m_registry.try_get<Cmp::Parent>(id);
 	if (parent)
-		return getMatrix(parent->id, false) * model;
+		return getParentModelMatrix(parent->id) * m_registry.get<Cmp::TransformMatrix>(parent->id).val;
 	else
-		return DisplayInfos::Matrix() * model;
+		return glm::mat3(1.0f);
 }

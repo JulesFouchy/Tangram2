@@ -6,7 +6,8 @@
 
 #include "Debugging/Log.hpp"
 
-#include "Components/Scale.hpp"
+#include "Components/TransformMatrix.hpp"
+#include <glm/gtx/matrix_transform_2d.hpp>
 
 #include "App.hpp"
 
@@ -20,5 +21,6 @@ void InputState_Rest::onLeftClicDown() {
 }
 
 void InputState_Rest::onWheelScroll(float dl) {
-	m_inputSystem->m_registry.get<Cmp::Scale>(App::Get().m_drawingBoardId).val *= pow(0.95f, -dl);
+	glm::mat3& mat = m_inputSystem->m_registry.get<Cmp::TransformMatrix>(App::Get().m_drawingBoardId).val;
+	mat = glm::scale(mat, glm::vec2(pow(0.95f, -dl)));
 }

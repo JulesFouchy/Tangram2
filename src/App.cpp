@@ -15,6 +15,9 @@
 #include "Components/Scale.hpp"
 #include "Components/Parent.hpp"
 #include "Components/AspectRatio.hpp"
+#include "Components/TransformMatrix.hpp"
+
+#include "glm/gtx/matrix_transform_2d.hpp"
 
 App::App(SDL_Window* window)
 	: m_bShowImGUIDemoWindow(false),
@@ -33,15 +36,17 @@ App::App(SDL_Window* window)
 void App::onInit() {
 	{
 		entt::entity id = m_layersManager.addLayer();
-		m_registry.get<Cmp::Translation>(id).val = glm::vec2(1.3f, 0.0f);
-		m_registry.get<Cmp::Scale>(id).val = 0.15f;
+		glm::mat3& mat = m_registry.get<Cmp::TransformMatrix>(id).val;
+		mat = glm::translate(mat, glm::vec2(1.3f, 0.0f));
+		mat = glm::scale(mat, glm::vec2(0.15f));
 		m_registry.get<Cmp::AspectRatio>(id).val = 2.0f;
 	}
 
 	{
 		entt::entity id = m_layersManager.addLayer();
-		m_registry.get<Cmp::Translation>(id).val = glm::vec2(1.0f, 0.0f);
-		m_registry.get<Cmp::Scale>(id).val = 0.3f;
+		glm::mat3& mat = m_registry.get<Cmp::TransformMatrix>(id).val;
+		mat = glm::translate(mat, glm::vec2(1.0f, 0.0f));
+		mat = glm::scale(mat, glm::vec2(0.3f));
 	}
 }
 
@@ -63,9 +68,10 @@ void App::onLoopIteration() {
 }
 
 void App::createDrawingBoard() {
-	m_drawingBoardId = m_registry.create();
-	m_registry.assign<Cmp::Translation>(m_drawingBoardId, 0.0f, 0.0f);
-	m_registry.assign<Cmp::Scale>(m_drawingBoardId, 0.8f);
+	m_drawingBoardId = m_registry.create(); 
+	glm::mat3& mat = m_registry.assign<Cmp::TransformMatrix>(m_drawingBoardId).val;
+	mat = glm::scale(mat, glm::vec2(0.8f));
+	mat = glm::rotate(mat, 0.1f);
 	m_registry.assign<Cmp::AspectRatio>(m_drawingBoardId, 16.0f / 9.0f);
 }
 

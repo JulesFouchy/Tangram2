@@ -7,8 +7,7 @@
 
 #include "Helper/DisplayInfos.hpp"
 
-#include "Components/Translation.hpp"
-#include "Components/Scale.hpp"
+#include "Components/TransformMatrix.hpp"
 #include "Components/AspectRatio.hpp"
 
 #include "Components/Parent.hpp"
@@ -73,8 +72,7 @@ void RenderSystem::renderPreviewTextures(const std::vector<entt::entity>& list) 
 }
 
 glm::mat3 RenderSystem::getMatrix(entt::entity id, bool bIncludeRatio) {
-	glm::mat3 model = glm::translate(glm::mat3(1.0f), m_registry.get<Cmp::Translation>(id).val);
-	model = glm::scale(model, glm::vec2(m_registry.get<Cmp::Scale>(id).val));
+	glm::mat3 model = m_registry.get<Cmp::TransformMatrix>(id).val;
 	if (bIncludeRatio)
 		model = glm::scale(model, glm::vec2(m_registry.get<Cmp::AspectRatio>(id).val, 1.0f));
 	Cmp::Parent* parent = m_registry.try_get<Cmp::Parent>(id);

@@ -15,5 +15,5 @@ public:
 
 private:
 	glm::vec2 m_mouseInitialPosInScreen;
-	glm::vec2 m_DBInitialPosInScreen;
+	glm::mat3 m_DBInitialMat;
 };

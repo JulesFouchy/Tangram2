@@ -10,6 +10,8 @@
 #include "Components/Translation.hpp"
 #include "Components/Scale.hpp"
 
+#include "Components/Parent.hpp"
+
 unsigned int RenderSystem::m1to1QuadVBOid;
 unsigned int RenderSystem::m1to1QuadVAOid;
 Shader RenderSystem::shader("res/shaders/showTexture.vert", "res/shaders/showTexture.frag", false);
@@ -55,11 +57,19 @@ void RenderSystem::ShutDown() {
 
 void RenderSystem::update() {
 	shader.bind();
-	m_registry.view<Cmp::Translation, Cmp::Scale>().each([](auto entity, auto& translation, auto& scale) {
-		glm::mat3 model = glm::translate(glm::mat3(1.0f), translation.val);
-		model = glm::scale(model, scale.val);
-		shader.setUniformMat3f("u_mat", DisplayInfos::Matrix() * model);
+	m_registry.view<Cmp::Translation, Cmp::Scale>().each([this](auto entity, auto& translation, auto& scale) {
+		shader.setUniformMat3f("u_mat",  getMatrix(entity));
 		glBindVertexArray(m1to1QuadVAOid);
 		glDrawArrays(GL_TRIANGLES,0 , 6);
 	});
+}
+
+glm::mat3 RenderSystem::getMatrix(entt::entity id) {
+	glm::mat3 model = glm::translate(glm::mat3(1.0f), m_registry.get<Cmp::Translation>(id).val);
+	model = glm::scale(model, m_registry.get<Cmp::Scale>(id).val);
+	Cmp::Parent* parent = m_registry.try_get<Cmp::Parent>(id);
+	if (parent)
+		return getMatrix(parent->id) * model;
+	else
+		return DisplayInfos::Matrix() * model;
 }

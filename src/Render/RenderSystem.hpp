@@ -4,6 +4,8 @@
 
 #include "OpenGL/Shader.hpp"
 
+#include <glm/glm.hpp>
+
 class RenderSystem : public ISystem {
 public:
 	RenderSystem(entt::registry& registry);
@@ -12,6 +14,9 @@ public:
 	static void ShutDown();
 
 	void update() override;
+
+private:
+	glm::mat3 getMatrix(entt::entity id);
 
 private:
 	static unsigned int m1to1QuadVBOid;

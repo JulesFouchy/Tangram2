@@ -13,6 +13,7 @@
 
 #include "Components/Translation.hpp"
 #include "Components/Scale.hpp"
+#include "Components/Parent.hpp"
 
 App::App(SDL_Window* window)
 	: m_bShowImGUIDemoWindow(false),
@@ -29,16 +30,15 @@ App::App(SDL_Window* window)
 }
 
 void App::onInit() {
-	{
-		auto id = m_registry.create();
-		m_registry.assign<Cmp::Translation>(id, 1.0f, 0.0f);
-		m_registry.assign<Cmp::Scale>(id, 0.6f, 0.3f);
-	}
-	{
-		auto id = m_registry.create();
-		m_registry.assign<Cmp::Translation>(id, 0.0f, 0.0f);
-		m_registry.assign<Cmp::Scale>(id, 1.0f, 1.0f);
-	} 
+	auto id1 = m_registry.create();
+	m_registry.assign<Cmp::Translation>(id1, 1.0f, 0.0f);
+	m_registry.assign<Cmp::Scale>(id1, 0.6f, 0.3f);
+	m_registry.assign<Cmp::Parent>(id1, m_drawingBoardId);
+
+	auto id2 = m_registry.create();
+	m_registry.assign<Cmp::Translation>(id2, 0.0f, 0.0f);
+	m_registry.assign<Cmp::Scale>(id2, 1.0f, 1.0f);
+	m_registry.assign<Cmp::Parent>(id2, m_drawingBoardId);
 }
 
 void App::onLoopIteration() {

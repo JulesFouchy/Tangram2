@@ -78,7 +78,7 @@ void App::onEvent(const SDL_Event& e) {
 
 	case SDL_MOUSEWHEEL:
 		if (!ImGui::GetIO().WantCaptureMouse){
-
+			m_inputSystem.onWheelScroll(e.wheel.y);
 		}
 		break;
 

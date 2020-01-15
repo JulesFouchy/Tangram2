@@ -29,6 +29,7 @@ public:
 	inline void onRightClicUp()             { m_currentState->onRightClicUp(); }
 	inline void onKeyDown(SDL_Scancode key) { m_currentState->onKeyDown(key); }
 	inline void onKeyUp(SDL_Scancode key)	{ m_currentState->onKeyUp(key); }
+	inline void onWheelScroll(float dl)     { m_currentState->onWheelScroll(dl); }
 
 private:
 	template <typename T> 

@@ -8,4 +8,5 @@ public:
 	~InputState_Rest() = default;
 
 	void onLeftClicDown() override;
+	void onWheelScroll(float dl) override;
 };

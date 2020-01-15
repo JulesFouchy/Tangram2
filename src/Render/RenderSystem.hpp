@@ -18,7 +18,7 @@ public:
 	void update() override;
 	void renderPreviewTextures(const std::vector<entt::entity>& list);
 
-private:
+public:
 	glm::mat3 getMatrix(entt::entity id, bool bIncludeRatio = true);
 
 private:

@@ -35,6 +35,7 @@ void App::onInit() {
 		entt::entity id = m_layersManager.addLayer();
 		m_registry.get<Cmp::Translation>(id).val = glm::vec2(1.3f, 0.0f);
 		m_registry.get<Cmp::Scale>(id).val = 0.15f;
+		m_registry.get<Cmp::AspectRatio>(id).val = 2.0f;
 	}
 
 	{
@@ -58,6 +59,7 @@ void App::onLoopIteration() {
 	glClear(GL_COLOR_BUFFER_BIT);
 	m_renderSystem.update();
 	m_inputSystem.update();
+	m_layersManager.hoveredLayer(m_inputSystem.MousePositionInNormalizedDeviceCoordinates());
 }
 
 void App::createDrawingBoard() {

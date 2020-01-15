@@ -18,6 +18,7 @@ public:
 
 	static glm::vec2 MousePositionInPixels(); 
 	static glm::vec2 MousePositionInScreen();
+	static glm::vec2 MousePositionInNormalizedDeviceCoordinates();
 	static glm::vec2 MousePositionInInches();
 	static bool KeyIsDown(SDL_Scancode key);
 

@@ -3,7 +3,7 @@
 #include <SDL2/SDL.h>
 #include <glad/glad.h>
 
-#include <gtx/matrix_transform_2d.hpp>
+#include <glm/gtx/matrix_transform_2d.hpp>
 
 int DisplayInfos::m_windowWidth;
 int DisplayInfos::m_windowHeight;

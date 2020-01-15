@@ -3,7 +3,7 @@
 #include <glad/glad.h>
 #include "Debugging/glException.hpp"
 
-#include <gtx/matrix_transform_2d.hpp>
+#include <glm/gtx/matrix_transform_2d.hpp>
 
 #include "Helper/DisplayInfos.hpp"
 
@@ -12,6 +12,8 @@
 #include "Components/AspectRatio.hpp"
 
 #include "Components/Parent.hpp"
+
+#include "App.hpp"
 
 unsigned int RenderSystem::m1to1QuadVBOid;
 unsigned int RenderSystem::m1to1QuadVAOid;
@@ -57,12 +59,17 @@ void RenderSystem::ShutDown() {
 }
 
 void RenderSystem::update() {
+	renderPreviewTextures({ App::Get().m_drawingBoardId });
+	renderPreviewTextures(App::Get().m_layersManager.m_layersOrdered);
+}
+
+void RenderSystem::renderPreviewTextures(const std::vector<entt::entity>& list) {
 	shader.bind();
-	m_registry.view<Cmp::Translation, Cmp::Scale>().each([this](auto entity, auto& translation, auto& scale) {
-		shader.setUniformMat3f("u_mat",  getMatrix(entity));
+	for (const entt::entity& entity : list){
+		shader.setUniformMat3f("u_mat", getMatrix(entity));
 		glBindVertexArray(m1to1QuadVAOid);
-		glDrawArrays(GL_TRIANGLES,0 , 6);
-	});
+		glDrawArrays(GL_TRIANGLES, 0, 6);
+	}
 }
 
 glm::mat3 RenderSystem::getMatrix(entt::entity id, bool bIncludeRatio) {

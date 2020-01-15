@@ -1,11 +1,8 @@
 #include "App.hpp"
 
-#include <SDL2/SDL.h>
-#include <glad/glad.h>
-
-#include <imgui.h>
-#include <imgui_impl_sdl.h>
-#include <imgui_impl_opengl3.h>
+#include <imgui/imgui.h>
+#include <imgui/imgui_impl_sdl.h>
+#include <imgui/imgui_impl_opengl3.h>
 
 #include <debug_break/debug_break.h>
 
@@ -13,6 +10,9 @@
 
 #include "Render/RenderSystem.hpp"
 #include "Input/InputSystem.hpp"
+
+#include <SDL2/SDL.h>
+#include <glad/glad.h>
 
 #ifdef _WIN32
 	#define _CRTDBG_MAP_ALLOC

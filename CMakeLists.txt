@@ -51,8 +51,6 @@ include_directories(
     ${OPENGL_INCLUDE_DIR}
     ${SDL2_INCLUDE_DIRS}
     lib/glad/include
-    lib/imgui
-    lib/glm
     lib/entt-3.2.2/src
     lib
     src

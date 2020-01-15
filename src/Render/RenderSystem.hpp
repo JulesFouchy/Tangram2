@@ -6,6 +6,8 @@
 
 #include <glm/glm.hpp>
 
+#include <vector>
+
 class RenderSystem : public ISystem {
 public:
 	RenderSystem(entt::registry& registry);
@@ -14,6 +16,7 @@ public:
 	static void ShutDown();
 
 	void update() override;
+	void renderPreviewTextures(const std::vector<entt::entity>& list);
 
 private:
 	glm::mat3 getMatrix(entt::entity id, bool bIncludeRatio = true);

@@ -2,9 +2,9 @@
 
 #include <SDL2/SDL.h>
 
-#include <imgui.h>
-#include <imgui_impl_sdl.h>
-#include <imgui_impl_opengl3.h>
+#include <imgui/imgui.h>
+#include <imgui/imgui_impl_sdl.h>
+#include <imgui/imgui_impl_opengl3.h>
 
 #include "Debugging/Log.hpp"
 #include "Debugging/glException.hpp"
@@ -31,17 +31,17 @@ App::App(SDL_Window* window)
 }
 
 void App::onInit() {
-	auto id1 = m_registry.create();
-	m_registry.assign<Cmp::Translation>(id1, 1.7f, 0.0f);
-	m_registry.assign<Cmp::Scale>(id1, 0.3f);
-	m_registry.assign<Cmp::AspectRatio>(id1, 1.5f);
-	m_registry.assign<Cmp::Parent>(id1, m_drawingBoardId);
+	{
+		entt::entity id = m_layersManager.addLayer();
+		m_registry.get<Cmp::Translation>(id).val = glm::vec2(1.3f, 0.0f);
+		m_registry.get<Cmp::Scale>(id).val = 0.15f;
+	}
 
-	auto id2 = m_registry.create();
-	m_registry.assign<Cmp::Translation>(id2, 0.0f, 0.0f);
-	m_registry.assign<Cmp::Scale>(id2, 3.0f);
-	m_registry.assign<Cmp::AspectRatio>(id2, 1.0f);
-	m_registry.assign<Cmp::Parent>(id2, m_drawingBoardId);
+	{
+		entt::entity id = m_layersManager.addLayer();
+		m_registry.get<Cmp::Translation>(id).val = glm::vec2(1.0f, 0.0f);
+		m_registry.get<Cmp::Scale>(id).val = 0.3f;
+	}
 }
 
 void App::onLoopIteration() {
@@ -78,7 +78,7 @@ void App::onEvent(const SDL_Event& e) {
 
 	case SDL_MOUSEWHEEL:
 		if (!ImGui::GetIO().WantCaptureMouse){
-			m_inputSystem.onWheelScroll(e.wheel.y);
+			m_inputSystem.onWheelScroll((float) e.wheel.y);
 		}
 		break;
 

@@ -7,6 +7,7 @@ union SDL_Event;
 
 #include "Render/RenderSystem.hpp"
 #include "Input/InputSystem.hpp"
+#include "Layers/LayersManager.hpp"
 
 class App {
 private:
@@ -31,6 +32,7 @@ public: // TODO make me private
 	entt::entity m_drawingBoardId;
 	RenderSystem m_renderSystem;
 	InputSystem m_inputSystem;
+	LayersManager m_layersManager;
 
 /********************
   * INTERNAL CODE *

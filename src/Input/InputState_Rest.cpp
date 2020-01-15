@@ -8,9 +8,7 @@
 
 InputState_Rest::InputState_Rest(InputSystem* inputSystem)
 	: IInputState(inputSystem)
-{
-	spdlog::warn("REST");
-}
+{}
 
 void InputState_Rest::onLeftClicDown() {
 	if (InputSystem::KeyIsDown(SDL_SCANCODE_SPACE))

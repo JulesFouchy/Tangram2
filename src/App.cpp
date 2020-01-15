@@ -54,12 +54,13 @@ void App::onLoopIteration() {
 	//
 	glClear(GL_COLOR_BUFFER_BIT);
 	m_renderSystem.update();
+	m_inputSystem.update();
 }
 
 void App::createDrawingBoard() {
-	auto id = m_registry.create();
-	m_registry.assign<Cmp::Translation>(id, 0.0f, 0.0f);
-	m_registry.assign<Cmp::Scale>(id, 16.0f / 9.0f * 0.8f, 0.8f);
+	m_drawingBoardId = m_registry.create();
+	m_registry.assign<Cmp::Translation>(m_drawingBoardId, 0.0f, 0.0f);
+	m_registry.assign<Cmp::Scale>(m_drawingBoardId, 16.0f / 9.0f * 0.8f, 0.8f);
 }
 
 void App::onEvent(const SDL_Event& e) {

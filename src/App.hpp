@@ -24,10 +24,11 @@ private:
 	void onWindowResize();
 	void switchFullScreenMode();
 
-private:
+public: // TODO make me private
 	bool m_bShowImGUIDemoWindow;
 	bool m_bFullScreen;
 	entt::registry m_registry;
+	entt::entity m_drawingBoardId;
 	RenderSystem m_renderSystem;
 	InputSystem m_inputSystem;
 

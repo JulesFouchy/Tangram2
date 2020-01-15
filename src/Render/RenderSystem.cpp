@@ -9,6 +9,7 @@
 
 #include "Components/Translation.hpp"
 #include "Components/Scale.hpp"
+#include "Components/AspectRatio.hpp"
 
 #include "Components/Parent.hpp"
 
@@ -64,12 +65,14 @@ void RenderSystem::update() {
 	});
 }
 
-glm::mat3 RenderSystem::getMatrix(entt::entity id) {
+glm::mat3 RenderSystem::getMatrix(entt::entity id, bool bIncludeRatio) {
 	glm::mat3 model = glm::translate(glm::mat3(1.0f), m_registry.get<Cmp::Translation>(id).val);
-	model = glm::scale(model, m_registry.get<Cmp::Scale>(id).val);
+	model = glm::scale(model, glm::vec2(m_registry.get<Cmp::Scale>(id).val));
+	if (bIncludeRatio)
+		model = glm::scale(model, glm::vec2(m_registry.get<Cmp::AspectRatio>(id).val, 1.0f));
 	Cmp::Parent* parent = m_registry.try_get<Cmp::Parent>(id);
 	if (parent)
-		return getMatrix(parent->id) * model;
+		return getMatrix(parent->id, false) * model;
 	else
 		return DisplayInfos::Matrix() * model;
 }

@@ -5,15 +5,11 @@
 namespace Cmp {
 
 struct Scale {
-	Scale(float x, float y)
-		: val(x, y)
+	Scale(float scale)
+		: val(scale)
 	{}
 
-	operator glm::vec2() {
-		return val;
-	}
-
-	glm::vec2 val;
+	float val;
 };
 
 }

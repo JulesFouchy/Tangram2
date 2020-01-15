@@ -16,7 +16,7 @@ public:
 	void update() override;
 
 private:
-	glm::mat3 getMatrix(entt::entity id);
+	glm::mat3 getMatrix(entt::entity id, bool bIncludeRatio = true);
 
 private:
 	static unsigned int m1to1QuadVBOid;

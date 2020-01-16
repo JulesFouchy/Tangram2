@@ -9,10 +9,11 @@
 #include <glm/glm.hpp>
 
 class InputSystem : public ISystem {
+friend class IInputState;
 friend class InputState_Rest;
 friend class InputState_Translate;
 public:
-	InputSystem(entt::registry& registry);
+	InputSystem(Instance* instance);
 	~InputSystem() = default;
 	static void Initialize();
 
@@ -22,7 +23,7 @@ public:
 	static glm::vec2 MousePositionInInches();
 	static bool KeyIsDown(SDL_Scancode key);
 
-	inline void update() override { m_currentState->update(); }
+	inline void update() { m_currentState->update(); }
 
 	inline void onLeftClicDown()            { m_currentState->onLeftClicDown(); }
 	inline void onLeftClicUp()              { m_currentState->onLeftClicUp(); }

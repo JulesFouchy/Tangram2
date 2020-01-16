@@ -10,20 +10,18 @@
 
 class RenderSystem : public ISystem {
 public:
-	RenderSystem(entt::registry& registry);
-	static void Initialize();
+	RenderSystem(Instance* instance);
 	~RenderSystem() = default;
+	static void Initialize();
 	static void ShutDown();
 
-	void update() override;
-	void renderPreviewTextures(const std::vector<entt::entity>& list);
-
-public:
-	glm::mat3 getMatrix(entt::entity id, bool bIncludeRatio = true);
-	glm::mat3 getParentModelMatrix(entt::entity id);
+	void render();
 
 private:
+	void renderPreviewTextures(const std::vector<entt::entity>& list);
+
+private:
+	static Shader shader;
 	static unsigned int m1to1QuadVBOid;
 	static unsigned int m1to1QuadVAOid;
-	static Shader shader;
 };

@@ -74,7 +74,7 @@ int main(int argc, char *argv[]) {
 			debug_break();
 		}
 
-		// ------- Initialize ImGUI ------------
+		// ------- Initialize ImGui ------------
 
 #if __APPLE__
 		const char* glslVersion = "#version 150";
@@ -103,16 +103,16 @@ int main(int argc, char *argv[]) {
 		ImGui_ImplSDL2_InitForOpenGL(window, glContext);
 		ImGui_ImplOpenGL3_Init(glslVersion);
 
-		// ------ Initialize our own classes
+		// ------ Initialize other classes
 
 		App::Initialize(window);
 		RenderSystem::Initialize();
 		InputSystem::Initialize();
 
 		// ------ Actual App
-		App::Get().onInit();
+
 		while (App::Get().isRunning()) {
-			App::Get()._loopIteration();
+			App::Get().onLoopIteration();
 		}
 
 		// ------ Shutdown

@@ -6,10 +6,12 @@
 
 #include <glm/glm.hpp>
 
-class LayersManager {
+#include "System/ISystem.hpp"
+
+class LayersManager : public ISystem {
 friend class RenderSystem;
 public:
-	LayersManager() = default;
+	LayersManager(Instance* instance);
 	~LayersManager() = default;
 
 	entt::entity addLayer();

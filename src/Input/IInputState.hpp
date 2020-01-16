@@ -1,14 +1,13 @@
 #pragma once
 
 class InputSystem;
+class Instance;
 
 #include <SDL2/SDL_scancode.h>
 
 class IInputState {
 public:
-	IInputState(InputSystem* inputSystem)
-		: m_inputSystem(inputSystem)
-	{}
+	IInputState(InputSystem* inputSystem);
 	~IInputState() = default;
 
 	virtual void update() {}
@@ -23,4 +22,5 @@ public:
 
 protected:
 	InputSystem* m_inputSystem;
+	Instance* I;
 };

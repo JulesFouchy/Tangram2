@@ -2,15 +2,14 @@
 
 #include <entt/entt.hpp>
 
-class ISystem {
-public:
-	virtual void update() = 0;
+class Instance;
 
+class ISystem {
 protected:
-	ISystem(entt::registry& registry) 
-		: m_registry(registry)
+	ISystem(Instance* instance)
+		: I(instance)
 	{}
 	~ISystem() = default;
 
-	entt::registry& m_registry;
+	Instance* I;
 };

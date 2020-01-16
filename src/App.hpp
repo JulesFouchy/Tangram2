@@ -3,56 +3,41 @@
 struct SDL_Window;
 union SDL_Event;
 
-#include <entt/entt.hpp>
-
-#include "Render/RenderSystem.hpp"
-#include "Input/InputSystem.hpp"
-#include "Layers/LayersManager.hpp"
+#include "Instance.hpp"
+#include <vector>
 
 class App {
 private:
 	App(SDL_Window* window);
 	~App() = default;
 
-public:
-	void onInit();
-private:
-	void onLoopIteration();
-	void onEvent(const SDL_Event& e);
-
-	void createDrawingBoard();
+	void addInstance();
+	void switchInstance();
+	inline Instance& activeInstance() { return m_instance; }// s[m_activeInstanceIndex]; }
 
 	void onWindowResize();
 	void switchFullScreenMode();
+	void handleEvents();
 
-public: // TODO make me private
-	bool m_bShowImGUIDemoWindow;
-	bool m_bFullScreen;
-	entt::registry m_registry;
-	entt::entity m_drawingBoardId;
-	RenderSystem m_renderSystem;
-	InputSystem m_inputSystem;
-	LayersManager m_layersManager;
-
-/********************
-  * INTERNAL CODE *
- ********************/
+	inline void exit() { m_running = false; }
 
 public:
 	static void Initialize(SDL_Window* window);
 	static void ShutDown();
-	inline static App& Get() { return *m_instance; }
 
-	void _loopIteration();
-	void handleSDLevents();
-
-	inline SDL_Window* getWindow() const { return m_window; }
+	inline static App& Get() { return *m_appInstance; }
 	inline bool isRunning() const { return m_running; }
-	inline void exit() { m_running = false; }
+	void onLoopIteration();
 
 private:
-	static App* m_instance;
+	//std::vector<Instance> m_instances;
+	Instance m_instance;
+	size_t m_activeInstanceIndex;
+
+	bool m_bShowImGuiDemoWindow;
+	bool m_bFullScreen;
 
 	SDL_Window* m_window;
 	bool m_running;
+	static App* m_appInstance;
 };

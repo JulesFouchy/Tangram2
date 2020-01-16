@@ -1,158 +1,38 @@
 #include "App.hpp"
 
-#include <SDL2/SDL.h>
-
 #include <imgui/imgui.h>
 #include <imgui/imgui_impl_sdl.h>
 #include <imgui/imgui_impl_opengl3.h>
 
-#include "Debugging/Log.hpp"
-#include "Debugging/glException.hpp"
-
 #include "Helper/DisplayInfos.hpp"
 
-#include "Components/Translation.hpp"
-#include "Components/Scale.hpp"
-#include "Components/Parent.hpp"
-#include "Components/AspectRatio.hpp"
-#include "Components/TransformMatrix.hpp"
+#include <SDL2/SDL.h>
+#include <glad/glad.h>
 
-#include "glm/gtx/matrix_transform_2d.hpp"
+#include "Debugging/Log.hpp"
+
+
+App* App::m_appInstance = nullptr;
 
 App::App(SDL_Window* window)
-	: m_bShowImGUIDemoWindow(false),
+	: m_bShowImGuiDemoWindow(false),
 	  m_bFullScreen(false),
-	  m_registry(),
-	  m_renderSystem(m_registry),
-	  m_inputSystem(m_registry),
 	  m_window(window), m_running(true)
 {
+	//m_instances.reserve(2); // TODO use linked list to avoid using move constructors
 	onWindowResize();
-	createDrawingBoard();
 	//glEnable(GL_BLEND);
 	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	addInstance();
 }
 
-void App::onInit() {
-	entt::entity id1;
-	{
-		entt::entity id = m_layersManager.addLayer();
-		glm::mat3& mat = m_registry.get<Cmp::TransformMatrix>(id).val;
-		mat = glm::translate(mat, glm::vec2(1.3f, 0.0f));
-		mat = glm::scale(mat, glm::vec2(0.15f));
-		m_registry.get<Cmp::AspectRatio>(id).val = 2.0f;
-		id1 = id;
-	}
-
-	{
-		entt::entity id = m_layersManager.addLayer();
-		glm::mat3& mat = m_registry.get<Cmp::TransformMatrix>(id).val;
-		mat = glm::translate(mat, glm::vec2(1.0f, 0.0f));
-		mat = glm::scale(mat, glm::vec2(0.3f));
-		m_registry.get<Cmp::Parent>(id).id = id1;
-	}
+void App::addInstance() {
+	//m_instances.emplace_back();
+	//m_activeInstanceIndex = m_instances.size() - 1;
 }
 
-void App::onLoopIteration() {
-	// ImGui windows
-#ifndef NDEBUG 
-	ImGui::Begin("Debug");
-	ImGui::Checkbox("Show Demo Window", &m_bShowImGUIDemoWindow);
-	ImGui::Text("Application average %.1f FPS", ImGui::GetIO().Framerate);
-	ImGui::End();
-	if (m_bShowImGUIDemoWindow) // Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
-		ImGui::ShowDemoWindow(&m_bShowImGUIDemoWindow);
-#endif
-	//
-	glClear(GL_COLOR_BUFFER_BIT);
-	m_renderSystem.update();
-	m_inputSystem.update();
-}
-
-void App::createDrawingBoard() {
-	m_drawingBoardId = m_registry.create(); 
-	glm::mat3& mat = m_registry.assign<Cmp::TransformMatrix>(m_drawingBoardId).val;
-	mat = glm::scale(mat, glm::vec2(0.8f));
-	mat = glm::rotate(mat, 0.1f);
-	m_registry.assign<Cmp::AspectRatio>(m_drawingBoardId, 16.0f / 9.0f);
-}
-
-void App::onEvent(const SDL_Event& e) {
-	switch (e.type) {
-
-	case SDL_MOUSEMOTION:
-		if (!ImGui::GetIO().WantCaptureMouse) {
-
-		}
-		break;
-
-	case SDL_MOUSEWHEEL:
-		if (!ImGui::GetIO().WantCaptureMouse){
-			m_inputSystem.onWheelScroll((float) e.wheel.y);
-		}
-		break;
-
-	case SDL_MOUSEBUTTONDOWN:
-		if (!ImGui::GetIO().WantCaptureMouse) {
-			if (e.button.button == SDL_BUTTON_LEFT) {
-				m_inputSystem.onLeftClicDown();
-			}
-			else if (e.button.button == SDL_BUTTON_RIGHT) {
-				m_inputSystem.onRightClicDown();
-			}
-			else if (e.button.button == SDL_BUTTON_MIDDLE) {
-
-			}
-		}
-		break;
-
-	case SDL_MOUSEBUTTONUP:
-		if (!ImGui::GetIO().WantCaptureMouse) {
-			if (e.button.button == SDL_BUTTON_LEFT) {
-				m_inputSystem.onLeftClicUp();
-			}
-			else if (e.button.button == SDL_BUTTON_RIGHT) {
-				m_inputSystem.onRightClicUp();
-			}
-			else if (e.button.button == SDL_BUTTON_MIDDLE) {
-
-			}
-		}
-		break;
-
-
-	case SDL_KEYDOWN:
-		if (e.key.keysym.scancode == SDL_SCANCODE_F11)
-			switchFullScreenMode();
-		if (e.key.keysym.scancode == SDL_SCANCODE_ESCAPE && m_bFullScreen)
-			switchFullScreenMode();
-
-		if (!ImGui::GetIO().WantCaptureKeyboard) {
-			m_inputSystem.onKeyDown(e.key.keysym.scancode);
-		}
-		break;
-
-	case SDL_KEYUP:
-		if (!ImGui::GetIO().WantCaptureKeyboard) {
-			m_inputSystem.onKeyUp(e.key.keysym.scancode);
-		}
-		break;
-
-	case SDL_WINDOWEVENT:
-		switch (e.window.event) {
-		case SDL_WINDOWEVENT_RESIZED:
-			onWindowResize();
-			break;
-		}
-		break;
-
-	case SDL_QUIT:
-		exit();
-		break;
-
-	default:
-		break;
-	}
+void App::switchInstance() {
+	//m_activeInstanceIndex = (m_activeInstanceIndex + 1) % m_instances.size();
 }
 
 void App::onWindowResize() {
@@ -169,34 +49,82 @@ void App::switchFullScreenMode(){
 	onWindowResize();
 }
 
-/////////////////////////////////////////////////////////////////////////////
-///////////////////////////// INTERNAL CODE /////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////
+void App::handleEvents() {
+	SDL_Event e;
+	while (SDL_PollEvent(&e)) {
+		ImGui_ImplSDL2_ProcessEvent(&e);
+		bool bHandled = false;
+		switch (e.type) {
+		case SDL_KEYDOWN:
+			if (!ImGui::GetIO().WantCaptureKeyboard) {
+				if (e.key.keysym.scancode == SDL_SCANCODE_F11) {
+					switchFullScreenMode();
+					bHandled = true;
+				}
+				else if (e.key.keysym.scancode == SDL_SCANCODE_ESCAPE && m_bFullScreen) {
+					switchFullScreenMode();
+					bHandled = true;
+				}
+				else if (e.key.keysym.scancode == SDL_SCANCODE_TAB) {
+					switchInstance();
+					bHandled = true;
+				}
+			}
+			break;
 
-App* App::m_instance = nullptr;
+		case SDL_WINDOWEVENT:
+			switch (e.window.event) {
+			case SDL_WINDOWEVENT_RESIZED:
+				onWindowResize();
+				bHandled = true;
+				break;
+			}
+			break;
+
+		case SDL_QUIT:
+			exit();
+			bHandled = true;
+			break;
+
+		default:
+			break;
+		}
+		if (!bHandled)
+			activeInstance().onEvent(e);
+	}
+}
+
+
 
 void App::Initialize(SDL_Window* window) {
-	assert(!m_instance);
-	m_instance = new App(window);
-	if (m_instance == nullptr)
+	assert(!m_appInstance);
+	m_appInstance = new App(window);
+	if (m_appInstance == nullptr)
 		spdlog::error("[App::Initialize] Unable to allocate enough memory !");
 }
 
 void App::ShutDown() {
-	delete m_instance;
+	delete m_appInstance;
 }
 
-void App::_loopIteration() {
+void App::onLoopIteration() {
 	// Events
-	handleSDLevents();
+	handleEvents();
 	// Start ImGui frame
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplSDL2_NewFrame(m_window);
 	ImGui::NewFrame();
-
+	// ImGui Debug and Demo
+#ifndef NDEBUG 
+	ImGui::Begin("Debug");
+	ImGui::Checkbox("Show Demo Window", &m_bShowImGuiDemoWindow);
+	ImGui::Text("Application average %.1f FPS", ImGui::GetIO().Framerate);
+	ImGui::End();
+	if (m_bShowImGuiDemoWindow) // Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
+		ImGui::ShowDemoWindow(&m_bShowImGuiDemoWindow);
+#endif
 	// Actual application code
-	onLoopIteration();
-
+	activeInstance().onLoopIteration();
 	// Render ImGui
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
 	ImGui::Render();
@@ -217,12 +145,4 @@ void App::_loopIteration() {
 
 	// End frame
 	SDL_GL_SwapWindow(m_window);
-}
-
-void App::handleSDLevents() {
-	SDL_Event e;
-	while (SDL_PollEvent(&e)) {
-		ImGui_ImplSDL2_ProcessEvent(&e);
-		onEvent(e);
-	}
 }

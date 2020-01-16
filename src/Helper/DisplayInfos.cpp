@@ -5,6 +5,7 @@
 
 #include <glm/gtx/matrix_transform_2d.hpp>
 
+
 int DisplayInfos::m_windowWidth;
 int DisplayInfos::m_windowHeight;
 float DisplayInfos::m_aspectRatio;
@@ -12,6 +13,7 @@ glm::mat3 DisplayInfos::m_windowMat;
 
 float DisplayInfos::m_horizontalDPI;
 float DisplayInfos::m_verticalDPI;
+
 
 void DisplayInfos::Initialize() {
 	SDL_GetDisplayDPI(0, nullptr, &m_horizontalDPI, &m_verticalDPI);
@@ -42,4 +44,9 @@ glm::vec2 DisplayInfos::MousePositionInNormalizedDeviceCoordinates() {
 
 glm::vec2 DisplayInfos::MousePositionInInches() {
 	return MousePositionInPixels() / glm::vec2(m_horizontalDPI, m_verticalDPI);
+}
+
+bool DisplayInfos::KeyIsDown(SDL_Scancode key) {
+	const Uint8* state = SDL_GetKeyboardState(NULL);
+	return state[key];
 }

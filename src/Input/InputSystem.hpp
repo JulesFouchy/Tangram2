@@ -14,8 +14,6 @@ public:
 	InputSystem(Instance& instance);
 	~InputSystem() = default;
 
-	static bool KeyIsDown(SDL_Scancode key);
-
 	inline void update() { m_currentState->update(); }
 
 	inline void onLeftClicDown()            { m_currentState->onLeftClicDown(); }

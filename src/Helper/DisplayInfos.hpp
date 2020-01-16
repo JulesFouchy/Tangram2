@@ -2,6 +2,7 @@
 
 #include <glm/glm.hpp>
 
+#include <SDL2/SDL_scancode.h>
 struct SDL_Window;
 
 class DisplayInfos {
@@ -18,6 +19,8 @@ public:
 	static glm::vec2 MousePositionInScreen();
 	static glm::vec2 MousePositionInNormalizedDeviceCoordinates();
 	static glm::vec2 MousePositionInInches();
+
+	static bool KeyIsDown(SDL_Scancode key);
 
 private:
 	static int m_windowWidth;

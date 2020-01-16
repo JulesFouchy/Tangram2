@@ -8,6 +8,8 @@
 
 #include "Instance.hpp"
 
+#include "Helper/DisplayInfos.hpp"
+
 #include <glm/gtx/matrix_transform_2d.hpp>
 
 InputState_Rest::InputState_Rest(InputSystem* inputSystem)
@@ -15,7 +17,7 @@ InputState_Rest::InputState_Rest(InputSystem* inputSystem)
 {}
 
 void InputState_Rest::onLeftClicDown() {
-	if (InputSystem::KeyIsDown(SDL_SCANCODE_SPACE))
+	if (DisplayInfos::KeyIsDown(SDL_SCANCODE_SPACE))
 		m_inputSystem->m_currentState = std::make_unique<InputState_Translate>(m_inputSystem, I.drawingBoardId());
 	else {
 		entt::entity hoveredLayer = I.layersManager().layerHoveredByMouse();

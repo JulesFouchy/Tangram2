@@ -3,13 +3,6 @@
 #include <glad/glad.h>
 #include "Debugging/glException.hpp"
 
-#include <glm/gtx/matrix_transform_2d.hpp>
-
-#include "Components/TransformMatrix.hpp"
-#include "Components/AspectRatio.hpp"
-
-#include "Components/Parent.hpp"
-
 #include "Instance.hpp"
 
 unsigned int RenderSystem::m1to1QuadVBOid;

@@ -4,8 +4,6 @@
 
 #include "OpenGL/Shader.hpp"
 
-#include <glm/glm.hpp>
-
 #include <vector>
 
 class RenderSystem : public ISystem {

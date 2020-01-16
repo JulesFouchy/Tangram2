@@ -22,8 +22,6 @@ App::App(SDL_Window* window)
 	//glEnable(GL_BLEND);
 	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	addInstance();
-	addInstance();
-	addInstance();
 	m_activeInstanceIt = m_instances.begin();
 }
 

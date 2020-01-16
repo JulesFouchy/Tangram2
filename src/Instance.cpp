@@ -13,6 +13,8 @@
 
 #include <imgui/imgui.h>
 
+#include <cereal/archives/json.hpp>
+
 Instance::Instance()
 	: m_registry(),
 	  m_renderSystem(*this),

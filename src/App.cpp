@@ -6,11 +6,10 @@
 
 #include "Helper/DisplayInfos.hpp"
 
-#include <SDL2/SDL.h>
-#include <glad/glad.h>
-
 #include "Debugging/Log.hpp"
 
+#include <SDL2/SDL.h>
+#include <glad/glad.h>
 
 App* App::m_appInstance = nullptr;
 
@@ -19,20 +18,27 @@ App::App(SDL_Window* window)
 	  m_bFullScreen(false),
 	  m_window(window), m_running(true)
 {
-	//m_instances.reserve(2); // TODO use linked list to avoid using move constructors
 	onWindowResize();
 	//glEnable(GL_BLEND);
 	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	addInstance();
+	addInstance();
+	addInstance();
+	m_activeInstanceIt = m_instances.begin();
 }
 
 void App::addInstance() {
-	//m_instances.emplace_back();
-	//m_activeInstanceIndex = m_instances.size() - 1;
+	m_instances.emplace_back();
 }
 
 void App::switchInstance() {
-	//m_activeInstanceIndex = (m_activeInstanceIndex + 1) % m_instances.size();
+	m_activeInstanceIt++;
+	if (m_activeInstanceIt == m_instances.end())
+		m_activeInstanceIt = m_instances.begin();
+}
+
+Instance& App::activeInstance() { 
+	return *m_activeInstanceIt;
 }
 
 void App::onWindowResize() {

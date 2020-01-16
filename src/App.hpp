@@ -4,7 +4,7 @@ struct SDL_Window;
 union SDL_Event;
 
 #include "Instance.hpp"
-#include <vector>
+#include <list>
 
 class App {
 private:
@@ -13,7 +13,7 @@ private:
 
 	void addInstance();
 	void switchInstance();
-	inline Instance& activeInstance() { return m_instance; }// s[m_activeInstanceIndex]; }
+	Instance& activeInstance();
 
 	void onWindowResize();
 	void switchFullScreenMode();
@@ -30,9 +30,8 @@ public:
 	void onLoopIteration();
 
 private:
-	//std::vector<Instance> m_instances;
-	Instance m_instance;
-	size_t m_activeInstanceIndex;
+	std::list<Instance> m_instances;
+	std::list<Instance>::iterator m_activeInstanceIt;
 
 	bool m_bShowImGuiDemoWindow;
 	bool m_bFullScreen;

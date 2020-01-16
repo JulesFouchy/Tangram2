@@ -22,5 +22,5 @@ public:
 
 protected:
 	InputSystem* m_inputSystem;
-	Instance* I;
+	Instance& I;
 };

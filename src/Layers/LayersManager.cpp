@@ -6,6 +6,8 @@
 #include "Components/AspectRatio.hpp"
 #include "Components/Parent.hpp"
 
+#include "Helper/DisplayInfos.hpp"
+
 #include "Debugging/Log.hpp"
 
 LayersManager::LayersManager(Instance& instance)
@@ -35,5 +37,5 @@ entt::entity LayersManager::layerHoveredBy(const glm::vec2& posInNDC) {
 }
 
 entt::entity LayersManager::layerHoveredByMouse() {
-	return layerHoveredBy(I.inputSystem().MousePositionInNormalizedDeviceCoordinates());
+	return layerHoveredBy(DisplayInfos::MousePositionInNormalizedDeviceCoordinates());
 }

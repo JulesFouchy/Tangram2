@@ -6,8 +6,6 @@
 
 #include <memory>
 
-#include <glm/glm.hpp>
-
 class InputSystem : public ISystem {
 friend class IInputState;
 friend class InputState_Rest;
@@ -15,12 +13,7 @@ friend class InputState_Translate;
 public:
 	InputSystem(Instance& instance);
 	~InputSystem() = default;
-	static void Initialize();
 
-	static glm::vec2 MousePositionInPixels(); 
-	static glm::vec2 MousePositionInScreen();
-	static glm::vec2 MousePositionInNormalizedDeviceCoordinates();
-	static glm::vec2 MousePositionInInches();
 	static bool KeyIsDown(SDL_Scancode key);
 
 	inline void update() { m_currentState->update(); }
@@ -39,7 +32,4 @@ private:
 
 private:
 	std::unique_ptr<IInputState> m_currentState;
-
-	static float HorizontalDPI;
-	static float VerticalDPI;
 };

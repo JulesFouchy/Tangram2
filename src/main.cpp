@@ -9,7 +9,7 @@
 #include "Debugging/Log.hpp"
 
 #include "Render/RenderSystem.hpp"
-#include "Input/InputSystem.hpp"
+#include "Helper/DisplayInfos.hpp"
 
 #include <SDL2/SDL.h>
 #include <glad/glad.h>
@@ -107,7 +107,7 @@ int main(int argc, char *argv[]) {
 
 		App::Initialize(window);
 		RenderSystem::Initialize();
-		InputSystem::Initialize();
+		DisplayInfos::Initialize();
 
 		// ------ Actual App
 

@@ -13,7 +13,7 @@ public:
 	Instance();
 	~Instance() = default;
 
-	glm::mat3 getMatrix(entt::entity id, bool bIncludeRatio = true);
+	glm::mat3 getMatrix(entt::entity id);
 	glm::mat3 getParentModelMatrix(entt::entity id);
 
 	inline entt::registry& registry() { return m_registry; }

@@ -10,6 +10,8 @@
 
 #include "Components/Parent.hpp"
 
+#include "Instance.hpp"
+
 unsigned int RenderSystem::m1to1QuadVBOid;
 unsigned int RenderSystem::m1to1QuadVAOid;
 Shader RenderSystem::shader("res/shaders/showTexture.vert", "res/shaders/showTexture.frag", false);

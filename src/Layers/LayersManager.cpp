@@ -1,10 +1,10 @@
 #include "LayersManager.hpp"
 
-#include "Components/TransformMatrix.hpp"
-#include "Components/Parent.hpp"
-#include "Components/AspectRatio.hpp"
+#include "Instance.hpp"
 
-#include "App.hpp"
+#include "Components/TransformMatrix.hpp"
+#include "Components/AspectRatio.hpp"
+#include "Components/Parent.hpp"
 
 #include "Debugging/Log.hpp"
 

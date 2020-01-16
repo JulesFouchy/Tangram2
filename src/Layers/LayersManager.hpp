@@ -1,12 +1,12 @@
 #pragma once
 
-#include <vector>
+#include "System/ISystem.hpp"
 
 #include <entt/entt.hpp>
 
-#include <glm/glm.hpp>
+#include <vector>
 
-#include "System/ISystem.hpp"
+#include <glm/glm.hpp>
 
 class LayersManager : public ISystem {
 friend class RenderSystem;

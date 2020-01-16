@@ -1,16 +1,12 @@
 #include "InputState_Rest.hpp"
-
-#include "InputSystem.hpp"
-
 #include "InputState_Translate.hpp"
 
-#include "Components/TransformMatrix.hpp"
-
 #include "Instance.hpp"
-
 #include "Helper/DisplayInfos.hpp"
 
+#include "Components/TransformMatrix.hpp"
 #include <glm/gtx/matrix_transform_2d.hpp>
+
 
 InputState_Rest::InputState_Rest(InputSystem* inputSystem)
 	: IInputState(inputSystem)

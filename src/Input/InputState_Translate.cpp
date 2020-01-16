@@ -1,15 +1,14 @@
 #include "InputState_Translate.hpp"
-
 #include "InputState_Rest.hpp"
 
+#include "Instance.hpp"
 #include "Helper/DisplayInfos.hpp"
-
-#include "Debugging/Log.hpp"
 
 #include "Components/TransformMatrix.hpp"
 #include <glm/gtx/matrix_transform_2d.hpp>
 
-#include "Instance.hpp"
+#include "Debugging/Log.hpp"
+
 
 InputState_Translate::InputState_Translate(InputSystem* inputSystem, entt::entity targetID)
 	: IInputState(inputSystem),

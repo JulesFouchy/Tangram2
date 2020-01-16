@@ -1,9 +1,9 @@
 #pragma once
 
+#include <SDL2/SDL_scancode.h>
+
 class InputSystem;
 class Instance;
-
-#include <SDL2/SDL_scancode.h>
 
 class IInputState {
 public:

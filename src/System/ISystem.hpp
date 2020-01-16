@@ -6,10 +6,10 @@ class Instance;
 
 class ISystem {
 protected:
-	ISystem(Instance* instance)
+	ISystem(Instance& instance)
 		: I(instance)
 	{}
 	~ISystem() = default;
 
-	Instance* I;
+	Instance& I;
 };

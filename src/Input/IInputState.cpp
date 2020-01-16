@@ -3,5 +3,5 @@
 #include "InputSystem.hpp"
 
 IInputState::IInputState(InputSystem* inputSystem)
-	: m_inputSystem(inputSystem), I(inputSystem->I)
+	: m_inputSystem(inputSystem), I(&inputSystem->I)
 {}

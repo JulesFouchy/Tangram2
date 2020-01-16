@@ -9,7 +9,7 @@
 float InputSystem::HorizontalDPI;
 float InputSystem::VerticalDPI;
 
-InputSystem::InputSystem(Instance* instance)
+InputSystem::InputSystem(Instance& instance)
 	: ISystem(instance)
 {
 	setState<InputState_Rest>();

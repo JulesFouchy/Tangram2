@@ -11,7 +11,7 @@
 class LayersManager : public ISystem {
 friend class RenderSystem;
 public:
-	LayersManager(Instance* instance);
+	LayersManager(Instance& instance);
 	~LayersManager() = default;
 
 	entt::entity addLayer();

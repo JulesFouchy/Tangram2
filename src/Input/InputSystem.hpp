@@ -13,7 +13,7 @@ friend class IInputState;
 friend class InputState_Rest;
 friend class InputState_Translate;
 public:
-	InputSystem(Instance* instance);
+	InputSystem(Instance& instance);
 	~InputSystem() = default;
 	static void Initialize();
 

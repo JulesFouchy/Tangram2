@@ -10,7 +10,7 @@
 
 class RenderSystem : public ISystem {
 public:
-	RenderSystem(Instance* instance);
+	RenderSystem(Instance& instance);
 	~RenderSystem() = default;
 	static void Initialize();
 	static void ShutDown();

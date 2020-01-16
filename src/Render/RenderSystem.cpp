@@ -16,19 +16,19 @@ unsigned int RenderSystem::m1to1QuadVBOid;
 unsigned int RenderSystem::m1to1QuadVAOid;
 Shader RenderSystem::shader("res/shaders/showTexture.vert", "res/shaders/showTexture.frag", false);
 
-RenderSystem::RenderSystem(Instance* instance)
+RenderSystem::RenderSystem(Instance& instance)
 	: ISystem(instance)
 {}
 
 void RenderSystem::render() {
-	renderPreviewTextures({ I->drawingBoardId() });
-	renderPreviewTextures( I->layersManager().m_layersOrdered);
+	renderPreviewTextures({ I.drawingBoardId() });
+	renderPreviewTextures(I.layersManager().m_layersOrdered);
 }
 
 void RenderSystem::renderPreviewTextures(const std::vector<entt::entity>& list) {
 	shader.bind();
 	for (const entt::entity& entity : list){
-		shader.setUniformMat3f("u_mat", I->getMatrix(entity));
+		shader.setUniformMat3f("u_mat", I.getMatrix(entity));
 		glBindVertexArray(m1to1QuadVAOid);
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 	}

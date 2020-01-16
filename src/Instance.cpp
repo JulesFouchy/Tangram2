@@ -15,9 +15,9 @@
 
 Instance::Instance()
 	: m_registry(),
-	  m_renderSystem(this),
-	  m_inputSystem(this),
-	  m_layersManager(this)
+	  m_renderSystem(*this),
+	  m_inputSystem(*this),
+	  m_layersManager(*this)
 {
 	createDrawingBoard();
 

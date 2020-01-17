@@ -23,7 +23,6 @@ Instance::Instance()
 	  m_inputSystem(*this),
 	  m_layersManager(*this)
 {
-	//openProject("C:/Dev/Tangram2/test");
 	createDrawingBoard();
 	
 	entt::entity id1;
@@ -43,6 +42,16 @@ Instance::Instance()
 		//mat = glm::scale(mat, glm::vec2(0.3f));
 		registry().get<Cmp::Parent>(id).id = id1;
 	}
+}
+
+
+Instance::Instance(const std::string& projectFolderpath)
+	: m_registry(),
+	m_renderSystem(*this),
+	m_inputSystem(*this),
+	m_layersManager(*this)
+{
+	openProject(projectFolderpath);
 }
 
 void Instance::onLoopIteration(){
@@ -120,7 +129,6 @@ void Instance::onEvent(const SDL_Event& e) {
 	case SDL_KEYDOWN:
 		if (!ImGui::GetIO().WantCaptureKeyboard) {
 			inputSystem().onKeyDown(e.key.keysym.scancode);
-			saveProject("C:/Dev/Tangram2/test");
 		}
 		break;
 

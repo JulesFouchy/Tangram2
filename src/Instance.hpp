@@ -12,6 +12,7 @@ union SDL_Event;
 class Instance {
 public:
 	Instance();
+	Instance(const std::string& projectFolderpath);
 	~Instance() = default;
 
 	glm::mat3 getMatrix(entt::entity id);

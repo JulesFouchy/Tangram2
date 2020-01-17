@@ -8,6 +8,9 @@
 
 #include <glm/glm.hpp>
 
+#include <cereal/access.hpp>
+#include <cereal/types/vector.hpp>
+
 class LayersManager : public ISystem {
 friend class RenderSystem;
 public:
@@ -22,4 +25,13 @@ public:
 
 private:
 	std::vector<entt::entity> m_layersOrdered;
+
+
+	//Serialization
+	friend class cereal::access;
+	template <class Archive>
+	void serialize(Archive& archive)
+	{
+		archive(CEREAL_NVP(m_layersOrdered));
+	}
 };

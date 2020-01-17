@@ -5,6 +5,7 @@ union SDL_Event;
 
 #include "Instance.hpp"
 #include <list>
+#include <string>
 
 class App {
 private:
@@ -12,6 +13,7 @@ private:
 	~App() = default;
 
 	void addInstance();
+	void addInstance(const std::string& folderpath);
 	void switchInstance();
 	Instance& activeInstance();
 

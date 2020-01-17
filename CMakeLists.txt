@@ -52,6 +52,7 @@ include_directories(
     ${SDL2_INCLUDE_DIRS}
     lib/glad/include
     lib/entt-3.2.2/src
+    lib/cereal-1.3.0/include/
     lib
     src
     res

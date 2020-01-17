@@ -3,6 +3,7 @@
 union SDL_Event;
 
 #include <entt/entt.hpp>
+#include <string>
 
 #include "Render/RenderSystem.hpp"
 #include "Input/InputSystem.hpp"
@@ -11,6 +12,7 @@ union SDL_Event;
 class Instance {
 public:
 	Instance();
+	Instance(const std::string& projectFolderpath);
 	~Instance() = default;
 
 	glm::mat3 getMatrix(entt::entity id);
@@ -28,6 +30,8 @@ friend class App;
 	void onEvent(const SDL_Event& e);
 	void createDrawingBoard();
 	void onWindowResize() {};
+	void saveProject(const std::string& folderpath);
+	void openProject(const std::string& folderpath);
 
 private:
 	entt::registry m_registry;

@@ -13,6 +13,10 @@
 
 #include <imgui/imgui.h>
 
+#include <cereal/archives/json.hpp>
+#include <fstream>
+#include "Debugging/Log.hpp"
+
 Instance::Instance()
 	: m_registry(),
 	  m_renderSystem(*this),
@@ -20,7 +24,7 @@ Instance::Instance()
 	  m_layersManager(*this)
 {
 	createDrawingBoard();
-
+	
 	entt::entity id1;
 	{
 		entt::entity id = layersManager().addLayer();
@@ -30,14 +34,24 @@ Instance::Instance()
 		registry().get<Cmp::AspectRatio>(id).val = 2.0f;
 		id1 = id;
 	}
-
+	
 	{
 		entt::entity id = layersManager().addLayer();
 		glm::mat3& mat = registry().get<Cmp::TransformMatrix>(id).val;
 		mat = glm::translate(mat, glm::vec2(1.0f, 0.0f));
-		mat = glm::scale(mat, glm::vec2(0.3f));
+		//mat = glm::scale(mat, glm::vec2(0.3f));
 		registry().get<Cmp::Parent>(id).id = id1;
 	}
+}
+
+
+Instance::Instance(const std::string& projectFolderpath)
+	: m_registry(),
+	m_renderSystem(*this),
+	m_inputSystem(*this),
+	m_layersManager(*this)
+{
+	openProject(projectFolderpath);
 }
 
 void Instance::onLoopIteration(){
@@ -127,4 +141,42 @@ void Instance::onEvent(const SDL_Event& e) {
 	default:
 		break;
 	}
+}
+
+void Instance::saveProject(const std::string& folderpath) {
+	spdlog::info("Saving project to '{}'", folderpath);
+	std::ofstream registryOs(folderpath+"/reg.tng");
+	std::ofstream otherOs(folderpath + "/other.tng");
+	{
+		cereal::JSONOutputArchive otherArchive(otherOs);
+		otherArchive(
+			CEREAL_NVP(m_layersManager),
+			CEREAL_NVP(m_drawingBoardId)
+		);
+		cereal::JSONOutputArchive registryArchive(registryOs);
+		registry().snapshot()
+			.entities(registryArchive)
+			.destroyed(registryArchive)
+			.component<Cmp::AspectRatio, Cmp::TransformMatrix, Cmp::Parent>(registryArchive);
+	}
+	Log::separationLine();
+}
+
+void Instance::openProject(const std::string& folderpath) {
+	spdlog::info("Opening project from '{}'", folderpath);
+	std::ifstream registryIs(folderpath + "/reg.tng");
+	std::ifstream otherIs(folderpath + "/other.tng");
+	{
+		cereal::JSONInputArchive otherArchive(otherIs);
+		otherArchive(
+			m_layersManager,
+			m_drawingBoardId
+		);
+		cereal::JSONInputArchive registryArchive(registryIs);
+		registry().loader()
+			.entities(registryArchive)
+			.destroyed(registryArchive)
+			.component<Cmp::AspectRatio, Cmp::TransformMatrix, Cmp::Parent>(registryArchive);
+	}
+	Log::separationLine();
 }

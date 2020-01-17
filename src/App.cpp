@@ -22,13 +22,15 @@ App::App(SDL_Window* window)
 	//glEnable(GL_BLEND);
 	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	addInstance();
-	addInstance();
-	addInstance();
 	m_activeInstanceIt = m_instances.begin();
 }
 
 void App::addInstance() {
 	m_instances.emplace_back();
+}
+
+void App::addInstance(const std::string& folderpath) {
+	m_instances.emplace_back(folderpath);
 }
 
 void App::switchInstance() {
@@ -74,6 +76,16 @@ void App::handleEvents() {
 				else if (e.key.keysym.scancode == SDL_SCANCODE_TAB) {
 					switchInstance();
 					bHandled = true;
+				}
+				if (DisplayInfos::KeyIsDown(SDL_SCANCODE_LCTRL)) {
+					if (e.key.keysym.scancode == SDL_SCANCODE_S) {
+						activeInstance().saveProject("C:/Dev/Tangram2/test");
+						bHandled = true;
+					}
+					else if (e.key.keysym.scancode == SDL_SCANCODE_O) {
+						addInstance("C:/Dev/Tangram2/test");
+						bHandled = true;
+					}
 				}
 			}
 			break;

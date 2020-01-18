@@ -81,14 +81,15 @@ void App::handleEvents() {
 				}
 				if (DisplayInfos::KeyIsDown(SDL_SCANCODE_LCTRL)) {
 					if (e.key.keysym.scancode == SDL_SCANCODE_S) {
-						FileBrowser::GetFolder();
-						//std::string folderPath = FileBrowser::GetFolder();
+						std::string folderPath = FileBrowser::GetFolder();
+						spdlog::info("Selected folder '{}'", folderPath);
 						//activeInstance().saveProject(folderPath);
 						bHandled = true;
 					}
 					else if (e.key.keysym.scancode == SDL_SCANCODE_O) {
 						std::string folderPath = FileBrowser::GetFolder();
-						addInstance(folderPath);
+						spdlog::info("Selected folder '{}'", folderPath);
+						//addInstance(folderPath);
 						bHandled = true;
 					}
 				}

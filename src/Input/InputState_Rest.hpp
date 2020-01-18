@@ -9,4 +9,5 @@ public:
 
 	void onLeftClicDown() override;
 	void onWheelScroll(float dl) override;
+	void onKeyDown(SDL_Scancode key) override;
 };

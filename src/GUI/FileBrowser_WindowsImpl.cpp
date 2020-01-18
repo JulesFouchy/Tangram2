@@ -6,14 +6,10 @@
 
 #include "FileBrowser.hpp"
 
-#include <windows.h>
-#include <Commdlg.h>
-#include <shlobj.h>
-#include <shobjidl_core.h>
 #include <atlstr.h> // includes CW2A to convert LPCWSTR to std::string
 
 #include "Debugging/Log.hpp"
-#include <iostream>
+
 
 void FileBrowser::Initialize() {
 	HRESULT hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);
@@ -26,40 +22,19 @@ void FileBrowser::ShutDown() {
 }
 
 std::string FileBrowser::GetFileOpen(const char* filter) {
+	std::string res = "";
 	COMDLG_FILTERSPEC rgSpec[] =
 	{
 		{ L"JPEG", L"*.jpg;*.jpeg" },
 		{ L"PDF", L"*.p" },
 		{ L"All Files", L"*.*" },
 	};
-	std::string res = "";
-	IFileOpenDialog* pFileOpen;
-	HRESULT hr = CoCreateInstance(CLSID_FileOpenDialog, NULL, CLSCTX_ALL, IID_IFileOpenDialog, reinterpret_cast<void**>(&pFileOpen));
+	IFileDialog* dialog;
+	HRESULT hr = CoCreateInstance(CLSID_FileOpenDialog, NULL, CLSCTX_ALL, IID_IFileOpenDialog, reinterpret_cast<void**>(&dialog));
 
 	if (SUCCEEDED(hr)) {
-		pFileOpen->SetFileTypes(3, rgSpec);
-		hr = pFileOpen->Show(NULL);
-
-		if (SUCCEEDED(hr)) {
-			IShellItem* pItem;
-			hr = pFileOpen->GetResult(&pItem);
-			if (SUCCEEDED(hr))
-			{
-				PWSTR pszFilePath;
-				hr = pItem->GetDisplayName(SIGDN_FILESYSPATH, &pszFilePath);
-
-				if (SUCCEEDED(hr))
-				{
-					res = CW2A(pszFilePath);
-					CoTaskMemFree(pszFilePath);
-				}
-				pItem->Release();
-			}
-			else {
-				spdlog::error("[FileBrowser::GetFileOpen] failed1");
-			}
-		}
-		pFileOpen->Release();
+		dialog->SetFileTypes(3, rgSpec);
+		res = GetPathAndFreeDialog(dialog);
 	}
 	else {
 		spdlog::error("[FileBrowser::GetFileOpen] failed0");
@@ -75,81 +50,70 @@ std::string FileBrowser::GetFileSave(const char* filter) {
 		{ L"All Files", L"*.*" },
 	};
 	std::string res = "";
-	IFileSaveDialog* pFileOpen;
-	HRESULT hr = CoCreateInstance(CLSID_FileSaveDialog, NULL, CLSCTX_ALL, IID_IFileSaveDialog, reinterpret_cast<void**>(&pFileOpen));
+	IFileDialog* dialog;
+	HRESULT hr = CoCreateInstance(CLSID_FileSaveDialog, NULL, CLSCTX_ALL, IID_IFileSaveDialog, reinterpret_cast<void**>(&dialog));
 
 	if (SUCCEEDED(hr)) {
-		pFileOpen->SetFileTypes(3, rgSpec);
-		pFileOpen->SetDefaultExtension(L"ifYouSeeThisSometingWentWrong");
-		hr = pFileOpen->Show(NULL);
-
-		if (SUCCEEDED(hr)) {
-			IShellItem* pItem;
-			hr = pFileOpen->GetResult(&pItem);
-			if (SUCCEEDED(hr))
-			{
-				PWSTR pszFilePath;
-				hr = pItem->GetDisplayName(SIGDN_FILESYSPATH, &pszFilePath);
-
-				if (SUCCEEDED(hr))
-				{
-					res = CW2A(pszFilePath);
-					CoTaskMemFree(pszFilePath);
-				}
-				pItem->Release();
-			}
-			else {
-				spdlog::error("[FileBrowser::GetFileOpen] failed1");
-			}
-		}
-		pFileOpen->Release();
+		dialog->SetFileTypes(3, rgSpec);
+		dialog->SetDefaultExtension(L"ifYouSeeThisSometingWentWrong");
+		res = GetPathAndFreeDialog(dialog);
 	}
 	else {
-		spdlog::error("[FileBrowser::GetFileOpen] failed0");
+		spdlog::error("[FileBrowser::GetFileSave] failed");
 	}
-	spdlog::info("'{}'", res);
 	return res;
 }
-
-
 
 std::string FileBrowser::GetFolder()
 {
 	std::string res = "";
-	IFileOpenDialog* pFileOpen;
-	HRESULT hr = CoCreateInstance(CLSID_FileOpenDialog, NULL, CLSCTX_ALL, IID_IFileOpenDialog, reinterpret_cast<void**>(&pFileOpen));
+	IFileDialog* dialog;
+	HRESULT hr = CoCreateInstance(CLSID_FileOpenDialog, NULL, CLSCTX_ALL, IID_IFileOpenDialog, reinterpret_cast<void**>(&dialog));
 
 	if (SUCCEEDED(hr)) {
-		FILEOPENDIALOGOPTIONS currOptions;
-		pFileOpen->GetOptions(&currOptions);
-		pFileOpen->SetOptions(FOS_PICKFOLDERS | currOptions);
-		hr = pFileOpen->Show(NULL);
-
-		if (SUCCEEDED(hr)) {
-			IShellItem* pItem;
-			hr = pFileOpen->GetResult(&pItem);
-			if (SUCCEEDED(hr))
-			{
-				PWSTR pszFilePath;
-				hr = pItem->GetDisplayName(SIGDN_FILESYSPATH, &pszFilePath);
-
-				if (SUCCEEDED(hr))
-				{
-					res = CW2A(pszFilePath);
-					CoTaskMemFree(pszFilePath);
-				}
-				pItem->Release();
-			}
-			else {
-				spdlog::error("[FileBrowser::GetFileOpen] failed1");
-			}
-		}
-		pFileOpen->Release();
+		AddOptions(dialog, FOS_PICKFOLDERS);
+		res = GetPathAndFreeDialog(dialog);
 	}
 	else {
-		spdlog::error("[FileBrowser::GetFileOpen] failed0");
+		spdlog::error("[FileBrowser::GetFolder] failed");
 	}
 	return res;
+}
+
+std::string FileBrowser::GetPathAndFreeDialog(IFileDialog* dialog) {
+	std::string res = "";
+	HRESULT hr = dialog->Show(NULL);
+
+	if (SUCCEEDED(hr)) {
+		IShellItem* pItem;
+		hr = dialog->GetResult(&pItem);
+		if (SUCCEEDED(hr))
+		{
+			PWSTR pszFilePath;
+			hr = pItem->GetDisplayName(SIGDN_FILESYSPATH, &pszFilePath);
+
+			if (SUCCEEDED(hr))
+			{
+				res = CW2A(pszFilePath);
+				CoTaskMemFree(pszFilePath);
+			}
+			else {
+				spdlog::error("[FileBrowser::GetPathAndFreeDialog] failed1");
+			}
+			pItem->Release();
+		}
+		else {
+			spdlog::error("[FileBrowser::GetPathAndFreeDialog] failed0");
+		}
+	}
+	dialog->Release();
+	return res;
+}
+
+void FileBrowser::AddOptions(IFileDialog* dialog, FILEOPENDIALOGOPTIONS complementaryOptions) {
+	FILEOPENDIALOGOPTIONS currOptions;
+	dialog->GetOptions(&currOptions);
+	dialog->SetOptions(complementaryOptions | currOptions);
 }
 
 #endif

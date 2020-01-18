@@ -7,6 +7,9 @@
 #include "Components/TransformMatrix.hpp"
 #include <glm/gtx/matrix_transform_2d.hpp>
 
+#include "GUI/FileBrowser.hpp"
+#include "Debugging/Log.hpp"
+
 
 InputState_Rest::InputState_Rest(InputSystem* inputSystem)
 	: IInputState(inputSystem)
@@ -25,4 +28,17 @@ void InputState_Rest::onLeftClicDown() {
 void InputState_Rest::onWheelScroll(float dl) {
 	glm::mat3& mat = I.registry().get<Cmp::TransformMatrix>(I.drawingBoardId()).val;
 	mat = glm::scale(mat, glm::vec2(pow(0.95f, -dl)));
+}
+
+void InputState_Rest::onKeyDown(SDL_Scancode key) {
+	if (DisplayInfos::KeyIsDown(SDL_SCANCODE_LCTRL)) {
+		if (key == SDL_SCANCODE_E) {
+			std::string filepath = FileBrowser::GetFileSave();
+			spdlog::info("Saving file '{}'", filepath);
+		}
+		else if (key == SDL_SCANCODE_I) {
+			std::string filepath = FileBrowser::GetFileOpen();
+			spdlog::info("Importing file '{}'", filepath);
+		}
+	}
 }

@@ -10,77 +10,56 @@
 
 #include "Debugging/Log.hpp"
 
+IFileDialog* FileBrowser::m_fileOpenImageDialog;
+IFileDialog* FileBrowser::m_fileSaveImageDialog;
+IFileDialog* FileBrowser::m_folderDialog;
 
 void FileBrowser::Initialize() {
+	// Init COM
 	HRESULT hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);
 	if (FAILED(hr))
 		spdlog::error("[FileBrowser::Initialize] failed");
+	// Create dialog instances
+	COMDLG_FILTERSPEC imageFilter[] =
+	{
+		{ L"PNG", L"*.png" },
+		{ L"JPEG", L"*.jpg;*.jpeg" },
+	};
+		// Open Image File
+	hr = CoCreateInstance(CLSID_FileOpenDialog, NULL, CLSCTX_ALL, IID_IFileOpenDialog, reinterpret_cast<void**>(&m_fileOpenImageDialog));
+	if (FAILED(hr)) spdlog::error("[FileBrowser::Initialize] failed to initialize FileOpenDialog");
+	m_fileOpenImageDialog->SetFileTypes(_countof(imageFilter), imageFilter);
+		// Save Image File
+	hr = CoCreateInstance(CLSID_FileSaveDialog, NULL, CLSCTX_ALL, IID_IFileSaveDialog, reinterpret_cast<void**>(&m_fileSaveImageDialog));
+	if (FAILED(hr)) spdlog::error("[FileBrowser::Initialize] failed to initialize FileSaveDialog");
+	m_fileSaveImageDialog->SetFileTypes(_countof(imageFilter), imageFilter);
+	m_fileSaveImageDialog->SetDefaultExtension(L"ifYouSeeThisSometingWentWrong");
+		// Folder
+	hr = CoCreateInstance(CLSID_FileOpenDialog, NULL, CLSCTX_ALL, IID_IFileOpenDialog, reinterpret_cast<void**>(&m_folderDialog));
+	if (FAILED(hr)) spdlog::error("[FileBrowser::Initialize] failed to initialize FolderDialog");
+	AddOptions(m_folderDialog, FOS_PICKFOLDERS);
 }
 
 void FileBrowser::ShutDown() {
+	m_folderDialog->Release();
+	m_fileSaveImageDialog->Release();
+	m_fileOpenImageDialog->Release();
 	CoUninitialize();
 }
 
-std::string FileBrowser::GetFileOpen(const char* filter) {
-	std::string res = "";
-	COMDLG_FILTERSPEC rgSpec[] =
-	{
-		{ L"JPEG", L"*.jpg;*.jpeg" },
-		{ L"PDF", L"*.p" },
-		{ L"All Files", L"*.*" },
-	};
-	IFileDialog* dialog;
-	HRESULT hr = CoCreateInstance(CLSID_FileOpenDialog, NULL, CLSCTX_ALL, IID_IFileOpenDialog, reinterpret_cast<void**>(&dialog));
-
-	if (SUCCEEDED(hr)) {
-		dialog->SetFileTypes(3, rgSpec);
-		res = GetPathAndFreeDialog(dialog);
-	}
-	else {
-		spdlog::error("[FileBrowser::GetFileOpen] failed0");
-	}
-	return res;
+std::string FileBrowser::GetImageFileOpen() {
+	return ShowAndGetPath(m_fileOpenImageDialog);
 }
 
-std::string FileBrowser::GetFileSave(const char* filter) {
-	COMDLG_FILTERSPEC rgSpec[] =
-	{
-		{ L"JPEG", L"*.jpg;*.jpeg" },
-		{ L"PDF", L"*.p" },
-		{ L"All Files", L"*.*" },
-	};
-	std::string res = "";
-	IFileDialog* dialog;
-	HRESULT hr = CoCreateInstance(CLSID_FileSaveDialog, NULL, CLSCTX_ALL, IID_IFileSaveDialog, reinterpret_cast<void**>(&dialog));
-
-	if (SUCCEEDED(hr)) {
-		dialog->SetFileTypes(3, rgSpec);
-		dialog->SetDefaultExtension(L"ifYouSeeThisSometingWentWrong");
-		res = GetPathAndFreeDialog(dialog);
-	}
-	else {
-		spdlog::error("[FileBrowser::GetFileSave] failed");
-	}
-	return res;
+std::string FileBrowser::GetImageFileSave() {
+	return ShowAndGetPath(m_fileSaveImageDialog);
 }
 
-std::string FileBrowser::GetFolder()
-{
-	std::string res = "";
-	IFileDialog* dialog;
-	HRESULT hr = CoCreateInstance(CLSID_FileOpenDialog, NULL, CLSCTX_ALL, IID_IFileOpenDialog, reinterpret_cast<void**>(&dialog));
-
-	if (SUCCEEDED(hr)) {
-		AddOptions(dialog, FOS_PICKFOLDERS);
-		res = GetPathAndFreeDialog(dialog);
-	}
-	else {
-		spdlog::error("[FileBrowser::GetFolder] failed");
-	}
-	return res;
+std::string FileBrowser::GetFolder() {
+	return ShowAndGetPath(m_folderDialog);
 }
 
-std::string FileBrowser::GetPathAndFreeDialog(IFileDialog* dialog) {
+std::string FileBrowser::ShowAndGetPath(IFileDialog* dialog) {
 	std::string res = "";
 	HRESULT hr = dialog->Show(NULL);
 
@@ -98,15 +77,14 @@ std::string FileBrowser::GetPathAndFreeDialog(IFileDialog* dialog) {
 				CoTaskMemFree(pszFilePath);
 			}
 			else {
-				spdlog::error("[FileBrowser::GetPathAndFreeDialog] failed1");
+				spdlog::error("[FileBrowser::ShowAndGetPath] failed1");
 			}
 			pItem->Release();
 		}
 		else {
-			spdlog::error("[FileBrowser::GetPathAndFreeDialog] failed0");
+			spdlog::error("[FileBrowser::ShowAndGetPath] failed0");
 		}
 	}
-	dialog->Release();
 	return res;
 }
 
@@ -114,6 +92,12 @@ void FileBrowser::AddOptions(IFileDialog* dialog, FILEOPENDIALOGOPTIONS compleme
 	FILEOPENDIALOGOPTIONS currOptions;
 	dialog->GetOptions(&currOptions);
 	dialog->SetOptions(complementaryOptions | currOptions);
+}
+
+void FileBrowser::RemoveOptions(IFileDialog* dialog, FILEOPENDIALOGOPTIONS options) {
+	FILEOPENDIALOGOPTIONS currOptions;
+	dialog->GetOptions(&currOptions);
+	dialog->SetOptions((~options) & currOptions);
 }
 
 #endif

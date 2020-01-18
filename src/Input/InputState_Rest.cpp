@@ -33,11 +33,11 @@ void InputState_Rest::onWheelScroll(float dl) {
 void InputState_Rest::onKeyDown(SDL_Scancode key) {
 	if (DisplayInfos::KeyIsDown(SDL_SCANCODE_LCTRL)) {
 		if (key == SDL_SCANCODE_E) {
-			std::string filepath = FileBrowser::GetImageFileSave();
+			std::string filepath = FileBrowser::GetFileSave(FileFilter::Image);
 			spdlog::info("Saving file '{}'", filepath);
 		}
 		else if (key == SDL_SCANCODE_I) {
-			std::string filepath = FileBrowser::GetImageFileOpen();
+			std::string filepath = FileBrowser::GetFileOpen(FileFilter::Image);
 			spdlog::info("Importing file '{}'", filepath);
 		}
 	}

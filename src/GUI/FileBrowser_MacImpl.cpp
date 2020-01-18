@@ -12,17 +12,17 @@ void FileBrowser::ShutDown(
 	spdlog::warn("Sorry, file explorer not implemented for Mac yet ! ");
 }
 
-std::string FileBrowser::GetFileOpen(const char* filter) {
+std::string FileBrowser::GetFileOpen(FileFilter filter) {
 	spdlog::warn("Sorry, file explorer not implemented for Mac yet ! ");
 	return "";
 }
 
-std::string FileBrowser::GetFileSave(const char* filter) {
+std::string FileBrowser::GetFileSave(FileFilter filter) {
 	spdlog::warn("Sorry, file explorer not implemented for Mac yet ! ");
 	return "";
 }
 
-std::string FileBrowser::GetFolder(const char* filter) {
+std::string FileBrowser::GetFolder() {
 	spdlog::warn("Sorry, file explorer not implemented for Mac yet ! ");
 	return "";
 }

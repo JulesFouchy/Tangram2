@@ -5,61 +5,99 @@
 // https://docs.microsoft.com/en-us/previous-versions/windows/desktop/legacy/bb776913%28v=vs.85%29
 
 #include "FileBrowser.hpp"
-
 #include <atlstr.h> // includes CW2A to convert LPCWSTR to std::string
-
 #include "Debugging/Log.hpp"
 
-IFileDialog* FileBrowser::m_fileOpenImageDialog;
-IFileDialog* FileBrowser::m_fileSaveImageDialog;
-IFileDialog* FileBrowser::m_folderDialog;
 
 void FileBrowser::Initialize() {
-	// Init COM
 	HRESULT hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);
 	if (FAILED(hr))
 		spdlog::error("[FileBrowser::Initialize] failed");
-	// Create dialog instances
-	COMDLG_FILTERSPEC imageFilter[] =
-	{
-		{ L"PNG", L"*.png" },
-		{ L"JPEG", L"*.jpg;*.jpeg" },
-	};
-		// Open Image File
-	hr = CoCreateInstance(CLSID_FileOpenDialog, NULL, CLSCTX_ALL, IID_IFileOpenDialog, reinterpret_cast<void**>(&m_fileOpenImageDialog));
-	if (FAILED(hr)) spdlog::error("[FileBrowser::Initialize] failed to initialize FileOpenDialog");
-	m_fileOpenImageDialog->SetFileTypes(_countof(imageFilter), imageFilter);
-		// Save Image File
-	hr = CoCreateInstance(CLSID_FileSaveDialog, NULL, CLSCTX_ALL, IID_IFileSaveDialog, reinterpret_cast<void**>(&m_fileSaveImageDialog));
-	if (FAILED(hr)) spdlog::error("[FileBrowser::Initialize] failed to initialize FileSaveDialog");
-	m_fileSaveImageDialog->SetFileTypes(_countof(imageFilter), imageFilter);
-	m_fileSaveImageDialog->SetDefaultExtension(L"ifYouSeeThisSometingWentWrong");
-		// Folder
-	hr = CoCreateInstance(CLSID_FileOpenDialog, NULL, CLSCTX_ALL, IID_IFileOpenDialog, reinterpret_cast<void**>(&m_folderDialog));
-	if (FAILED(hr)) spdlog::error("[FileBrowser::Initialize] failed to initialize FolderDialog");
-	AddOptions(m_folderDialog, FOS_PICKFOLDERS);
 }
 
 void FileBrowser::ShutDown() {
-	m_folderDialog->Release();
-	m_fileSaveImageDialog->Release();
-	m_fileOpenImageDialog->Release();
 	CoUninitialize();
 }
 
-std::string FileBrowser::GetImageFileOpen() {
-	return ShowAndGetPath(m_fileOpenImageDialog);
+static std::string WinFileBrowser_ShowAndGetPath(IFileDialog* dialog);
+static void WinFileBrowser_AddOptions(IFileDialog* dialog, FILEOPENDIALOGOPTIONS complementaryOptions);
+static void WinFileBrowser_RemoveOptions(IFileDialog* dialog, FILEOPENDIALOGOPTIONS options);
+
+std::string FileBrowser::GetFileOpen(FileFilter filter) {
+	std::string res = "";
+	// Create Open File dialog
+	IFileDialog* dialog;
+	HRESULT hr = CoCreateInstance(CLSID_FileOpenDialog, NULL, CLSCTX_ALL, IID_IFileOpenDialog, reinterpret_cast<void**>(&dialog));
+	if (FAILED(hr)) 
+		spdlog::error("[FileBrowser::GetFileOpen] failed");
+	else {
+	// Add filter
+		switch (filter)
+		{
+		case FileFilter::None:
+			break;
+		case FileFilter::Image:
+			COMDLG_FILTERSPEC imageOpenFilter[] =
+			{
+				{ L"Image", L"*.png;*.jpg;*.jpeg" },
+				{ L"PNG", L"*.png" },
+				{ L"JPEG", L"*.jpg;*.jpeg" },
+			};
+			dialog->SetFileTypes(_countof(imageOpenFilter), imageOpenFilter);
+			break;
+		}
+	// Show browser
+		res = WinFileBrowser_ShowAndGetPath(dialog);
+	}
+	return res;
 }
 
-std::string FileBrowser::GetImageFileSave() {
-	return ShowAndGetPath(m_fileSaveImageDialog);
+std::string FileBrowser::GetFileSave(FileFilter filter) {
+	std::string res = "";
+	// Create Save File dialog
+	IFileDialog* dialog;
+	HRESULT hr = CoCreateInstance(CLSID_FileSaveDialog, NULL, CLSCTX_ALL, IID_IFileSaveDialog, reinterpret_cast<void**>(&dialog));
+	if (FAILED(hr))
+		spdlog::error("[FileBrowser::GetFileSave] failed");
+	else {
+	// Add filter
+		switch (filter)
+		{
+		case FileFilter::None:
+			break;
+		case FileFilter::Image:
+			COMDLG_FILTERSPEC imageSaveFilter[] =
+			{
+				{ L"PNG", L"*.png" },
+				{ L"JPEG", L"*.jpg;*.jpeg" },
+			};
+			dialog->SetFileTypes(_countof(imageSaveFilter), imageSaveFilter);
+			break;
+		}
+	// Enable auto fill of extension
+	dialog->SetDefaultExtension(L"ifYouSeeThisSometingWentWrongInFileBrowserGetFileSave");
+	// Show browser
+		res = WinFileBrowser_ShowAndGetPath(dialog);
+	}
+	return res;
 }
 
 std::string FileBrowser::GetFolder() {
-	return ShowAndGetPath(m_folderDialog);
+	std::string res = "";
+	// Create Browser dialog
+	IFileDialog* dialog;
+	HRESULT hr = CoCreateInstance(CLSID_FileOpenDialog, NULL, CLSCTX_ALL, IID_IFileOpenDialog, reinterpret_cast<void**>(&dialog));
+	if (FAILED(hr))
+		spdlog::error("[FileBrowser::GetFolder] failed");
+	else {
+		WinFileBrowser_AddOptions(dialog, FOS_PICKFOLDERS);
+	// Show browser
+		res = WinFileBrowser_ShowAndGetPath(dialog);
+	}
+	return res;
 }
 
-std::string FileBrowser::ShowAndGetPath(IFileDialog* dialog) {
+static std::string WinFileBrowser_ShowAndGetPath(IFileDialog* dialog) {
 	std::string res = "";
 	HRESULT hr = dialog->Show(NULL);
 
@@ -88,13 +126,13 @@ std::string FileBrowser::ShowAndGetPath(IFileDialog* dialog) {
 	return res;
 }
 
-void FileBrowser::AddOptions(IFileDialog* dialog, FILEOPENDIALOGOPTIONS complementaryOptions) {
+static void WinFileBrowser_AddOptions(IFileDialog* dialog, FILEOPENDIALOGOPTIONS complementaryOptions) {
 	FILEOPENDIALOGOPTIONS currOptions;
 	dialog->GetOptions(&currOptions);
 	dialog->SetOptions(complementaryOptions | currOptions);
 }
 
-void FileBrowser::RemoveOptions(IFileDialog* dialog, FILEOPENDIALOGOPTIONS options) {
+static void WinFileBrowser_RemoveOptions(IFileDialog* dialog, FILEOPENDIALOGOPTIONS options) {
 	FILEOPENDIALOGOPTIONS currOptions;
 	dialog->GetOptions(&currOptions);
 	dialog->SetOptions((~options) & currOptions);

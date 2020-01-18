@@ -4,12 +4,26 @@
 
 #include "Debugging/Log.hpp"
 
-std::string FileBrowser::openfilename(const char* filter) {
+
+void FileBrowser::Initialize(
+	spdlog::warn("Sorry, file explorer not implemented for Linux yet ! ");
+}
+
+void FileBrowser::ShutDown(
+	spdlog::warn("Sorry, file explorer not implemented for Linux yet ! ");
+}
+
+std::string FileBrowser::GetFileOpen(const char* filter) {
 	spdlog::warn("Sorry, file explorer not implemented for Linux yet ! ");
 	return "";
 }
 
-std::string FileBrowser::savefilename(const char* filter) {
+std::string FileBrowser::GetFileSave(const char* filter) {
+	spdlog::warn("Sorry, file explorer not implemented for Linux yet ! ");
+	return "";
+}
+
+std::string FileBrowser::GetFolder(const char* filter) {
 	spdlog::warn("Sorry, file explorer not implemented for Linux yet ! ");
 	return "";
 }

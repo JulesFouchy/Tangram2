@@ -6,6 +6,8 @@
 
 #include "Helper/DisplayInfos.hpp"
 
+#include "GUI/FileBrowser.hpp"
+
 #include "Debugging/Log.hpp"
 
 #include <SDL2/SDL.h>
@@ -79,11 +81,14 @@ void App::handleEvents() {
 				}
 				if (DisplayInfos::KeyIsDown(SDL_SCANCODE_LCTRL)) {
 					if (e.key.keysym.scancode == SDL_SCANCODE_S) {
-						activeInstance().saveProject("C:/Dev/Tangram2/test");
+						FileBrowser::GetFileOpen();
+						//std::string folderPath = FileBrowser::GetFolder();
+						//activeInstance().saveProject(folderPath);
 						bHandled = true;
 					}
 					else if (e.key.keysym.scancode == SDL_SCANCODE_O) {
-						addInstance("C:/Dev/Tangram2/test");
+						std::string folderPath = FileBrowser::GetFolder();
+						addInstance(folderPath);
 						bHandled = true;
 					}
 				}

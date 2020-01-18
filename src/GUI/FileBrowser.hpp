@@ -3,6 +3,9 @@
 #include <string>
 
 namespace FileBrowser {
-	std::string openfilename(const char* filter = "All Files (*.*)\0*.*\0"); // Returns an empty string if dialog is canceled
-	std::string savefilename(const char* filter = "All Files (*.*)\0*.*\0"); // Returns an empty string if dialog is canceled
+	void Initialize();
+	void ShutDown();
+	std::string GetFileOpen(const char* filter = "All Files (*.*)\0*.*\0"); // Returns an empty string if dialog is canceled
+	std::string GetFileSave(const char* filter = "All Files (*.*)\0*.*\0"); // Returns an empty string if dialog is canceled
+	std::string GetFolder(); // Returns an empty string if dialog is canceled
 }

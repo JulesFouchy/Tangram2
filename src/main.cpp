@@ -10,6 +10,7 @@
 
 #include "Render/RenderSystem.hpp"
 #include "Helper/DisplayInfos.hpp"
+#include "GUI/FileBrowser.hpp"
 
 #include <SDL2/SDL.h>
 #include <glad/glad.h>
@@ -108,6 +109,7 @@ int main(int argc, char *argv[]) {
 		App::Initialize(window);
 		RenderSystem::Initialize();
 		DisplayInfos::Initialize();
+		FileBrowser::Initialize();
 
 		// ------ Actual App
 
@@ -116,6 +118,7 @@ int main(int argc, char *argv[]) {
 		}
 
 		// ------ Shutdown
+		FileBrowser::ShutDown();
 		RenderSystem::ShutDown();
 		App::ShutDown();
 		ImGui_ImplOpenGL3_Shutdown();

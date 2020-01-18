@@ -1,6 +1,8 @@
 #ifdef _WIN32
 
 //Big thanks to https://docs.microsoft.com/en-us/windows/win32/learnwin32/example--the-open-dialog-box
+// https://www.codeproject.com/articles/16678/vista-goodies-in-c-using-the-new-vista-file-dialog
+// https://docs.microsoft.com/en-us/previous-versions/windows/desktop/legacy/bb776913%28v=vs.85%29
 
 #include "FileBrowser.hpp"
 
@@ -8,7 +10,7 @@
 #include <Commdlg.h>
 #include <shlobj.h>
 #include <shobjidl_core.h>
-#include <atlstr.h>
+#include <atlstr.h> // includes CW2A to convert LPCWSTR to std::string
 
 #include "Debugging/Log.hpp"
 #include <iostream>
@@ -24,11 +26,18 @@ void FileBrowser::ShutDown() {
 }
 
 std::string FileBrowser::GetFileOpen(const char* filter) {
+	COMDLG_FILTERSPEC rgSpec[] =
+	{
+		{ L"JPEG", L"*.jpg;*.jpeg" },
+		{ L"PDF", L"*.p" },
+		{ L"All Files", L"*.*" },
+	};
 	std::string res = "";
 	IFileOpenDialog* pFileOpen;
 	HRESULT hr = CoCreateInstance(CLSID_FileOpenDialog, NULL, CLSCTX_ALL, IID_IFileOpenDialog, reinterpret_cast<void**>(&pFileOpen));
 
 	if (SUCCEEDED(hr)) {
+		pFileOpen->SetFileTypes(3, rgSpec);
 		hr = pFileOpen->Show(NULL);
 
 		if (SUCCEEDED(hr)) {
@@ -58,51 +67,89 @@ std::string FileBrowser::GetFileOpen(const char* filter) {
 	return res;
 }
 
-std::string FileBrowser::GetFolder()
-{
-	TCHAR path[MAX_PATH];
-	BROWSEINFO bi = { 0 };
-	bi.lpszTitle = ("All Folders Automatically Recursed.");
-	bi.ulFlags = BIF_RETURNONLYFSDIRS | BIF_NEWDIALOGSTYLE;
-	bi.lParam = (LPARAM)"C:/Dev/Tangram2";
-	LPITEMIDLIST pidl = SHBrowseForFolder(&bi);
-
-	if (pidl != 0)
+std::string FileBrowser::GetFileSave(const char* filter) {
+	COMDLG_FILTERSPEC rgSpec[] =
 	{
-		// get the name of the folder and put it in path
-		SHGetPathFromIDList(pidl, path);
+		{ L"JPEG", L"*.jpg;*.jpeg" },
+		{ L"PDF", L"*.p" },
+		{ L"All Files", L"*.*" },
+	};
+	std::string res = "";
+	IFileSaveDialog* pFileOpen;
+	HRESULT hr = CoCreateInstance(CLSID_FileSaveDialog, NULL, CLSCTX_ALL, IID_IFileSaveDialog, reinterpret_cast<void**>(&pFileOpen));
 
-		//Set the current directory to path
-		//SetCurrentDirectory(path);
+	if (SUCCEEDED(hr)) {
+		pFileOpen->SetFileTypes(3, rgSpec);
+		pFileOpen->SetDefaultExtension(L"ifYouSeeThisSometingWentWrong");
+		hr = pFileOpen->Show(NULL);
 
-		// free memory used
-		IMalloc* imalloc = 0;
-		if (SUCCEEDED(SHGetMalloc(&imalloc)))
-		{
-			imalloc->Free(pidl);
-			imalloc->Release();
+		if (SUCCEEDED(hr)) {
+			IShellItem* pItem;
+			hr = pFileOpen->GetResult(&pItem);
+			if (SUCCEEDED(hr))
+			{
+				PWSTR pszFilePath;
+				hr = pItem->GetDisplayName(SIGDN_FILESYSPATH, &pszFilePath);
+
+				if (SUCCEEDED(hr))
+				{
+					res = CW2A(pszFilePath);
+					CoTaskMemFree(pszFilePath);
+				}
+				pItem->Release();
+			}
+			else {
+				spdlog::error("[FileBrowser::GetFileOpen] failed1");
+			}
 		}
-		return path;
+		pFileOpen->Release();
 	}
-	return "";
+	else {
+		spdlog::error("[FileBrowser::GetFileOpen] failed0");
+	}
+	spdlog::info("'{}'", res);
+	return res;
 }
 
-std::string FileBrowser::GetFileSave(const char* filter) {
-	HWND owner = NULL;
-	OPENFILENAME ofn;
-	char fileName[MAX_PATH] = "";
-	ZeroMemory(&ofn, sizeof(ofn));
-	ofn.lStructSize = sizeof(OPENFILENAME);
-	ofn.hwndOwner = owner;
-	ofn.lpstrFilter = filter;
-	ofn.lpstrFile = fileName;
-	ofn.nMaxFile = MAX_PATH;
-	ofn.Flags = OFN_EXPLORER | OFN_FILEMUSTEXIST | OFN_HIDEREADONLY;
-	ofn.lpstrDefExt = "";
-	std::string fileNameStr;
-	if (GetSaveFileNameA(&ofn))
-		fileNameStr = fileName;
-	return fileNameStr;
+
+
+std::string FileBrowser::GetFolder()
+{
+	std::string res = "";
+	IFileOpenDialog* pFileOpen;
+	HRESULT hr = CoCreateInstance(CLSID_FileOpenDialog, NULL, CLSCTX_ALL, IID_IFileOpenDialog, reinterpret_cast<void**>(&pFileOpen));
+
+	if (SUCCEEDED(hr)) {
+		FILEOPENDIALOGOPTIONS currOptions;
+		pFileOpen->GetOptions(&currOptions);
+		pFileOpen->SetOptions(FOS_PICKFOLDERS | currOptions);
+		hr = pFileOpen->Show(NULL);
+
+		if (SUCCEEDED(hr)) {
+			IShellItem* pItem;
+			hr = pFileOpen->GetResult(&pItem);
+			if (SUCCEEDED(hr))
+			{
+				PWSTR pszFilePath;
+				hr = pItem->GetDisplayName(SIGDN_FILESYSPATH, &pszFilePath);
+
+				if (SUCCEEDED(hr))
+				{
+					res = CW2A(pszFilePath);
+					CoTaskMemFree(pszFilePath);
+				}
+				pItem->Release();
+			}
+			else {
+				spdlog::error("[FileBrowser::GetFileOpen] failed1");
+			}
+		}
+		pFileOpen->Release();
+	}
+	else {
+		spdlog::error("[FileBrowser::GetFileOpen] failed0");
+	}
+	return res;
 }
 
 #endif

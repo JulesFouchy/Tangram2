@@ -81,7 +81,7 @@ void App::handleEvents() {
 				}
 				if (DisplayInfos::KeyIsDown(SDL_SCANCODE_LCTRL)) {
 					if (e.key.keysym.scancode == SDL_SCANCODE_S) {
-						FileBrowser::GetFileOpen();
+						FileBrowser::GetFolder();
 						//std::string folderPath = FileBrowser::GetFolder();
 						//activeInstance().saveProject(folderPath);
 						bHandled = true;

@@ -95,6 +95,10 @@ void App::handleEvents() {
 							addInstance(folderPath);
 						bHandled = true;
 					}
+					else if (e.key.keysym.scancode == SDL_SCANCODE_N) {
+						addInstance();
+						bHandled = true;
+					}
 				}
 			}
 			break;

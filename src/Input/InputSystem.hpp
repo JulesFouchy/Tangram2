@@ -10,6 +10,7 @@ class InputSystem : public ISystem {
 friend class IInputState;
 friend class InputState_Rest;
 friend class InputState_Translate;
+//template <typename T>
 friend class _InputState_GUI;
 friend class Window_SaveProject;
 public:

@@ -1,6 +1,7 @@
 #include "InputState_Rest.hpp"
 #include "InputState_Translate.hpp"
-#include "InputState_SaveProject.hpp"
+#include "_InputState_GUI.hpp"
+#include "Window_SaveProject.hpp"
 
 #include "Instance.hpp"
 #include "Helper/DisplayInfos.hpp"
@@ -44,7 +45,7 @@ void InputState_Rest::onKeyDown(SDL_Scancode key) {
 			spdlog::info("Importing file '{}'", filepath);
 		}
 		else if (key == SDL_SCANCODE_S) {
-			m_inputSystem->setState<InputState_SaveProject>();
+			m_inputSystem->setState<_InputState_GUI>();
 		}
 	}
 }

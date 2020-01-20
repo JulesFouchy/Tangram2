@@ -1,12 +1,11 @@
 #include "Window_SaveProject.hpp"
 
+#include "Instance.hpp"
+
+#include "Helper/File.hpp"
+
 #include <imgui/imgui.h>
 #include "imgui/misc/cpp/imgui_stdlib.h"
-
-#include "InputSystem.hpp"
-#include "InputState_Rest.hpp"
-#include "Instance.hpp"
-#include "Helper/File.hpp"
 
 #include "Debugging/Log.hpp"
 
@@ -37,12 +36,12 @@ void Window_SaveProject::OnConfirmation() {
 	if (!MyFile::Exists(projectPath))
 		std::filesystem::create_directory(projectPath);
 	I.saveProject(projectPath);
-	//m_inputSystem->setState<InputState_Rest>();
 }
 
 bool Window_SaveProject::WarnIf() {
 	return MyFile::Exists(projectFullPath());
 }
+
 std::string Window_SaveProject::WarningMessage() {
 	return "This project already exists and will be overwritten :\n" + projectFullPath();
 }

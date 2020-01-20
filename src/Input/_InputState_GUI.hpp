@@ -22,10 +22,8 @@ public:
 	~_InputState_GUI() = default;
 
 	void _InputState_GUI::update() override {
-		if (!m_window.IsOpen()) // user closed window. Don't apply "onConfirmation()"
-		{
+		if (!m_window.IsOpen())
 			m_inputSystem->setState<InputState_Rest>();
-		}
 		else
 			m_window.Show_IfOpen();
 	}

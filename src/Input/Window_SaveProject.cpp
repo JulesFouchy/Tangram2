@@ -37,7 +37,7 @@ void Window_SaveProject::OnConfirmation() {
 	if (!MyFile::Exists(projectPath))
 		std::filesystem::create_directory(projectPath);
 	m_inputSystem->I.saveProject(projectPath);
-	m_inputSystem->setState<InputState_Rest>();
+	//m_inputSystem->setState<InputState_Rest>();
 }
 
 bool Window_SaveProject::WarnIf() {

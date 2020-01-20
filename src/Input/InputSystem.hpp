@@ -11,7 +11,7 @@ friend class IInputState;
 friend class InputState_Rest;
 friend class InputState_Translate;
 friend class InputState_GUI;
-friend class Window_SaveProject;
+friend class Window_SaveAsProject;
 public:
 	InputSystem(Instance& instance);
 	~InputSystem() = default;

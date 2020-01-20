@@ -10,14 +10,14 @@
 #include "Debugging/Log.hpp"
 
 
-Window_SaveProject::Window_SaveProject(Instance& instance)
-	: PopupWindow_WithConfirmationWarning("Saving project"), I(instance),
+Window_SaveAsProject::Window_SaveAsProject(Instance& instance)
+	: PopupWindow_WithConfirmationWarning("Saving project as"), I(instance),
 	  m_folderpathPicker(FileFilter::None), m_projectName(instance.inputSystem().I.m_projectName)
 {
 	m_folderpathPicker.setFilepath(I.m_projectLocation);
 }
 
-void Window_SaveProject::Show() {
+void Window_SaveAsProject::Show() {
 	BeginWindow();
 	ImGui::InputText("Name", &m_projectName);
 	m_folderpathPicker.ShowFolderBrowser();
@@ -31,21 +31,21 @@ void Window_SaveProject::Show() {
 	EndWindow();
 }
 
-void Window_SaveProject::OnConfirmation() {
+void Window_SaveAsProject::OnConfirmation() {
 	std::string projectPath = projectFullPath();
 	if (!MyFile::Exists(projectPath))
 		std::filesystem::create_directory(projectPath);
 	I.saveProject(projectPath);
 }
 
-bool Window_SaveProject::WarnIf() {
-	return MyFile::Exists(projectFullPath());
+bool Window_SaveAsProject::WarnIf() {
+	return MyFile::Exists(projectFullPath()) && projectFullPath().compare(I.getProjectPath());
 }
 
-std::string Window_SaveProject::WarningMessage() {
+std::string Window_SaveAsProject::WarningMessage() {
 	return "This project already exists and will be overwritten :\n" + projectFullPath();
 }
 
-std::string Window_SaveProject::projectFullPath() {
+std::string Window_SaveAsProject::projectFullPath() {
 	return m_folderpathPicker.getFilepath() + "/" + (m_projectName.empty() ? "UntitledProject" : m_projectName);
 }

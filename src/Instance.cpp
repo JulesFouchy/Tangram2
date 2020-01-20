@@ -25,7 +25,7 @@ Instance::Instance()
 	  m_inputSystem(*this),
 	  m_layersManager(*this),
 	  m_projectLocation(MyFile::RootDir),
-	  m_projectName("MyTangramProject")
+	  m_projectName("")
 {
 	createDrawingBoard();
 	
@@ -84,6 +84,11 @@ glm::mat3 Instance::getParentModelMatrix(entt::entity id) {
 		return getParentModelMatrix(parent->id) * registry().get<Cmp::TransformMatrix>(parent->id).val;
 	else
 		return glm::mat3(1.0f);
+}
+
+
+std::string Instance::getProjectPath() {
+	return m_projectLocation + "/" + (m_projectName.empty() ? "UntitledProject" : m_projectName);
 }
 
 void Instance::onEvent(const SDL_Event& e) {

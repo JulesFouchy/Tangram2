@@ -5,10 +5,10 @@
 
 class Instance;
 
-class Window_SaveProject : public PopupWindow_WithConfirmationWarning {
+class Window_SaveAsProject : public PopupWindow_WithConfirmationWarning {
 public:
-	Window_SaveProject(Instance& instance);
-	~Window_SaveProject() = default;
+	Window_SaveAsProject(Instance& instance);
+	~Window_SaveAsProject() = default;
 
 	void Show() override;
 protected:

@@ -5,6 +5,7 @@
 
 #include "Instance.hpp"
 #include "Helper/DisplayInfos.hpp"
+#include "Helper/File.hpp"
 
 #include "Components/TransformMatrix.hpp"
 #include <glm/gtx/matrix_transform_2d.hpp>
@@ -43,7 +44,10 @@ void InputState_Rest::onKeyDown(SDL_Scancode key) {
 			spdlog::info("Importing file '{}'", filepath);
 		}
 		else if (key == SDL_SCANCODE_S) {
-			I.inputSystem().setGUIState<Window_SaveProject>();
+			if (!MyFile::Exists(I.getProjectPath()) || DisplayInfos::KeyIsDown(SDL_SCANCODE_LSHIFT))
+				I.inputSystem().setGUIState<Window_SaveAsProject>();
+			else
+				I.saveProject(I.getProjectPath());
 		}
 	}
 }

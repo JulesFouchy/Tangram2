@@ -8,6 +8,7 @@
 
 #include "Helper/DisplayInfos.hpp"
 #include "Helper/String.hpp"
+#include "Helper/File.hpp"
 
 #include <SDL2/SDL.h>
 #include <glad/glad.h>
@@ -23,8 +24,8 @@ Instance::Instance()
 	  m_renderSystem(*this),
 	  m_inputSystem(*this),
 	  m_layersManager(*this),
-	  m_projectLocation(""),
-	  m_projectName("")
+	  m_projectLocation(MyFile::RootDir),
+	  m_projectName("MyTangramProject")
 {
 	createDrawingBoard();
 	

@@ -8,7 +8,7 @@ class Instance;
 class IInputState {
 public:
 	IInputState(InputSystem* inputSystem);
-	~IInputState() = default;
+	virtual ~IInputState() = default;
 
 	virtual void update() {}
 

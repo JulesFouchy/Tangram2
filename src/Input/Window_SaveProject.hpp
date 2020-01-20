@@ -17,7 +17,10 @@ protected:
 	std::string WarningMessage() override;
 
 private:
+	std::string projectFullPath();
+
+private:
 	InputSystem* m_inputSystem;
-	GUIwidget_FilepathPicker m_filepathPicker;
+	GUIwidget_FilepathPicker m_folderpathPicker;
 	std::string m_projectName;
 };

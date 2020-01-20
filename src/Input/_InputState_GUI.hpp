@@ -6,6 +6,8 @@
 #include "GUI/PopupWindow/_PopupWindow.hpp"
 #include "Window_SaveProject.hpp"
 
+#include "Debugging/Log.hpp"
+
 #include <memory>
 
 typedef Window_SaveProject WindowType;
@@ -15,9 +17,12 @@ public:
 	_InputState_GUI::_InputState_GUI(InputSystem* inputSystem)
 		: IInputState(inputSystem), m_window(inputSystem)
 	{
+		spdlog::info("GUI in");
 		m_window.Open();
 	}
-	~_InputState_GUI() = default;
+	~_InputState_GUI() {
+		spdlog::info("GUI out");
+	}
 
 	void _InputState_GUI::update() override {
 		if (!m_window.IsOpen()) // user closed window. Don't apply "onConfirmation()"
@@ -25,7 +30,7 @@ public:
 			m_inputSystem->setState<InputState_Rest>();
 		}
 		else
-			m_window.Show();
+			m_window.Show_IfOpen();
 	}
 
 protected:

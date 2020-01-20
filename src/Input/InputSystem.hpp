@@ -10,7 +10,7 @@ class InputSystem : public ISystem {
 friend class IInputState;
 friend class InputState_Rest;
 friend class InputState_Translate;
-friend class _InputState_GUI;
+friend class InputState_GUI;
 friend class Window_SaveProject;
 public:
 	InputSystem(Instance& instance);
@@ -30,7 +30,7 @@ private:
 	template <typename State>
 	inline void setState() { m_currentState = std::make_unique<State>(I); }
 	template <typename WindowType>
-	inline void setGUIState() { m_currentState = std::make_unique<_InputState_GUI>(I, [](Instance& instance) { return std::make_unique<WindowType>(instance); });}
+	inline void setGUIState() { m_currentState = std::make_unique<InputState_GUI>(I, [](Instance& instance) { return std::make_unique<WindowType>(instance); });}
 
 private:
 	std::unique_ptr<IInputState> m_currentState;

@@ -1,6 +1,6 @@
 #include "InputState_Rest.hpp"
 #include "InputState_Translate.hpp"
-#include "_InputState_GUI.hpp"
+#include "InputState_GUI.hpp"
 #include "Window_SaveProject.hpp"
 
 #include "Instance.hpp"

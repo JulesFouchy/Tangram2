@@ -1,5 +1,6 @@
 #include "InputState_Rest.hpp"
 #include "InputState_Translate.hpp"
+#include "InputState_SaveProject.hpp"
 
 #include "Instance.hpp"
 #include "Helper/DisplayInfos.hpp"
@@ -13,7 +14,9 @@
 
 InputState_Rest::InputState_Rest(InputSystem* inputSystem)
 	: IInputState(inputSystem)
-{}
+{
+	spdlog::info("rest");
+}
 
 void InputState_Rest::onLeftClicDown() {
 	if (DisplayInfos::KeyIsDown(SDL_SCANCODE_SPACE))
@@ -39,6 +42,9 @@ void InputState_Rest::onKeyDown(SDL_Scancode key) {
 		else if (key == SDL_SCANCODE_I) {
 			std::string filepath = FileBrowser::GetFileOpen(FileFilter::Image);
 			spdlog::info("Importing file '{}'", filepath);
+		}
+		else if (key == SDL_SCANCODE_S) {
+			m_inputSystem->setState<InputState_SaveProject>();
 		}
 	}
 }

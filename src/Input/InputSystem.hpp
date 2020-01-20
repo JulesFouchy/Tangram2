@@ -10,6 +10,8 @@ class InputSystem : public ISystem {
 friend class IInputState;
 friend class InputState_Rest;
 friend class InputState_Translate;
+friend class _InputState_GUI;
+friend class Window_SaveProject;
 public:
 	InputSystem(Instance& instance);
 	~InputSystem() = default;

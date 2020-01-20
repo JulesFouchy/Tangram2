@@ -30,6 +30,7 @@ friend class App;
 	void onEvent(const SDL_Event& e);
 	void createDrawingBoard();
 	void onWindowResize() {};
+friend class Window_SaveProject;
 	void saveProject(const std::string& folderpath);
 	void openProject(const std::string& folderpath);
 

@@ -13,17 +13,17 @@
 #include "Debugging/Log.hpp"
 
 
-InputState_Rest::InputState_Rest(InputSystem* inputSystem)
-	: IInputState(inputSystem)
+InputState_Rest::InputState_Rest(Instance& instance)
+	: IInputState(instance)
 {}
 
 void InputState_Rest::onLeftClicDown() {
 	if (DisplayInfos::KeyIsDown(SDL_SCANCODE_SPACE))
-		m_inputSystem->m_currentState = std::make_unique<InputState_Translate>(m_inputSystem, I.drawingBoardId());
+		I.inputSystem().m_currentState = std::make_unique<InputState_Translate>(I, I.drawingBoardId());
 	else {
 		entt::entity hoveredLayer = I.layersManager().layerHoveredByMouse();
 		if (I.registry().valid(hoveredLayer))
-			m_inputSystem->m_currentState = std::make_unique<InputState_Translate>(m_inputSystem, hoveredLayer);
+			I.inputSystem().m_currentState = std::make_unique<InputState_Translate>(I, hoveredLayer);
 	}
 }
 
@@ -43,7 +43,7 @@ void InputState_Rest::onKeyDown(SDL_Scancode key) {
 			spdlog::info("Importing file '{}'", filepath);
 		}
 		else if (key == SDL_SCANCODE_S) {
-			m_inputSystem->setGUIState<Window_SaveProject>();
+			I.inputSystem().setGUIState<Window_SaveProject>();
 		}
 	}
 }

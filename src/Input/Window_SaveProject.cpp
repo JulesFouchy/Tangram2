@@ -11,11 +11,11 @@
 #include "Debugging/Log.hpp"
 
 
-Window_SaveProject::Window_SaveProject(InputSystem* inputSystem)
-	: PopupWindow_WithConfirmationWarning("Saving project"), m_inputSystem(inputSystem),
-	  m_folderpathPicker(FileFilter::None), m_projectName(inputSystem->I.m_projectName)
+Window_SaveProject::Window_SaveProject(Instance& instance)
+	: PopupWindow_WithConfirmationWarning("Saving project"), I(instance),
+	  m_folderpathPicker(FileFilter::None), m_projectName(instance.inputSystem().I.m_projectName)
 {
-	m_folderpathPicker.setFilepath(inputSystem->I.m_projectLocation);
+	m_folderpathPicker.setFilepath(I.m_projectLocation);
 }
 
 void Window_SaveProject::Show() {
@@ -36,7 +36,7 @@ void Window_SaveProject::OnConfirmation() {
 	std::string projectPath = projectFullPath();
 	if (!MyFile::Exists(projectPath))
 		std::filesystem::create_directory(projectPath);
-	m_inputSystem->I.saveProject(projectPath);
+	I.saveProject(projectPath);
 	//m_inputSystem->setState<InputState_Rest>();
 }
 

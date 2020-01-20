@@ -1,7 +1,7 @@
 #include "IInputState.hpp"
 
-#include "InputSystem.hpp"
+#include "Instance.hpp"
 
-IInputState::IInputState(InputSystem* inputSystem)
-	: m_inputSystem(inputSystem), I(inputSystem->I)
+IInputState::IInputState(Instance& instance)
+	: I(instance)
 {}

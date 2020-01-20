@@ -3,11 +3,11 @@
 #include "GUI/PopupWindow/_PopupWindow_WithConfirmationWarning.hpp"
 #include "GUI/Widget/FilepathPicker.hpp"
 
-class InputSystem;
+class Instance;
 
 class Window_SaveProject : public PopupWindow_WithConfirmationWarning {
 public:
-	Window_SaveProject(InputSystem* inputSystem);
+	Window_SaveProject(Instance& instance);
 	~Window_SaveProject() = default;
 
 	void Show() override;
@@ -20,7 +20,7 @@ private:
 	std::string projectFullPath();
 
 private:
-	InputSystem* m_inputSystem;
+	Instance& I;
 	GUIwidget_FilepathPicker m_folderpathPicker;
 	std::string m_projectName;
 };

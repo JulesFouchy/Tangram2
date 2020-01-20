@@ -4,7 +4,7 @@
 
 class InputState_Rest : public IInputState {
 public:
-	InputState_Rest(InputSystem* inputSystem);
+	InputState_Rest(Instance& instance);
 	~InputState_Rest() = default;
 
 	void onLeftClicDown() override;

@@ -10,15 +10,15 @@
 #include "Debugging/Log.hpp"
 
 
-InputState_Translate::InputState_Translate(InputSystem* inputSystem, entt::entity targetID)
-	: IInputState(inputSystem),
+InputState_Translate::InputState_Translate(Instance& instance, entt::entity targetID)
+	: IInputState(instance),
 	  m_targetID(targetID),
 	  m_mouseInitialPosInScreen(DisplayInfos::MousePositionInScreen()),
 	  m_initialMat(I.registry().get<Cmp::TransformMatrix>(targetID).val)
 {}
 
 void InputState_Translate::onLeftClicUp() {
-	m_inputSystem->setState<InputState_Rest>();
+	I.inputSystem().setState<InputState_Rest>();
 }
 
 void InputState_Translate::update() {

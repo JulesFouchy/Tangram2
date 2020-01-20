@@ -12,21 +12,23 @@
 
 #include <functional>
 
+#include "Instance.hpp"
+
 #include <memory>
 
 class _InputState_GUI : public IInputState {
 public:
-	_InputState_GUI::_InputState_GUI(InputSystem* inputSystem, std::function<std::unique_ptr<PopupWindow>(InputSystem*)> windowConstructor)
-		: IInputState(inputSystem)
+	_InputState_GUI::_InputState_GUI(Instance& instance, std::function<std::unique_ptr<PopupWindow>(Instance&)> windowConstructor)
+		: IInputState(instance)
 	{
-		m_window = windowConstructor(inputSystem);
+		m_window = windowConstructor(I);
 		m_window->Open();
 	}
 	~_InputState_GUI() = default;
 
 	void _InputState_GUI::update() override {
 		if (!m_window->IsOpen())
-			m_inputSystem->setState<InputState_Rest>();
+			I.inputSystem().setState<InputState_Rest>();
 		else
 			m_window->Show_IfOpen();
 	}

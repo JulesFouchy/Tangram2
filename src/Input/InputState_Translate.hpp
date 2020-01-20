@@ -8,7 +8,7 @@
 
 class InputState_Translate : public IInputState {
 public:
-	InputState_Translate(InputSystem* inputSystem, entt::entity targetID);
+	InputState_Translate(Instance& instance, entt::entity targetID);
 	~InputState_Translate() = default;
 
 	void onLeftClicUp() override;

@@ -28,9 +28,9 @@ public:
 
 private:
 	template <typename State>
-	inline void setState() { m_currentState = std::make_unique<State>(this); }
+	inline void setState() { m_currentState = std::make_unique<State>(I); }
 	template <typename WindowType>
-	inline void setGUIState() { m_currentState = std::make_unique<_InputState_GUI>(this, [](InputSystem* sys) { return std::make_unique<WindowType>(sys); });}
+	inline void setGUIState() { m_currentState = std::make_unique<_InputState_GUI>(I, [](Instance& instance) { return std::make_unique<WindowType>(instance); });}
 
 private:
 	std::unique_ptr<IInputState> m_currentState;

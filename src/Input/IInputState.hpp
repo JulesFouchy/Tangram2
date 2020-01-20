@@ -4,12 +4,11 @@
 
 #include "Debugging/Log.hpp"
 
-class InputSystem;
 class Instance;
 
 class IInputState {
 public:
-	IInputState(InputSystem* inputSystem);
+	IInputState(Instance& instance);
 	virtual ~IInputState() = default;
 
 	virtual void update() {}
@@ -23,6 +22,5 @@ public:
 	virtual void onWheelScroll(float dl) {}
 
 protected:
-	InputSystem* m_inputSystem;
 	Instance& I;
 };

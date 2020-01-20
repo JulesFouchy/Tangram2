@@ -45,6 +45,15 @@ Instance& App::activeInstance() {
 	return *m_activeInstanceIt;
 }
 
+void App::ImGui_InstancesWindow() {
+	ImGui::Begin("Instances");
+	for (auto it = m_instances.begin(); it != m_instances.end(); ++it) {
+		if (ImGui::Selectable(it->getProjectPath().c_str(), it == m_activeInstanceIt))
+			m_activeInstanceIt = it;
+	}
+	ImGui::End();
+}
+
 void App::onWindowResize() {
 	DisplayInfos::RefreshSize(m_window);
 	glViewport(0, 0, DisplayInfos::Width(), DisplayInfos::Height());
@@ -141,6 +150,11 @@ void App::onLoopIteration() {
 	if (m_bShowImGuiDemoWindow) // Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
 		ImGui::ShowDemoWindow(&m_bShowImGuiDemoWindow);
 #endif
+	// Main menu bar
+	ImGui::BeginMainMenuBar();
+	ImGui::EndMainMenuBar();
+	// Instances window
+	ImGui_InstancesWindow();
 	// Actual application code
 	activeInstance().onLoopIteration();
 	// Render ImGui

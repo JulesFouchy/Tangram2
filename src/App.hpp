@@ -16,6 +16,7 @@ private:
 	void addInstance(const std::string& folderpath);
 	void switchInstance();
 	Instance& activeInstance();
+	void ImGui_InstancesWindow();
 
 	void onWindowResize();
 	void switchFullScreenMode();

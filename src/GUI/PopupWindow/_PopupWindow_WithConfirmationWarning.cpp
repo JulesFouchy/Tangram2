@@ -9,8 +9,8 @@ PopupWindow_WithConfirmationWarning::PopupWindow_WithConfirmationWarning(const s
 }
 
 void PopupWindow_WithConfirmationWarning::Show_IfOpen() {
-	PopupWindow::Show_IfOpen();
 	m_warningWindow.Show_IfOpen();
+	PopupWindow::Show_IfOpen();
 }
 
 void PopupWindow_WithConfirmationWarning::Confirm(bool iReadTheWarningAndIAmStillSure) {

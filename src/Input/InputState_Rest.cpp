@@ -15,9 +15,7 @@
 
 InputState_Rest::InputState_Rest(InputSystem* inputSystem)
 	: IInputState(inputSystem)
-{
-	spdlog::info("rest");
-}
+{}
 
 void InputState_Rest::onLeftClicDown() {
 	if (DisplayInfos::KeyIsDown(SDL_SCANCODE_SPACE))

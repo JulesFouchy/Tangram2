@@ -17,12 +17,9 @@ public:
 	_InputState_GUI::_InputState_GUI(InputSystem* inputSystem)
 		: IInputState(inputSystem), m_window(inputSystem)
 	{
-		spdlog::info("GUI in");
 		m_window.Open();
 	}
-	~_InputState_GUI() {
-		spdlog::info("GUI out");
-	}
+	~_InputState_GUI() = default;
 
 	void _InputState_GUI::update() override {
 		if (!m_window.IsOpen()) // user closed window. Don't apply "onConfirmation()"

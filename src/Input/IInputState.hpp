@@ -2,6 +2,8 @@
 
 #include <SDL2/SDL_scancode.h>
 
+#include "Debugging/Log.hpp"
+
 class InputSystem;
 class Instance;
 

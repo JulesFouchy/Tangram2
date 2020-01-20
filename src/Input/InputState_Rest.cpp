@@ -43,7 +43,7 @@ void InputState_Rest::onKeyDown(SDL_Scancode key) {
 			spdlog::info("Importing file '{}'", filepath);
 		}
 		else if (key == SDL_SCANCODE_S) {
-			m_inputSystem->setState<_InputState_GUI>();
+			m_inputSystem->setGUIState<Window_SaveProject>();
 		}
 	}
 }

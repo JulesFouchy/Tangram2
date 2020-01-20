@@ -10,7 +10,6 @@ class InputSystem : public ISystem {
 friend class IInputState;
 friend class InputState_Rest;
 friend class InputState_Translate;
-//template <typename T>
 friend class _InputState_GUI;
 friend class Window_SaveProject;
 public:
@@ -28,8 +27,10 @@ public:
 	inline void onWheelScroll(float dl)     { m_currentState->onWheelScroll(dl); }
 
 private:
-	template <typename T>
-	inline void setState() { m_currentState = std::make_unique<T>(this); }
+	template <typename State>
+	inline void setState() { m_currentState = std::make_unique<State>(this); }
+	template <typename WindowType>
+	inline void setGUIState() { m_currentState = std::make_unique<_InputState_GUI>(this, [](InputSystem* sys) { return std::make_unique<WindowType>(sys); });}
 
 private:
 	std::unique_ptr<IInputState> m_currentState;

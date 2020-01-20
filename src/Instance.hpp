@@ -40,4 +40,7 @@ private:
 	InputSystem m_inputSystem;
 	LayersManager m_layersManager;
 	entt::entity m_drawingBoardId;
+
+	std::string m_projectLocation;
+	std::string m_projectName;
 };

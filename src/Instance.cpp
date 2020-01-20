@@ -7,6 +7,7 @@
 #include "glm/gtx/matrix_transform_2d.hpp"
 
 #include "Helper/DisplayInfos.hpp"
+#include "Helper/String.hpp"
 
 #include <SDL2/SDL.h>
 #include <glad/glad.h>
@@ -21,7 +22,9 @@ Instance::Instance()
 	: m_registry(),
 	  m_renderSystem(*this),
 	  m_inputSystem(*this),
-	  m_layersManager(*this)
+	  m_layersManager(*this),
+	  m_projectLocation(""),
+	  m_projectName("")
 {
 	createDrawingBoard();
 	
@@ -47,9 +50,9 @@ Instance::Instance()
 
 Instance::Instance(const std::string& projectFolderpath)
 	: m_registry(),
-	m_renderSystem(*this),
-	m_inputSystem(*this),
-	m_layersManager(*this)
+	  m_renderSystem(*this),
+	  m_inputSystem(*this),
+	  m_layersManager(*this)
 {
 	openProject(projectFolderpath);
 }
@@ -144,6 +147,9 @@ void Instance::onEvent(const SDL_Event& e) {
 }
 
 void Instance::saveProject(const std::string& folderpath) {
+	m_projectLocation = MyString::GetFolderHierarchy(folderpath);
+	m_projectName = MyString::RemoveFolderHierarchy(folderpath);
+
 	spdlog::info("Saving project to '{}'", folderpath);
 	std::ofstream registryOs(folderpath+"/reg.tng");
 	std::ofstream otherOs(folderpath + "/other.tng");
@@ -163,6 +169,9 @@ void Instance::saveProject(const std::string& folderpath) {
 }
 
 void Instance::openProject(const std::string& folderpath) {
+	m_projectLocation = MyString::GetFolderHierarchy(folderpath);
+	m_projectName = MyString::RemoveFolderHierarchy(folderpath);
+
 	spdlog::info("Opening project from '{}'", folderpath);
 	std::ifstream registryIs(folderpath + "/reg.tng");
 	std::ifstream otherIs(folderpath + "/other.tng");

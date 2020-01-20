@@ -13,8 +13,10 @@
 
 Window_SaveProject::Window_SaveProject(InputSystem* inputSystem)
 	: PopupWindow_WithConfirmationWarning("Saving project"), m_inputSystem(inputSystem),
-	  m_filepathPicker(FileFilter::None)
-{}
+	  m_filepathPicker(FileFilter::None), m_projectName(inputSystem->I.m_projectName)
+{
+	m_filepathPicker.setFilepath(inputSystem->I.m_projectLocation);
+}
 
 void Window_SaveProject::Show() {
 	BeginWindow();

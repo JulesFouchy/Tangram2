@@ -26,7 +26,7 @@ Instance::Instance()
 	  m_renderSystem(*this),
 	  m_inputSystem(*this),
 	  m_layersManager(*this),
-	  m_projectLocation(MyFile::RootDir),
+	  m_projectLocation(MyFile::RootDir+"/MyTangramProjects"),
 	  m_bUserChoseProjectName(false)
 {
 	// Project default name

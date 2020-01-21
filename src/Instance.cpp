@@ -69,7 +69,6 @@ Instance::Instance(const std::string& projectFolderpath)
 }
 
 void Instance::onLoopIteration(){
-	glClear(GL_COLOR_BUFFER_BIT);
 	renderSystem().render();
 	inputSystem().update();
 }

@@ -165,6 +165,7 @@ void App::ShutDown() {
 }
 
 void App::onLoopIteration() {
+	glClear(GL_COLOR_BUFFER_BIT);
 	// Events
 	handleEvents();
 	// Start ImGui frame

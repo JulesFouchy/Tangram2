@@ -30,10 +30,12 @@ App::App(SDL_Window* window)
 
 void App::addInstance() {
 	m_instances.emplace_back();
+	m_activeInstanceIt = --m_instances.end();
 }
 
 void App::addInstance(const std::string& folderpath) {
 	m_instances.emplace_back(folderpath);
+	m_activeInstanceIt = --m_instances.end();
 }
 
 void App::switchInstance() {

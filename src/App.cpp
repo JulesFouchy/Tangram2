@@ -5,6 +5,7 @@
 #include <imgui/imgui_impl_opengl3.h>
 
 #include "Helper/DisplayInfos.hpp"
+#include "Helper/File.hpp"
 
 #include "GUI/FileBrowser.hpp"
 
@@ -43,6 +44,14 @@ void App::switchInstance() {
 
 Instance& App::activeInstance() { 
 	return *m_activeInstanceIt;
+}
+
+std::list<Instance>::iterator App::itToInstanceWithPath(const std::string& path) {
+	for (auto it = m_instances.begin(); it != m_instances.end(); ++it) {
+		if (!std::filesystem::path(it->getProjectPath()).compare(std::filesystem::path(path)))
+			return it;
+	}
+	return m_instances.end();
 }
 
 void App::ImGui_InstancesWindow() {
@@ -91,8 +100,13 @@ void App::handleEvents() {
 				if (DisplayInfos::KeyIsDown(SDL_SCANCODE_LCTRL)) {
 					if (e.key.keysym.scancode == SDL_SCANCODE_O) {
 						std::string folderPath = FileBrowser::GetFolder();
-						if (!folderPath.empty())
-							addInstance(folderPath);
+						if (!folderPath.empty()) {
+							auto it = itToInstanceWithPath(folderPath);
+							if (it == m_instances.end())
+								addInstance(folderPath);
+							else
+								m_activeInstanceIt = it;
+						}
 						bHandled = true;
 					}
 					else if (e.key.keysym.scancode == SDL_SCANCODE_N) {

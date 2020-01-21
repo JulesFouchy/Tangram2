@@ -16,6 +16,7 @@ private:
 	void addInstance(const std::string& folderpath);
 	void switchInstance();
 	Instance& activeInstance();
+	std::list<Instance>::iterator itToInstanceWithPath(const std::string& path);
 	void ImGui_InstancesWindow();
 
 	void onWindowResize();

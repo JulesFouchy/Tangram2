@@ -59,8 +59,11 @@ std::list<Instance>::iterator App::itToInstanceWithPath(const std::string& path)
 void App::ImGui_InstancesWindow() {
 	ImGui::Begin("Instances");
 	for (auto it = m_instances.begin(); it != m_instances.end(); ++it) {
-		if (ImGui::Selectable(it->getProjectPath().c_str(), it == m_activeInstanceIt))
+		ImGui::PushID(&(*it));
+		if (ImGui::Selectable(it->getProjectPath().c_str(), it == m_activeInstanceIt)) {
 			m_activeInstanceIt = it;
+		}
+		ImGui::PopID();
 	}
 	ImGui::End();
 }

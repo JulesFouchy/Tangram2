@@ -9,6 +9,8 @@
 
 #include "Debugging/Log.hpp"
 
+#include "App.hpp"
+
 
 Window_SaveAsProject::Window_SaveAsProject(Instance& instance)
 	: PopupWindow_WithConfirmationWarning("Saving project as"), I(instance),
@@ -22,8 +24,13 @@ void Window_SaveAsProject::Show() {
 	ImGui::InputText("Name", &m_projectName);
 	m_folderpathPicker.ShowFolderBrowser();
 	if (MyFile::Exists(m_folderpathPicker.getFilepath())) {
-		ConfirmationButton();
-		ImGui::Separator();
+		auto it = App::Get().itToInstanceWithPath(projectFullPath());
+		if (it != App::Get().m_instances.end() && &*it != &I)
+			ImGui::TextColored(ImVec4(0.95f, 0.1f, 0.2f, 1.0f), "A project with the same path is already open !\nClose the other instance first if you want to overwrite it.");
+		else {
+			ConfirmationButton();
+			ImGui::Separator();
+		}
 	}
 	else {
 		ImGui::TextColored(ImVec4(0.95f, 0.1f, 0.2f, 1.0f), "Location doesn't exist !");

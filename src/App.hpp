@@ -8,6 +8,7 @@ union SDL_Event;
 #include <string>
 
 class App {
+friend class Window_SaveAsProject;
 private:
 	App(SDL_Window* window);
 	~App() = default;

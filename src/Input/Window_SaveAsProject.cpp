@@ -21,7 +21,7 @@ Window_SaveAsProject::Window_SaveAsProject(Instance& instance)
 
 void Window_SaveAsProject::Show() {
 	BeginWindow();
-	ImGui::InputText("Name", &m_projectName);
+	ImGui::InputTextWithHint("Name", "UntitledProject", &m_projectName);
 	m_folderpathPicker.ShowFolderBrowser();
 	if (MyFile::Exists(m_folderpathPicker.getFilepath())) {
 		auto it = App::Get().itToInstanceWithPath(projectFullPath());

@@ -24,8 +24,9 @@ App::App(SDL_Window* window)
 	onWindowResize();
 	//glEnable(GL_BLEND);
 	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	addInstance();
-	m_activeInstanceIt = m_instances.begin();
+	//addInstance();
+	//m_activeInstanceIt = m_instances.begin();
+	m_activeInstanceIt = m_instances.end();
 }
 
 void App::addInstance() {
@@ -54,6 +55,10 @@ std::list<Instance>::iterator App::itToInstanceWithPath(const std::string& path)
 			return it;
 	}
 	return m_instances.end();
+}
+
+bool App::projectIsOpen(const std::string& projectPath) {
+	return itToInstanceWithPath(projectPath) != m_instances.end();
 }
 
 void App::ImGui_InstancesWindow() {
@@ -139,8 +144,10 @@ void App::handleEvents() {
 		default:
 			break;
 		}
-		if (!bHandled)
-			activeInstance().onEvent(e);
+		if (!bHandled) {
+			if (m_activeInstanceIt!=m_instances.end())
+				activeInstance().onEvent(e);
+		}
 	}
 }
 
@@ -179,7 +186,8 @@ void App::onLoopIteration() {
 	// Instances window
 	ImGui_InstancesWindow();
 	// Actual application code
-	activeInstance().onLoopIteration();
+	if (m_activeInstanceIt != m_instances.end())
+		activeInstance().onLoopIteration();
 	// Render ImGui
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
 	ImGui::Render();

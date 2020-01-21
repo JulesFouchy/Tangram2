@@ -19,14 +19,23 @@
 #include <fstream>
 #include "Debugging/Log.hpp"
 
+#include "App.hpp"
+
 Instance::Instance()
 	: m_registry(),
 	  m_renderSystem(*this),
 	  m_inputSystem(*this),
 	  m_layersManager(*this),
 	  m_projectLocation(MyFile::RootDir),
-	  m_projectName("")
+	  m_bUserChoseProjectName(false)
 {
+	// Project default name
+	m_projectName = "UntitledProject0";
+	int k = 1;
+	while (MyFile::Exists(getProjectPath()) || App::Get().projectIsOpen(getProjectPath())) {
+		m_projectName = "UntitledProject" + std::to_string(k++);
+	}
+	//
 	createDrawingBoard();
 	
 	entt::entity id1;
@@ -53,7 +62,8 @@ Instance::Instance(const std::string& projectFolderpath)
 	: m_registry(),
 	  m_renderSystem(*this),
 	  m_inputSystem(*this),
-	  m_layersManager(*this)
+	  m_layersManager(*this),
+	  m_bUserChoseProjectName(true)
 {
 	openProject(projectFolderpath);
 }

@@ -27,6 +27,8 @@ private:
 	inline void exit() { m_running = false; }
 
 public:
+	bool projectIsOpen(const std::string& projectPath);
+
 	static void Initialize(SDL_Window* window);
 	static void ShutDown();
 

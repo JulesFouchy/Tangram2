@@ -46,4 +46,5 @@ private:
 
 	std::string m_projectLocation;
 	std::string m_projectName;
+	bool m_bUserChoseProjectName;
 };

@@ -44,7 +44,7 @@ void InputState_Rest::onKeyDown(SDL_Scancode key) {
 			spdlog::info("Importing file '{}'", filepath);
 		}
 		else if (key == SDL_SCANCODE_S) {
-			if (!MyFile::Exists(I.getProjectPath()) || DisplayInfos::KeyIsDown(SDL_SCANCODE_LSHIFT))
+			if (!MyFile::Exists(I.getProjectPath()) || !I.m_bUserChoseProjectName || DisplayInfos::KeyIsDown(SDL_SCANCODE_LSHIFT))
 				I.inputSystem().setGUIState<Window_SaveAsProject>();
 			else
 				I.saveProject(I.getProjectPath());

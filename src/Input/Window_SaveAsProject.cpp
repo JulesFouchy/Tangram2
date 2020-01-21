@@ -43,6 +43,7 @@ void Window_SaveAsProject::OnConfirmation() {
 	if (!MyFile::Exists(projectPath))
 		std::filesystem::create_directory(projectPath);
 	I.saveProject(projectPath);
+	I.m_bUserChoseProjectName = true;
 }
 
 bool Window_SaveAsProject::WarnIf() {

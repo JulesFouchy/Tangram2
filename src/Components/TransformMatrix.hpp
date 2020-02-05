@@ -9,6 +9,9 @@ namespace Cmp {
 		TransformMatrix()
 			: val(1.0f)
 		{}
+		TransformMatrix(const glm::mat3& mat)
+			: val(mat)
+		{}
 
 	private:
 		//Serialization

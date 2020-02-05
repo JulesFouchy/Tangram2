@@ -15,6 +15,9 @@ RenderSystem::RenderSystem(Instance& instance)
 
 void RenderSystem::render() {
 	renderPreviewTextures({ I.drawingBoardId() });
+	I.registry().view<entt::tag<"Point2D"_hs>>().each([this](auto entity, auto& tag) {
+		renderPreviewTextures({ entity });
+		});
 	renderPreviewTextures(I.layersManager().m_layersOrdered);
 }
 

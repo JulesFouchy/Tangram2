@@ -27,7 +27,7 @@ void InputState_Rest::onLeftClicDown() {
 			I.inputSystem().m_currentState = std::make_unique<InputState_Translate>(I, hoveredLayer);
 		else {
 			glm::vec2 pos = DisplayInfos::MousePositionInNormalizedDeviceCoordinates();
-			glm::vec2 posInDBSpace = glm::inverse(I.getMatrixWithoutAspectRatio(I.drawingBoardId())) * glm::vec3(pos, 1.0f);
+			glm::vec2 posInDBSpace = glm::inverse(I.getMatrix(I.drawingBoardId())) * glm::vec3(pos, 1.0f);
 			Log::log(posInDBSpace);
 			I.shapeFactory().Point2D(posInDBSpace);
 		}

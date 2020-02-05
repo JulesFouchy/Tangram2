@@ -16,7 +16,8 @@ public:
 	void render();
 
 private:
-	void renderPreviewTextures(const std::vector<entt::entity>& list);
+	void renderQuad(const std::vector<entt::entity>& list);
+	void renderSquare(const std::vector<entt::entity>& list);
 
 private:
 	static Shader shader;

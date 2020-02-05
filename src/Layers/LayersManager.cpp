@@ -27,7 +27,7 @@ entt::entity LayersManager::addLayer() {
 
 entt::entity LayersManager::layerHoveredBy(const glm::vec2& posInNDC) {
 	for (auto it = m_layersOrdered.crbegin(); it < m_layersOrdered.crend(); it++) {
-		glm::mat3 mat = I.getMatrix(*it);
+		glm::mat3 mat = I.getMatrixPlusAspectRatio(*it);
 		glm::vec2 posInModelSpace = glm::inverse(mat) * glm::vec3(posInNDC, 1.0f);
 		if (abs(posInModelSpace.x) < 1.0f && abs(posInModelSpace.y) < 1.0f) {
 			return *it;

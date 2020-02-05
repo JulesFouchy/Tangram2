@@ -83,15 +83,13 @@ void Instance::createDrawingBoard() {
 	registry().assign<Cmp::AspectRatio>(drawingBoardId(), 16.0f / 9.0f);
 }
 
-glm::mat3 Instance::getMatrix(entt::entity id) {
+glm::mat3 Instance::getMatrixPlusAspectRatio(entt::entity id) {
 	glm::mat3 model = registry().get<Cmp::TransformMatrix>(id).val;
-	Cmp::AspectRatio* aspectRatio = registry().try_get<Cmp::AspectRatio>(id);
-	if (aspectRatio)
-		model = glm::scale(model, glm::vec2(registry().get<Cmp::AspectRatio>(id).val, 1.0f));
+	model = glm::scale(model, glm::vec2(registry().get<Cmp::AspectRatio>(id).val, 1.0f));
 	return DisplayInfos::Matrix() * getParentModelMatrix(id) * model;
 }
 
-glm::mat3 Instance::getMatrixWithoutAspectRatio(entt::entity id) {
+glm::mat3 Instance::getMatrix(entt::entity id) {
 	glm::mat3 model = registry().get<Cmp::TransformMatrix>(id).val;
 	return DisplayInfos::Matrix() * getParentModelMatrix(id) * model;
 }

@@ -18,11 +18,11 @@ public:
 
 private:
 	void _renderQuad(entt::entity e, Shader& shader, std::function<glm::mat3(entt::entity)> getMatrix);
-	void renderQuad(const std::vector<entt::entity>& list);
-	void renderSquare(const std::vector<entt::entity>& list);
+	void renderQuad(const std::vector<entt::entity>& list, Shader& shader);
+	void renderSquare(const std::vector<entt::entity>& list, Shader& shader);
 
 private:
-	static Shader shader;
+	static Shader m_shaderUV;
 	static unsigned int m1to1QuadVBOid;
 	static unsigned int m1to1QuadVAOid;
 };

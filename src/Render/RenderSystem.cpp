@@ -7,17 +7,17 @@
 
 unsigned int RenderSystem::m1to1QuadVBOid;
 unsigned int RenderSystem::m1to1QuadVAOid;
-Shader RenderSystem::shader("res/shaders/showTexture.vert", "res/shaders/showTexture.frag", false);
+Shader RenderSystem::m_shaderUV("res/shaders/showTexture.vert", "res/shaders/showTexture.frag", false);
 
 RenderSystem::RenderSystem(Instance& instance)
 	: ISystem(instance)
 {}
 
 void RenderSystem::render() {
-	renderQuad({ I.drawingBoardId() });
-	renderQuad(I.layersManager().m_layersOrdered);
+	renderQuad({ I.drawingBoardId() }, m_shaderUV);
+	renderQuad(I.layersManager().m_layersOrdered, m_shaderUV);
 	I.registry().view<entt::tag<"Point2D"_hs>>().each([this](auto entity, auto& tag) {
-		renderSquare({ entity });
+		renderSquare({ entity }, m_shaderUV);
 		});
 }
 
@@ -29,18 +29,18 @@ void RenderSystem::_renderQuad(entt::entity e, Shader& shader, std::function<glm
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 }
 
-void RenderSystem::renderQuad(const std::vector<entt::entity>& list) {
+void RenderSystem::renderQuad(const std::vector<entt::entity>& list, Shader& shader) {
 	for (const entt::entity& entity : list)
 		_renderQuad(entity, shader, [this](entt::entity e) { return I.getMatrixPlusAspectRatio(e); });
 }
 
-void RenderSystem::renderSquare(const std::vector<entt::entity>& list) {
+void RenderSystem::renderSquare(const std::vector<entt::entity>& list, Shader& shader) {
 	for (const entt::entity& entity : list)
 		_renderQuad(entity, shader, [this](entt::entity e) { return I.getMatrix(e); });
 }
 
 void RenderSystem::Initialize() {
-	shader.compile();
+	m_shaderUV.compile();
 	GLCall(glGenVertexArrays(1, &m1to1QuadVAOid));
 	GLCall(glGenBuffers(1, &m1to1QuadVBOid));
 	// Vertices data

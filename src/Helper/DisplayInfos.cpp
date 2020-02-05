@@ -35,7 +35,7 @@ glm::vec2 DisplayInfos::MousePositionInPixels() {
 }
 
 glm::vec2 DisplayInfos::MousePositionInScreen() {
-	return (MousePositionInPixels() / glm::vec2(DisplayInfos::Height(), DisplayInfos::Height()) - glm::vec2(0.5f)) * 2.0f;
+	return (MousePositionInPixels() / glm::vec2(DisplayInfos::Height(), DisplayInfos::Height()) - glm::vec2(DisplayInfos::Ratio() * 0.5f, 0.5f)) * 2.0f;
 }
 
 glm::vec2 DisplayInfos::MousePositionInNormalizedDeviceCoordinates() {

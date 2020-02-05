@@ -17,6 +17,7 @@ public:
 	~Instance() = default;
 
 	glm::mat3 getMatrix(entt::entity id);
+	glm::mat3 getMatrixWithoutAspectRatio(entt::entity id);
 	glm::mat3 getParentModelMatrix(entt::entity id);
 
 	std::string getProjectPath();

@@ -26,6 +26,7 @@ Instance::Instance()
 	  m_renderSystem(*this),
 	  m_inputSystem(*this),
 	  m_layersManager(*this),
+	  m_shapeFactory(*this),
 	  m_projectLocation(MyFile::RootDir+"/MyTangramProjects"),
 	  m_bUserChoseProjectName(false)
 {
@@ -37,6 +38,8 @@ Instance::Instance()
 	}
 	//
 	createDrawingBoard();
+	//
+	shapeFactory().Point2D(glm::vec2(0.0f));
 	
 	entt::entity id1;
 	{
@@ -63,6 +66,7 @@ Instance::Instance(const std::string& projectFolderpath)
 	  m_renderSystem(*this),
 	  m_inputSystem(*this),
 	  m_layersManager(*this),
+	  m_shapeFactory(*this),
 	  m_bUserChoseProjectName(true)
 {
 	openProject(projectFolderpath);

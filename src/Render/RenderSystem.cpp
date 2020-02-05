@@ -15,10 +15,10 @@ RenderSystem::RenderSystem(Instance& instance)
 
 void RenderSystem::render() {
 	renderQuad({ I.drawingBoardId() });
+	renderQuad(I.layersManager().m_layersOrdered);
 	I.registry().view<entt::tag<"Point2D"_hs>>().each([this](auto entity, auto& tag) {
 		renderSquare({ entity });
 		});
-	renderQuad(I.layersManager().m_layersOrdered);
 }
 
 

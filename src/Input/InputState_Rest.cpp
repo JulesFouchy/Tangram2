@@ -28,7 +28,6 @@ void InputState_Rest::onLeftClicDown() {
 		else {
 			glm::vec2 pos = DisplayInfos::MousePositionInNormalizedDeviceCoordinates();
 			glm::vec2 posInDBSpace = glm::inverse(I.getMatrix(I.drawingBoardId())) * glm::vec3(pos, 1.0f);
-			Log::log(posInDBSpace);
 			I.shapeFactory().Point2D(posInDBSpace);
 		}
 	}

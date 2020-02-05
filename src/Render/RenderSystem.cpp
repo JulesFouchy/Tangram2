@@ -21,22 +21,22 @@ void RenderSystem::render() {
 	renderQuad(I.layersManager().m_layersOrdered);
 }
 
-void RenderSystem::renderQuad(const std::vector<entt::entity>& list) {
+
+void RenderSystem::_renderQuad(entt::entity e, Shader& shader, std::function<glm::mat3(entt::entity)> getMatrix) {
 	shader.bind();
-	for (const entt::entity& entity : list){
-		shader.setUniformMat3f("u_mat", I.getMatrixPlusAspectRatio(entity));
-		glBindVertexArray(m1to1QuadVAOid);
-		glDrawArrays(GL_TRIANGLES, 0, 6);
-	}
+	shader.setUniformMat3f("u_mat", getMatrix(e));
+	glBindVertexArray(m1to1QuadVAOid);
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+}
+
+void RenderSystem::renderQuad(const std::vector<entt::entity>& list) {
+	for (const entt::entity& entity : list)
+		_renderQuad(entity, shader, [this](entt::entity e) { return I.getMatrixPlusAspectRatio(e); });
 }
 
 void RenderSystem::renderSquare(const std::vector<entt::entity>& list) {
-	shader.bind();
-	for (const entt::entity& entity : list) {
-		shader.setUniformMat3f("u_mat", I.getMatrix(entity));
-		glBindVertexArray(m1to1QuadVAOid);
-		glDrawArrays(GL_TRIANGLES, 0, 6);
-	}
+	for (const entt::entity& entity : list)
+		_renderQuad(entity, shader, [this](entt::entity e) { return I.getMatrix(e); });
 }
 
 void RenderSystem::Initialize() {

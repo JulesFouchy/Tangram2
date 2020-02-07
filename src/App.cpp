@@ -22,11 +22,8 @@ App::App(SDL_Window* window)
 	  m_window(window), m_running(true)
 {
 	onWindowResize();
-	//glEnable(GL_BLEND);
-	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	//addInstance();
-	//m_activeInstanceIt = m_instances.begin();
-	m_activeInstanceIt = m_instances.end();
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
 void App::addInstance() {
@@ -158,6 +155,7 @@ void App::Initialize(SDL_Window* window) {
 	m_appInstance = new App(window);
 	if (m_appInstance == nullptr)
 		spdlog::error("[App::Initialize] Unable to allocate enough memory !");
+	m_appInstance->addInstance();
 }
 
 void App::ShutDown() {

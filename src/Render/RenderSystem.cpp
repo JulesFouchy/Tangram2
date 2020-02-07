@@ -1,23 +1,24 @@
 #include "RenderSystem.hpp"
 
-#include <glad/glad.h>
-#include "Debugging/glException.hpp"
-
 #include "Instance.hpp"
+
+#include "Debugging/glException.hpp"
+#include <glad/glad.h>
 
 unsigned int RenderSystem::m1to1QuadVBOid;
 unsigned int RenderSystem::m1to1QuadVAOid;
-Shader RenderSystem::m_shaderUV("res/shaders/showTexture.vert", "res/shaders/showTexture.frag", false);
+Shader RenderSystem::s_shaderUV   ("res/shaders/default.vert", "res/shaders/showTexture.frag", false);
+Shader RenderSystem::s_shaderPoint("res/shaders/default.vert", "res/shaders/point.frag", false);
 
 RenderSystem::RenderSystem(Instance& instance)
 	: ISystem(instance)
 {}
 
 void RenderSystem::render() {
-	renderQuad({ I.drawingBoardId() }, m_shaderUV);
-	renderQuad(I.layersManager().m_layersOrdered, m_shaderUV);
+	renderQuad({ I.drawingBoardId() }, s_shaderUV);
+	renderQuad(I.layersManager().m_layersOrdered, s_shaderUV);
 	I.registry().view<entt::tag<"Point2D"_hs>>().each([this](auto entity, auto& tag) {
-		renderSquare({ entity }, m_shaderUV);
+		renderSquare({ entity }, s_shaderPoint);
 		});
 }
 
@@ -40,7 +41,8 @@ void RenderSystem::renderSquare(const std::vector<entt::entity>& list, Shader& s
 }
 
 void RenderSystem::Initialize() {
-	m_shaderUV.compile();
+	s_shaderUV.compile();
+	s_shaderPoint.compile();
 	GLCall(glGenVertexArrays(1, &m1to1QuadVAOid));
 	GLCall(glGenBuffers(1, &m1to1QuadVBOid));
 	// Vertices data

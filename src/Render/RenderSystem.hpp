@@ -22,7 +22,8 @@ private:
 	void renderSquare(const std::vector<entt::entity>& list, Shader& shader);
 
 private:
-	static Shader m_shaderUV;
+	static Shader s_shaderUV;
+	static Shader s_shaderPoint;
 	static unsigned int m1to1QuadVBOid;
 	static unsigned int m1to1QuadVAOid;
 };

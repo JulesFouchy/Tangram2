@@ -14,6 +14,8 @@ namespace Cmp {
 	struct Vertices {
 		std::vector<entt::entity> list;
 
+		Vertices() = default;
+
 		Vertices(const std::vector<glm::vec2>& vertices, const ShapeFactory& shapeFactory) {
 			for (const glm::vec2& vertex : vertices)
 				list.push_back(shapeFactory.createPoint2D(vertex));

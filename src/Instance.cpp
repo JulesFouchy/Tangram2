@@ -3,6 +3,7 @@
 #include "Components/TransformMatrix.hpp"
 #include "Components/Parent.hpp"
 #include "Components/AspectRatio.hpp"
+#include "Components/Vertices.hpp"
 
 #include "glm/gtx/matrix_transform_2d.hpp"
 
@@ -39,7 +40,7 @@ Instance::Instance()
 	// Drawing board
 	createDrawingBoard();
 	//
-	m_shapeFactory.createPolygon({ glm::vec2(-0.3, -0.5), glm::vec2(0, 0), glm::vec2(0.8, -0.5) });
+	m_shapeFactory.createPolygon({ glm::vec2(-0.3, -0.5), glm::vec2(0, 0), glm::vec2(0.8, -0.5), glm::vec2(-0.8, -0.5), glm::vec2(0.8, 0.5) });
 	//
 	entt::entity id1;
 	{
@@ -189,7 +190,8 @@ void Instance::saveProject(const std::string& folderpath) {
 		registry().snapshot()
 			.entities(registryArchive)
 			.destroyed(registryArchive)
-			.component<Cmp::AspectRatio, Cmp::TransformMatrix, Cmp::Parent>(registryArchive);
+			.component<Cmp::AspectRatio, Cmp::TransformMatrix, Cmp::Parent, Cmp::Vertices,
+						entt::tag<"Point2D"_hs>, entt::tag<"Polygon"_hs>>(registryArchive);
 	}
 	Log::separationLine();
 }
@@ -211,7 +213,8 @@ void Instance::openProject(const std::string& folderpath) {
 		registry().loader()
 			.entities(registryArchive)
 			.destroyed(registryArchive)
-			.component<Cmp::AspectRatio, Cmp::TransformMatrix, Cmp::Parent>(registryArchive);
+			.component<Cmp::AspectRatio, Cmp::TransformMatrix, Cmp::Parent, Cmp::Vertices,
+				entt::tag<"Point2D"_hs>, entt::tag<"Polygon"_hs>>(registryArchive);
 	}
 	Log::separationLine();
 }

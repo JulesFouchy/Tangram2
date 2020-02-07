@@ -12,7 +12,7 @@ void main() {
     vec2 nuv = vTexCoords*2.0 - 1.0;
 
     int intersectionsCount = 0;
-    int N = 3;
+    int N = 5;
     for (int i = 0; i < N; ++i){
         vec2 p1 = u_vertices[i];
         vec2 p2 = u_vertices[(i+1)%N];

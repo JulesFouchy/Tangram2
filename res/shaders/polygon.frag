@@ -38,10 +38,36 @@ float nonZeroWinding(vec2 nuv){
     return windingCount != 0 ? 1.0 : 0.0;
 }
 
+float distToSegment(vec2 nuv, vec2 p1, vec2 p2){
+    float h = min(1.0, max(0.0, dot(nuv - p1, p2 - p1) / dot(p2 - p1, p2 - p1)));
+    return length( nuv - p1 - (p2 - p1) * h);
+}
+float smin( float a, float b, float k )
+{
+    float res = exp2( -k*a ) + exp2( -k*b );
+    return -log2( res )/k;
+}
+
+float strokeDistanceField(vec2 nuv){
+    float dist = 10000000000000.0;
+    for (int i = 0; i < N; ++i){
+        vec2 p1 = u_vertices[i];
+        vec2 p2 = u_vertices[(i+1)%N];
+        float d = distToSegment(nuv, p1, p2);
+        dist = smin(dist, d, 32.0);
+    }
+    return smoothstep(0.007, 0.0, dist);
+}
+
 void main() {
     vec2 nuv = vTexCoords*2.0 - 1.0;
     
-    float alpha = evenOdd(nuv);
-    vec3 color = vec3(0.8, 0.2, 0.4);
-    gl_FragColor = vec4(color, alpha);
+    float alphaStroke = strokeDistanceField(nuv);
+    float alphaFill = evenOdd(nuv);
+    vec3 colorStroke = vec3(0.8, 0.2, 0.4);
+    vec3 colorFill = vec3(0.3, 0.6, 0.9);
+    vec3 color = colorFill;
+    if( alphaStroke >= alphaFill)
+        color = colorStroke;
+    gl_FragColor = vec4(color, alphaStroke + alphaFill);
 }

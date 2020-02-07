@@ -17,7 +17,7 @@ entt::entity ShapeFactory::createPoint2D(glm::vec2 posInDrawingBoardSpace) const
 	entt::entity id = R.create();
 	R.assign<entt::tag<"Point2D"_hs>>(id);
 	glm::mat3 transformMatrix = glm::translate(glm::mat3(1.0f), posInDrawingBoardSpace);
-	transformMatrix = glm::scale(transformMatrix, glm::vec2(0.025f));
+	transformMatrix = glm::scale(transformMatrix, glm::vec2(0.018f));
 	R.assign<Cmp::TransformMatrix>(id, Cmp::TransformMatrix(transformMatrix));
 	R.assign<Cmp::Parent>(id, I.drawingBoardId());
 	return id;

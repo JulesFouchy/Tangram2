@@ -2,6 +2,7 @@
 
 #include <entt/entt.hpp>
 #include <glm/glm.hpp>
+#include <vector>
 
 class Instance;
 
@@ -10,7 +11,8 @@ public:
 	ShapeFactory(Instance& instance);
 	~ShapeFactory() = default;
 
-	entt::entity Point2D(glm::vec2 posInScreenSpace);
+	entt::entity createPoint2D(glm::vec2 posInScreenSpace) const;
+	entt::entity createPolygon(const std::vector<glm::vec2>& vertices) const;
 private:
 	Instance& I;
 };

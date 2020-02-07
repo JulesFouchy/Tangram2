@@ -155,7 +155,7 @@ void App::Initialize(SDL_Window* window) {
 	m_appInstance = new App(window);
 	if (m_appInstance == nullptr)
 		spdlog::error("[App::Initialize] Unable to allocate enough memory !");
-	m_appInstance->addInstance();
+	m_appInstance->addInstance("C:\\Dev\\Tangram2\\MyTangramProjects\\TestPt2D");
 }
 
 void App::ShutDown() {

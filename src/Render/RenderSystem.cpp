@@ -2,24 +2,45 @@
 
 #include "Instance.hpp"
 
+#include "Components/Vertices.hpp"
+
+#include <glm/gtc/matrix_access.hpp>
+
 #include "Debugging/glException.hpp"
 #include <glad/glad.h>
 
 unsigned int RenderSystem::m1to1QuadVBOid;
 unsigned int RenderSystem::m1to1QuadVAOid;
-Shader RenderSystem::s_shaderUV   ("res/shaders/default.vert", "res/shaders/showTexture.frag", false);
-Shader RenderSystem::s_shaderPoint("res/shaders/default.vert", "res/shaders/point.frag", false);
+Shader RenderSystem::s_shaderUV      ("res/shaders/default.vert", "res/shaders/showTexture.frag", false);
+Shader RenderSystem::s_shaderPoint   ("res/shaders/default.vert", "res/shaders/point.frag", false);
+Shader RenderSystem::s_shaderPolygon ("res/shaders/default.vert", "res/shaders/polygon.frag", false);
 
 RenderSystem::RenderSystem(Instance& instance)
 	: ISystem(instance)
 {}
 
 void RenderSystem::render() {
+	// Drawing Board
 	renderQuad({ I.drawingBoardId() }, s_shaderUV);
+	// Layers
 	renderQuad(I.layersManager().m_layersOrdered, s_shaderUV);
+	// Polygons
+	I.registry().view<entt::tag<"Polygon"_hs>, Cmp::Vertices>().each([this](auto entity, auto& tag, auto& vertices) {
+		s_shaderPolygon.bind();
+		int k = 0;
+		for (entt::entity vertex : vertices.list) {
+			s_shaderPolygon.setUniform2f("u_vertices[" + std::to_string(k) + "]", glm::vec2(glm::column(I.getMatrix(vertex), 2)));
+			s_shaderPolygon.setUniformMat3f("u_mat", glm::mat3(1.0f));
+			glBindVertexArray(m1to1QuadVAOid);
+			glDrawArrays(GL_TRIANGLES, 0, 6);
+			k++;
+		}
+
+	});
+	// Points 2D
 	I.registry().view<entt::tag<"Point2D"_hs>>().each([this](auto entity, auto& tag) {
 		renderSquare({ entity }, s_shaderPoint);
-		});
+	});
 }
 
 
@@ -43,6 +64,7 @@ void RenderSystem::renderSquare(const std::vector<entt::entity>& list, Shader& s
 void RenderSystem::Initialize() {
 	s_shaderUV.compile();
 	s_shaderPoint.compile();
+	s_shaderPolygon.compile();
 	GLCall(glGenVertexArrays(1, &m1to1QuadVAOid));
 	GLCall(glGenBuffers(1, &m1to1QuadVBOid));
 	// Vertices data

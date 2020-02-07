@@ -24,6 +24,7 @@ private:
 private:
 	static Shader s_shaderUV;
 	static Shader s_shaderPoint;
+	static Shader s_shaderPolygon;
 	static unsigned int m1to1QuadVBOid;
 	static unsigned int m1to1QuadVAOid;
 };

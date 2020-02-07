@@ -20,8 +20,10 @@ public:
 	entt::entity addLayer();
 
 public:
-	entt::entity layerHoveredBy(const glm::vec2& posInNDC);
-	entt::entity layerHoveredByMouse();
+	entt::entity getEntityHoveredBy(const glm::vec2& posInNDC);
+	entt::entity getEntityHoveredByMouse();
+private:
+	bool isEntityHoveredBy(entt::entity e, const glm::vec2& posInNDC);
 
 private:
 	std::vector<entt::entity> m_layersOrdered;

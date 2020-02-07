@@ -36,9 +36,11 @@ Instance::Instance()
 	while (MyFile::Exists(getProjectPath()) || App::Get().projectIsOpen(getProjectPath())) {
 		m_projectName = "UntitledProject" + std::to_string(k++);
 	}
-	//
+	// Drawing board
 	createDrawingBoard();
-	
+	//
+	m_shapeFactory.createPolygon({ glm::vec2(-0.3, -0.5), glm::vec2(0, 0), glm::vec2(0.8, -0.5) });
+	//
 	entt::entity id1;
 	{
 		entt::entity id = layersManager().addLayer();
@@ -85,7 +87,9 @@ void Instance::createDrawingBoard() {
 
 glm::mat3 Instance::getMatrixPlusAspectRatio(entt::entity id) {
 	glm::mat3 model = registry().get<Cmp::TransformMatrix>(id).val;
-	model = glm::scale(model, glm::vec2(registry().get<Cmp::AspectRatio>(id).val, 1.0f));
+	Cmp::AspectRatio* ratio = registry().try_get<Cmp::AspectRatio>(id);
+	if (ratio)
+		model = glm::scale(model, glm::vec2(ratio->val, 1.0f));
 	return DisplayInfos::Matrix() * getParentModelMatrix(id) * model;
 }
 

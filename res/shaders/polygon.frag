@@ -1,5 +1,7 @@
 #version 430 core
 
+uniform float u_AspectRatio;
+
 uniform vec2 u_vertices[12];
 const int N = 5;
 
@@ -59,7 +61,7 @@ float strokeDistanceField(vec2 nuv){
         dist = smin(dist, d, u_SmoothMin);
         //dist = min(dist, d);
     }
-    return dist;
+    return dist - 0.005;
 }
 
 float strokeThroughDistanceField(vec2 nuv){
@@ -71,7 +73,7 @@ float SDF(vec2 nuv){
 }
 
 void main() {
-    vec2 nuv = vTexCoords*2.0 - 1.0;
+    vec2 nuv = (vTexCoords*2.0 - 1.0) * vec2(u_AspectRatio, 1.0);
 
     //float t = SDF(nuv)*0.5 + 0.5;
     //gl_FragColor = vec4(vec3(sin(t*60.0)*0.5+0.5), 1.0);

@@ -3,11 +3,14 @@
 #include "Instance.hpp"
 
 #include "Components/Vertices.hpp"
+#include "Components/AspectRatio.hpp"
 
 #include <glm/gtc/matrix_access.hpp>
 
 #include "Debugging/glException.hpp"
 #include <glad/glad.h>
+
+#include "Helper/DisplayInfos.hpp"
 
 unsigned int RenderSystem::m1to1QuadVBOid;
 unsigned int RenderSystem::m1to1QuadVAOid;
@@ -21,8 +24,6 @@ RenderSystem::RenderSystem(Instance& instance)
 	: ISystem(instance)
 {}
 
-#include <imgui/imgui.h>
-
 void RenderSystem::render() {
 	// Drawing Board
 	renderQuad({ I.drawingBoardId() }, s_shaderDrawingBoard);
@@ -30,10 +31,6 @@ void RenderSystem::render() {
 	//renderQuad(I.layersManager().m_layersOrdered, s_shaderTest);
 	renderPreviewTexture(I.layersManager().m_layersOrdered);
 	// Polygons
-	static float smoothMin = 32.0f;
-	ImGui::Begin("Test");
-	ImGui::SliderFloat("SmoothMin", &smoothMin, 0.0f, 40.0f);
-	ImGui::End();
 	//I.registry().view<entt::tag<"Polygon"_hs>, Cmp::Vertices>().each([this](auto entity, auto& tag, auto& vertices) {
 	//	renderPolygon(vertices.list, smoothMin);
 	//});
@@ -83,9 +80,10 @@ void RenderSystem::renderPreviewTexture(const std::vector<entt::entity>& list) {
 void RenderSystem::renderPolygon(const std::vector<entt::entity>& vertices, float smoothMin) {
 	s_shaderPolygon.bind();
 	s_shaderPolygon.setUniform1f("u_SmoothMin", smoothMin);
+	s_shaderPolygon.setUniform1f("u_AspectRatio", I.registry().get<Cmp::AspectRatio>(I.drawingBoardId()).val);
 	int k = 0;
 	for (entt::entity vertex : vertices) {
-		s_shaderPolygon.setUniform2f("u_vertices[" + std::to_string(k) + "]", glm::vec2(glm::column(I.getMatrix(vertex), 2)));
+		s_shaderPolygon.setUniform2f("u_vertices[" + std::to_string(k) + "]", glm::vec2(glm::column(I.getLocalTransform(vertex), 2)));
 		s_shaderPolygon.setUniformMat3f("u_mat", glm::mat3(1.0f));
 		k++;
 	}

@@ -60,7 +60,7 @@ Instance::Instance()
 		registry().get<Cmp::Parent>(id).id = id1;
 	}
 
-	layersManager().createPolygonLayer({ glm::vec2(-0.3, -0.5), glm::vec2(0, 0), glm::vec2(0.8, -0.5), glm::vec2(-0.8, -0.5), glm::vec2(0.8, 0.5) });
+	m_poly = layersManager().createPolygonLayer({ glm::vec2(-0.3, -0.5), glm::vec2(0, 0), glm::vec2(0.8, -0.5), glm::vec2(-0.8, -0.5), glm::vec2(0.8, 0.5) });
 }
 
 
@@ -78,6 +78,13 @@ Instance::Instance(const std::string& projectFolderpath)
 void Instance::onLoopIteration(){
 	renderSystem().render();
 	inputSystem().update();
+
+	static float smoothMin = 32.0f;
+	ImGui::Begin("Test");
+	ImGui::SliderFloat("SmoothMin", &smoothMin, 0.0f, 256.0f);
+	ImGui::End();
+
+	layersManager().renderPolygonOnPreviewTexture(m_poly, smoothMin);
 }
 
 void Instance::createDrawingBoard() {
@@ -101,6 +108,11 @@ glm::mat3 Instance::getMatrix(entt::entity id) {
 	return DisplayInfos::Matrix() * getParentModelMatrix(id) * model;
 }
 
+glm::mat3 Instance::getMatrixToDBSpace(entt::entity id) {
+	glm::mat3 model = getLocalTransform(id);
+	return getParentModelMatrixExcludingDB(id) * model;
+}
+
 glm::mat3 Instance::getLocalTransform(entt::entity id) {
 	return registry().get<Cmp::TransformMatrix>(id).val;
 }
@@ -113,6 +125,13 @@ glm::mat3 Instance::getParentModelMatrix(entt::entity id) {
 		return glm::mat3(1.0f);
 }
 
+glm::mat3 Instance::getParentModelMatrixExcludingDB(entt::entity id) {
+	Cmp::Parent* parent = registry().try_get<Cmp::Parent>(id);
+	if (parent && parent->id != drawingBoardId())
+		return getParentModelMatrix(parent->id) * registry().get<Cmp::TransformMatrix>(parent->id).val;
+	else
+		return glm::mat3(1.0f);
+}
 
 std::string Instance::getProjectPath() {
 	return m_projectLocation + "/" + (m_projectName.empty() ? "UntitledProject" : m_projectName);

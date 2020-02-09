@@ -18,8 +18,10 @@ public:
 
 	glm::mat3 getMatrixPlusAspectRatio(entt::entity id);
 	glm::mat3 getMatrix(entt::entity id);
+	glm::mat3 getMatrixToDBSpace(entt::entity id);
 	glm::mat3 getLocalTransform(entt::entity id);
 	glm::mat3 getParentModelMatrix(entt::entity id);
+	glm::mat3 getParentModelMatrixExcludingDB(entt::entity id);
 
 	std::string getProjectPath();
 
@@ -48,6 +50,8 @@ private:
 	LayersManager m_layersManager;
 	ShapeFactory m_shapeFactory;
 	entt::entity m_drawingBoardId;
+
+	entt::entity m_poly;
 
 	std::string m_projectLocation;
 	std::string m_projectName;

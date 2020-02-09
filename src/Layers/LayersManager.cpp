@@ -39,16 +39,26 @@ entt::entity LayersManager::createTestLayer() {
 entt::entity LayersManager::createPolygonLayer(const std::vector<glm::vec2>& vertices) {
 	entt::entity id = createLayerEntity();
 	I.registry().assign<entt::tag<"Polygon"_hs>>(id);
-	Cmp::Vertices& cmpVertices = I.registry().assign<Cmp::Vertices>(id, vertices, id, I.shapeFactory());
+	I.registry().assign<Cmp::Vertices>(id, vertices, id, I.shapeFactory());
 
-	RenderSystem& RS = I.renderSystem();
-	Cmp::Texture& texture = I.registry().get<Cmp::Texture>(id);
-	RS.setRenderTarget_Texture(texture);
-		RS.renderPolygon(cmpVertices.list, 32.0f);
-	RS.setRenderTarget_Screen();
+	renderPolygonOnPreviewTexture(id, 32.0f);
 
 	m_layersOrdered.push_back(id);
 	return id;
+}
+
+
+#include <imgui/imgui.h>
+
+void LayersManager::renderPolygonOnPreviewTexture(entt::entity polygon, float smoothMin) {
+	RenderSystem& RS = I.renderSystem();
+	Cmp::Texture& texture = I.registry().get<Cmp::Texture>(polygon);
+	Cmp::Vertices& vertices = I.registry().get<Cmp::Vertices>(polygon);
+	RS.setRenderTarget_Texture(texture);
+		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
+		RS.renderPolygon(vertices.list, smoothMin);
+	RS.setRenderTarget_Screen();
 }
 
 entt::entity LayersManager::createLayerEntity() {

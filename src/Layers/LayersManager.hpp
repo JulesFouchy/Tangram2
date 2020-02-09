@@ -19,6 +19,7 @@ public:
 
 	entt::entity createTestLayer();
 	entt::entity createPolygonLayer(const std::vector<glm::vec2>& vertices);
+	void renderPolygonOnPreviewTexture(entt::entity polygon, float smoothMin);
 
 	entt::entity getEntityHoveredBy(const glm::vec2& posInNDC);
 	entt::entity getEntityHoveredByMouse();

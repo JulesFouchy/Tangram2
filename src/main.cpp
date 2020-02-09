@@ -107,8 +107,8 @@ int main(int argc, char *argv[]) {
 
 		// ------ Initialize other classes
 
-		App::Initialize(window);
 		RenderSystem::Initialize();
+		App::Initialize(window);
 		DisplayInfos::Initialize();
 		FileBrowser::Initialize();
 		Texture2D::Initialize();

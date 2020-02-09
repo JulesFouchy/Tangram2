@@ -52,13 +52,13 @@ Instance::Instance()
 		id1 = id;
 	}
 	
-	{
+	/*{
 		entt::entity id = layersManager().addLayer();
 		glm::mat3& mat = registry().get<Cmp::TransformMatrix>(id).val;
 		mat = glm::translate(mat, glm::vec2(1.0f, 0.0f));
 		//mat = glm::scale(mat, glm::vec2(0.3f));
-		registry().get<Cmp::Parent>(id).id = id1;
-	}
+		//registry().get<Cmp::Parent>(id).id = id1;
+	}*/
 }
 
 

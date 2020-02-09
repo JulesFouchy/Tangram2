@@ -11,10 +11,11 @@
 
 unsigned int RenderSystem::m1to1QuadVBOid;
 unsigned int RenderSystem::m1to1QuadVAOid;
-Shader RenderSystem::s_shaderUV      ("res/shaders/default.vert", "res/shaders/showTexture.frag", false);
-Shader RenderSystem::s_shaderPoint   ("res/shaders/default.vert", "res/shaders/point.frag", false);
-Shader RenderSystem::s_shaderPolygon ("res/shaders/default.vert", "res/shaders/polygon.frag", false);
-Shader RenderSystem::s_shaderTexture ("res/shaders/default.vert", "res/shaders/texture.frag", false);
+Shader RenderSystem::s_shaderTest         ("res/shaders/default.vert", "res/shaders/test.frag", false);
+Shader RenderSystem::s_shaderDrawingBoard ("res/shaders/default.vert", "res/shaders/drawingBoard.frag", false);
+Shader RenderSystem::s_shaderPoint        ("res/shaders/default.vert", "res/shaders/point.frag", false);
+Shader RenderSystem::s_shaderPolygon      ("res/shaders/default.vert", "res/shaders/polygon.frag", false);
+Shader RenderSystem::s_shaderTexture      ("res/shaders/default.vert", "res/shaders/texture.frag", false);
 
 RenderSystem::RenderSystem(Instance& instance)
 	: ISystem(instance)
@@ -24,12 +25,12 @@ RenderSystem::RenderSystem(Instance& instance)
 
 void RenderSystem::render() {
 	// Drawing Board
-	renderQuad({ I.drawingBoardId() }, s_shaderUV);
+	renderQuad({ I.drawingBoardId() }, s_shaderDrawingBoard);
 	// Layers
-	//renderQuad(I.layersManager().m_layersOrdered, s_shaderUV);
+	//renderQuad(I.layersManager().m_layersOrdered, s_shaderTest);
 	renderPreviewTexture(I.layersManager().m_layersOrdered);
 	// Polygons
-	/*static float smoothMin = 32.0f;
+	static float smoothMin = 32.0f;
 	ImGui::Begin("Test");
 	ImGui::SliderFloat("SmoothMin", &smoothMin, 0.0f, 40.0f);
 	ImGui::End();
@@ -49,7 +50,7 @@ void RenderSystem::render() {
 	// Points 2D
 	I.registry().view<entt::tag<"Point2D"_hs>>().each([this](auto entity, auto& tag) {
 		renderSquare({ entity }, s_shaderPoint);
-	});*/
+	});
 }
 
 
@@ -62,7 +63,7 @@ void RenderSystem::_renderQuad(entt::entity e, Shader& shader, std::function<glm
 
 void RenderSystem::renderQuad(const std::vector<entt::entity>& list, Shader& shader) {
 	for (const entt::entity& entity : list)
-		_renderQuad(entity, shader, [this](entt::entity e) { return I.getMatrixPlusAspectRatio(e); });
+		_renderQuad(entity, shader, [this](entt::entity e) { return I.getMatrixPlusAspectRatio(e);  });
 }
 
 void RenderSystem::renderSquare(const std::vector<entt::entity>& list, Shader& shader) {
@@ -88,16 +89,9 @@ void RenderSystem::renderPreviewTexture(const std::vector<entt::entity>& list) {
 	GLCall(glBindTexture(GL_TEXTURE_2D, 0));
 }
 
-void RenderSystem::setRenderTarget_Texture(Cmp::Texture& texture) {
-
-}
-
-void RenderSystem::setRenderTarget_Screen() {
-
-}
-
 void RenderSystem::Initialize() {
-	s_shaderUV.compile();
+	s_shaderTest.compile();
+	s_shaderDrawingBoard.compile();
 	s_shaderPoint.compile();
 	s_shaderPolygon.compile();
 	s_shaderTexture.compile();

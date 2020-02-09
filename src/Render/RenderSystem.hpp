@@ -27,14 +27,15 @@ private:
 	void renderQuad(const std::vector<entt::entity>& list, Shader& shader);
 	void renderSquare(const std::vector<entt::entity>& list, Shader& shader);
 	void renderPreviewTexture(const std::vector<entt::entity>& list);
-
-	void setRenderTarget_Texture(Cmp::Texture& texture);
-	void setRenderTarget_Screen();
+friend class LayersManager;
+	inline void setRenderTarget_Texture(Cmp::Texture& texture) { m_renderBuffer.setRenderTarget_Texture(texture); }
+	inline void setRenderTarget_Screen() { m_renderBuffer.setRenderTarget_Screen(); }
 
 private:
 	RenderBuffer m_renderBuffer;
 
-	static Shader s_shaderUV;
+	static Shader s_shaderTest;
+	static Shader s_shaderDrawingBoard;
 	static Shader s_shaderPoint;
 	static Shader s_shaderPolygon;
 	static Shader s_shaderTexture;

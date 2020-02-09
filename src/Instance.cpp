@@ -48,7 +48,7 @@ Instance::Instance()
 		glm::mat3& mat = registry().get<Cmp::TransformMatrix>(id).val;
 		mat = glm::translate(mat, glm::vec2(1.3f, 0.0f));
 		mat = glm::scale(mat, glm::vec2(0.15f));
-		registry().get<Cmp::AspectRatio>(id).val = 2.0f;
+		//registry().get<Cmp::AspectRatio>(id).val = 2.0f;
 		id1 = id;
 	}
 	

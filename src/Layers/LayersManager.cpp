@@ -10,17 +10,26 @@
 
 #include "Debugging/Log.hpp"
 
+#include "OpenGL/Texture2D.hpp"
+
 LayersManager::LayersManager(Instance& instance)
 	: ISystem(instance)
 {}
 
 entt::entity LayersManager::addLayer() {
-	entt::entity id = I.registry().create();
+	entt::entity id = createLayerEntity();
 	m_layersOrdered.push_back(id);
+	return id;
+}
 
-	I.registry().assign<Cmp::TransformMatrix>(id);
-	I.registry().assign<Cmp::AspectRatio>(id, 1.0f);
-	I.registry().assign<Cmp::Parent>(id, I.drawingBoardId());
+entt::entity LayersManager::createLayerEntity() {
+	entt::registry& R = I.registry();
+	entt::entity id = R.create();
+
+	R.assign<Cmp::TransformMatrix>(id);
+	R.assign<Cmp::Parent>(id, I.drawingBoardId());
+	//R.assign<Texture2D>(id);
+	//R.assign<Cmp::AspectRatio>(id, 1.0f);
 
 	return id;
 }

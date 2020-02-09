@@ -66,5 +66,16 @@ entt::entity LayersManager::getEntityHoveredByMouse() {
 bool LayersManager::isEntityHoveredBy(entt::entity e, const glm::vec2& posInNDC) {
 	glm::mat3 mat = I.getMatrixPlusAspectRatio(e);
 	glm::vec2 posInModelSpace = glm::inverse(mat) * glm::vec3(posInNDC, 1.0f);
-	return (abs(posInModelSpace.x) < 1.0f && abs(posInModelSpace.y) < 1.0f);
+	Cmp::Texture* texture = I.registry().try_get<Cmp::Texture>(e);
+	if (texture) {
+		glm::vec2 posInNormalizedModelSpace = posInModelSpace * 0.5f + glm::vec2(0.5f);
+		// get pixel color under mouse
+		unsigned char pixelColor[4];
+		I.renderSystem().setRenderTarget_Texture(*texture);
+		glReadPixels(int(posInNormalizedModelSpace.x * texture->width), int(posInNormalizedModelSpace.y * texture->height), 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, pixelColor); // TODO this fails if preview texture is not in RGBA UNSIGNED BYTE
+		I.renderSystem().setRenderTarget_Screen();
+		return pixelColor[3] > 240;
+	}
+	else
+		return (abs(posInModelSpace.x) < 1.0f && abs(posInModelSpace.y) < 1.0f);
 }

@@ -78,7 +78,7 @@ void RenderSystem::renderPreviewTexture(const std::vector<entt::entity>& list) {
 	// Loop
 	for (entt::entity e : list) {
 		// Matrix
-		s_shaderTexture.setUniformMat3f("u_mat", I.getMatrixPlusAspectRatio(I.drawingBoardId()) * I.getLocalTransform(e));
+		s_shaderTexture.setUniformMat3f("u_mat", I.getMatrixPlusAspectRatio(e));
 		// Texture
 		Cmp::Texture& tex = I.registry().get<Cmp::Texture>(e);
 		GLCall(glBindTexture(GL_TEXTURE_2D, tex.id));

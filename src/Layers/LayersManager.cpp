@@ -31,7 +31,7 @@ entt::entity LayersManager::createLayerEntity() {
 	entt::entity id = R.create();
 
 	R.assign<Cmp::TransformMatrix>(id);
-	//R.assign<Cmp::Parent>(id, I.drawingBoardId());
+	R.assign<Cmp::Parent>(id, I.drawingBoardId());
 	Cmp::Texture& texture = R.assign<Cmp::Texture>(id, I.renderSystem().previewWidth(), I.renderSystem().previewHeight());
 	RS.setRenderTarget_Texture(texture);
 		RenderSystem::s_shaderTest.bind();
@@ -39,7 +39,7 @@ entt::entity LayersManager::createLayerEntity() {
 		glBindVertexArray(RenderSystem::m1to1QuadVAOid);
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 	RS.setRenderTarget_Screen();
-	//R.assign<Cmp::AspectRatio>(id, 1.0f);
+	R.assign<Cmp::AspectRatio>(id, R.get<Cmp::AspectRatio>(I.drawingBoardId()));
 
 	return id;
 }

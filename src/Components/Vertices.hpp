@@ -16,9 +16,9 @@ namespace Cmp {
 
 		Vertices() = default;
 
-		Vertices(const std::vector<glm::vec2>& vertices, const ShapeFactory& shapeFactory) {
+		Vertices(const std::vector<glm::vec2>& vertices, entt::entity parent, const ShapeFactory& shapeFactory) {
 			for (const glm::vec2& vertex : vertices)
-				list.push_back(shapeFactory.createPoint2D(vertex));
+				list.push_back(shapeFactory.createPoint2D(vertex, parent));
 		}
 
 	private:

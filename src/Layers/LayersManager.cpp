@@ -39,7 +39,7 @@ entt::entity LayersManager::createTestLayer() {
 entt::entity LayersManager::createPolygonLayer(const std::vector<glm::vec2>& vertices) {
 	entt::entity id = createLayerEntity();
 	I.registry().assign<entt::tag<"Polygon"_hs>>(id);
-	Cmp::Vertices& cmpVertices = I.registry().assign<Cmp::Vertices>(id, vertices, I.shapeFactory());
+	Cmp::Vertices& cmpVertices = I.registry().assign<Cmp::Vertices>(id, vertices, id, I.shapeFactory());
 
 	RenderSystem& RS = I.renderSystem();
 	Cmp::Texture& texture = I.registry().get<Cmp::Texture>(id);

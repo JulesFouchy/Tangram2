@@ -34,9 +34,9 @@ void RenderSystem::render() {
 	ImGui::Begin("Test");
 	ImGui::SliderFloat("SmoothMin", &smoothMin, 0.0f, 40.0f);
 	ImGui::End();
-	I.registry().view<entt::tag<"Polygon"_hs>, Cmp::Vertices>().each([this](auto entity, auto& tag, auto& vertices) {
-		renderPolygon(vertices.list, smoothMin);
-	});
+	//I.registry().view<entt::tag<"Polygon"_hs>, Cmp::Vertices>().each([this](auto entity, auto& tag, auto& vertices) {
+	//	renderPolygon(vertices.list, smoothMin);
+	//});
 	// Points 2D
 	I.registry().view<entt::tag<"Point2D"_hs>>().each([this](auto entity, auto& tag) {
 		renderSquare({ entity }, s_shaderPoint);

@@ -5,13 +5,13 @@
 #include <glad/glad.h>
 
 namespace Cmp {
-	struct PreviewTexture {
+	struct Texture {
 		unsigned int width;
 		unsigned int height;
 		float aspectRatio;
 		unsigned int id;
 
-		PreviewTexture(unsigned int width, unsigned int height,
+		Texture(unsigned int width, unsigned int height,
 					   GLint GLpixelInternalFormat = GL_RGBA8, GLenum GLpixelFormat = GL_RGBA, GLenum GLpixelType = GL_UNSIGNED_BYTE, GLint interpolationMode = GL_LINEAR, GLint wrapMode = GL_CLAMP_TO_EDGE)
 			: width(width), height(height), aspectRatio((float)width / height), id(0)
 		{

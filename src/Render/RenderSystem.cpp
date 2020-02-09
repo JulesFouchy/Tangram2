@@ -3,7 +3,6 @@
 #include "Instance.hpp"
 
 #include "Components/Vertices.hpp"
-#include "Components/PreviewTexture.hpp"
 
 #include <glm/gtc/matrix_access.hpp>
 
@@ -79,7 +78,7 @@ void RenderSystem::renderPreviewTexture(const std::vector<entt::entity>& list) {
 	// Loop
 	for (entt::entity e : list) {
 		// Texture
-		Cmp::PreviewTexture& tex = I.registry().get<Cmp::PreviewTexture>(e);
+		Cmp::Texture& tex = I.registry().get<Cmp::Texture>(e);
 		GLCall(glBindTexture(GL_TEXTURE_2D, tex.id));
 		// Draw
 		glBindVertexArray(m1to1QuadVAOid);
@@ -87,6 +86,14 @@ void RenderSystem::renderPreviewTexture(const std::vector<entt::entity>& list) {
 	}
 	// Unbind
 	GLCall(glBindTexture(GL_TEXTURE_2D, 0));
+}
+
+void RenderSystem::setRenderTarget_Texture(Cmp::Texture& texture) {
+
+}
+
+void RenderSystem::setRenderTarget_Screen() {
+
 }
 
 void RenderSystem::Initialize() {

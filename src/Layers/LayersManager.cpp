@@ -29,7 +29,7 @@ entt::entity LayersManager::createLayerEntity() {
 
 	R.assign<Cmp::TransformMatrix>(id);
 	R.assign<Cmp::Parent>(id, I.drawingBoardId());
-	R.assign<Cmp::PreviewTexture>(id, 1000, 1000);
+	R.assign<Cmp::Texture>(id, I.renderSystem().previewWidth(), I.renderSystem().previewHeight());
 	//R.assign<Cmp::AspectRatio>(id, 1.0f);
 
 	return id;

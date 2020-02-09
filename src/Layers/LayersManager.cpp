@@ -11,6 +11,7 @@
 #include "Debugging/Log.hpp"
 
 #include "OpenGL/Texture2D.hpp"
+#include "Components/PreviewTexture.hpp"
 
 LayersManager::LayersManager(Instance& instance)
 	: ISystem(instance)
@@ -28,7 +29,7 @@ entt::entity LayersManager::createLayerEntity() {
 
 	R.assign<Cmp::TransformMatrix>(id);
 	R.assign<Cmp::Parent>(id, I.drawingBoardId());
-	//R.assign<Texture2D>(id);
+	R.assign<Cmp::PreviewTexture>(id, 1000, 1000);
 	//R.assign<Cmp::AspectRatio>(id, 1.0f);
 
 	return id;

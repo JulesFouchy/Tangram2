@@ -20,11 +20,13 @@ private:
 	void _renderQuad(entt::entity e, Shader& shader, std::function<glm::mat3(entt::entity)> getMatrix);
 	void renderQuad(const std::vector<entt::entity>& list, Shader& shader);
 	void renderSquare(const std::vector<entt::entity>& list, Shader& shader);
+	void renderPreviewTexture(const std::vector<entt::entity>& list);
 
 private:
 	static Shader s_shaderUV;
 	static Shader s_shaderPoint;
 	static Shader s_shaderPolygon;
+	static Shader s_shaderTexture;
 	static unsigned int m1to1QuadVBOid;
 	static unsigned int m1to1QuadVAOid;
 };

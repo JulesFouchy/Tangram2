@@ -3,6 +3,7 @@
 #include "Instance.hpp"
 
 #include "Components/Vertices.hpp"
+#include "Components/PreviewTexture.hpp"
 
 #include <glm/gtc/matrix_access.hpp>
 
@@ -14,6 +15,7 @@ unsigned int RenderSystem::m1to1QuadVAOid;
 Shader RenderSystem::s_shaderUV      ("res/shaders/default.vert", "res/shaders/showTexture.frag", false);
 Shader RenderSystem::s_shaderPoint   ("res/shaders/default.vert", "res/shaders/point.frag", false);
 Shader RenderSystem::s_shaderPolygon ("res/shaders/default.vert", "res/shaders/polygon.frag", false);
+Shader RenderSystem::s_shaderTexture ("res/shaders/texture.vert", "res/shaders/texture.frag", false);
 
 RenderSystem::RenderSystem(Instance& instance)
 	: ISystem(instance)
@@ -68,10 +70,29 @@ void RenderSystem::renderSquare(const std::vector<entt::entity>& list, Shader& s
 		_renderQuad(entity, shader, [this](entt::entity e) { return I.getMatrix(e); });
 }
 
+void RenderSystem::renderPreviewTexture(const std::vector<entt::entity>& list) {
+	s_shaderTexture.bind();
+	s_shaderTexture.setUniformMat3f("u_mat", I.getMatrixPlusAspectRatio(I.drawingBoardId()));
+	GLCall(glActiveTexture(GL_TEXTURE0));
+	s_shaderTexture.setUniform1i("u_TextureSlot", 0);
+	// Loop
+	for (entt::entity e : list) {
+		// Texture
+		Cmp::PreviewTexture& tex = I.registry().get<Cmp::PreviewTexture>(e);
+		GLCall(glBindTexture(GL_TEXTURE_2D, tex.id));
+		// Draw
+		glBindVertexArray(m1to1QuadVAOid);
+		glDrawArrays(GL_TRIANGLES, 0, 6);
+	}
+	// Unbind
+	GLCall(glBindTexture(GL_TEXTURE_2D, 0));
+}
+
 void RenderSystem::Initialize() {
 	s_shaderUV.compile();
 	s_shaderPoint.compile();
 	s_shaderPolygon.compile();
+	s_shaderTexture.compile();
 	GLCall(glGenVertexArrays(1, &m1to1QuadVAOid));
 	GLCall(glGenBuffers(1, &m1to1QuadVBOid));
 	// Vertices data

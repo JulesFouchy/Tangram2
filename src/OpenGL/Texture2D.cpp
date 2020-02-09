@@ -6,7 +6,7 @@
 #include "Debugging/glException.hpp"
 
 std::vector<bool> Texture2D::isSlotUsed;
-Shader Texture2D::s_shader("res/shaders/texture.vert", "res/shaders/texture.frag", false);
+Shader Texture2D::s_shader("res/shaders/default.vert", "res/shaders/texture.frag", false);
 
 Texture2D::Texture2D(GLint GLpixelInternalFormat, GLenum GLpixelFormat, GLenum GLpixelType, GLint interpolationMode, GLint wrapMode)
 	: m_bytesPerPixel(BytesPerPixel(GLpixelFormat)), m_GLpixelInternalFormat(GLpixelInternalFormat), m_GLpixelFormat(GLpixelFormat), m_GLpixelType(GLpixelType),

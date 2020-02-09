@@ -15,7 +15,7 @@ unsigned int RenderSystem::m1to1QuadVAOid;
 Shader RenderSystem::s_shaderUV      ("res/shaders/default.vert", "res/shaders/showTexture.frag", false);
 Shader RenderSystem::s_shaderPoint   ("res/shaders/default.vert", "res/shaders/point.frag", false);
 Shader RenderSystem::s_shaderPolygon ("res/shaders/default.vert", "res/shaders/polygon.frag", false);
-Shader RenderSystem::s_shaderTexture ("res/shaders/texture.vert", "res/shaders/texture.frag", false);
+Shader RenderSystem::s_shaderTexture ("res/shaders/default.vert", "res/shaders/texture.frag", false);
 
 RenderSystem::RenderSystem(Instance& instance)
 	: ISystem(instance)
@@ -27,9 +27,10 @@ void RenderSystem::render() {
 	// Drawing Board
 	renderQuad({ I.drawingBoardId() }, s_shaderUV);
 	// Layers
-	renderQuad(I.layersManager().m_layersOrdered, s_shaderUV);
+	//renderQuad(I.layersManager().m_layersOrdered, s_shaderUV);
+	renderPreviewTexture(I.layersManager().m_layersOrdered);
 	// Polygons
-	static float smoothMin = 32.0f;
+	/*static float smoothMin = 32.0f;
 	ImGui::Begin("Test");
 	ImGui::SliderFloat("SmoothMin", &smoothMin, 0.0f, 40.0f);
 	ImGui::End();
@@ -49,7 +50,7 @@ void RenderSystem::render() {
 	// Points 2D
 	I.registry().view<entt::tag<"Point2D"_hs>>().each([this](auto entity, auto& tag) {
 		renderSquare({ entity }, s_shaderPoint);
-	});
+	});*/
 }
 
 

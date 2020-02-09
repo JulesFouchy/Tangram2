@@ -22,8 +22,8 @@ App::App(SDL_Window* window)
 	  m_window(window), m_running(true)
 {
 	onWindowResize();
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	//glEnable(GL_BLEND);
+	//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
 void App::addInstance() {
@@ -164,6 +164,7 @@ void App::ShutDown() {
 }
 
 void App::onLoopIteration() {
+	glClearColor(0.5, 0.75, 0.9, 1.0);
 	glClear(GL_COLOR_BUFFER_BIT);
 	// Events
 	handleEvents();

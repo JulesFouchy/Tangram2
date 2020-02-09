@@ -19,14 +19,21 @@ RenderSystem::RenderSystem(Instance& instance)
 	: ISystem(instance)
 {}
 
+#include <imgui/imgui.h>
+
 void RenderSystem::render() {
 	// Drawing Board
 	renderQuad({ I.drawingBoardId() }, s_shaderUV);
 	// Layers
 	renderQuad(I.layersManager().m_layersOrdered, s_shaderUV);
 	// Polygons
+	static float smoothMin = 32.0f;
+	ImGui::Begin("Test");
+	ImGui::SliderFloat("SmoothMin", &smoothMin, 0.0f, 40.0f);
+	ImGui::End();
 	I.registry().view<entt::tag<"Polygon"_hs>, Cmp::Vertices>().each([this](auto entity, auto& tag, auto& vertices) {
 		s_shaderPolygon.bind();
+		s_shaderPolygon.setUniform1f("u_SmoothMin", smoothMin);
 		int k = 0;
 		for (entt::entity vertex : vertices.list) {
 			s_shaderPolygon.setUniform2f("u_vertices[" + std::to_string(k) + "]", glm::vec2(glm::column(I.getMatrix(vertex), 2)));

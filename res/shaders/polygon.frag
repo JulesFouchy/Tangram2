@@ -3,6 +3,8 @@
 uniform vec2 u_vertices[12];
 const int N = 5;
 
+uniform float u_SmoothMin;
+
 in vec2 vTexCoords;
 
 float intersectionOfHorizRayWith(vec2 nuv, vec2 p1, vec2 p2){
@@ -54,15 +56,28 @@ float strokeDistanceField(vec2 nuv){
         vec2 p1 = u_vertices[i];
         vec2 p2 = u_vertices[(i+1)%N];
         float d = distToSegment(nuv, p1, p2);
-        dist = smin(dist, d, 32.0);
+        dist = smin(dist, d, u_SmoothMin);
+        //dist = min(dist, d);
     }
-    return smoothstep(0.007, 0.0, dist);
+    return dist;
+}
+
+float strokeThroughDistanceField(vec2 nuv){
+    return smoothstep(0.007, 0.0, strokeDistanceField(nuv));
+}
+
+float SDF(vec2 nuv){
+    return strokeDistanceField(nuv) * ( evenOdd(nuv) < 0.5 ? 1.0 : -1.0 );
 }
 
 void main() {
     vec2 nuv = vTexCoords*2.0 - 1.0;
+
+    //float t = SDF(nuv)*0.5 + 0.5;
+    //gl_FragColor = vec4(vec3(sin(t*60.0)*0.5+0.5), 1.0);
+    //gl_FragColor = vec4(vec3(smoothstep(0.001, -0.001, SDF(nuv))), 1.0);
     
-    float alphaStroke = strokeDistanceField(nuv);
+    float alphaStroke = strokeThroughDistanceField(nuv);
     float alphaFill = evenOdd(nuv);
     vec3 colorStroke = vec3(0.8, 0.2, 0.4);
     vec3 colorFill = vec3(0.3, 0.6, 0.9);

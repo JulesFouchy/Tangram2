@@ -27,6 +27,8 @@ private:
 	void renderQuad(const std::vector<entt::entity>& list, Shader& shader);
 	void renderSquare(const std::vector<entt::entity>& list, Shader& shader);
 	void renderPreviewTexture(const std::vector<entt::entity>& list);
+	void renderPolygon(const std::vector<entt::entity>& vertices, float smoothMin);
+
 friend class LayersManager;
 	inline void setRenderTarget_Texture(Cmp::Texture& texture) { m_renderBuffer.setRenderTarget_Texture(texture); }
 	inline void setRenderTarget_Screen() { m_renderBuffer.setRenderTarget_Screen(); }

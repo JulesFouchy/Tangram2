@@ -35,17 +35,7 @@ void RenderSystem::render() {
 	ImGui::SliderFloat("SmoothMin", &smoothMin, 0.0f, 40.0f);
 	ImGui::End();
 	I.registry().view<entt::tag<"Polygon"_hs>, Cmp::Vertices>().each([this](auto entity, auto& tag, auto& vertices) {
-		s_shaderPolygon.bind();
-		s_shaderPolygon.setUniform1f("u_SmoothMin", smoothMin);
-		int k = 0;
-		for (entt::entity vertex : vertices.list) {
-			s_shaderPolygon.setUniform2f("u_vertices[" + std::to_string(k) + "]", glm::vec2(glm::column(I.getMatrix(vertex), 2)));
-			s_shaderPolygon.setUniformMat3f("u_mat", glm::mat3(1.0f));
-			glBindVertexArray(m1to1QuadVAOid);
-			glDrawArrays(GL_TRIANGLES, 0, 6);
-			k++;
-		}
-
+		renderPolygon(vertices.list, smoothMin);
 	});
 	// Points 2D
 	I.registry().view<entt::tag<"Point2D"_hs>>().each([this](auto entity, auto& tag) {
@@ -88,6 +78,19 @@ void RenderSystem::renderPreviewTexture(const std::vector<entt::entity>& list) {
 	}
 	// Unbind
 	GLCall(glBindTexture(GL_TEXTURE_2D, 0));
+}
+
+void RenderSystem::renderPolygon(const std::vector<entt::entity>& vertices, float smoothMin) {
+	s_shaderPolygon.bind();
+	s_shaderPolygon.setUniform1f("u_SmoothMin", smoothMin);
+	int k = 0;
+	for (entt::entity vertex : vertices) {
+		s_shaderPolygon.setUniform2f("u_vertices[" + std::to_string(k) + "]", glm::vec2(glm::column(I.getMatrix(vertex), 2)));
+		s_shaderPolygon.setUniformMat3f("u_mat", glm::mat3(1.0f));
+		k++;
+	}
+	glBindVertexArray(m1to1QuadVAOid);
+	glDrawArrays(GL_TRIANGLES, 0, 6);
 }
 
 void RenderSystem::Initialize() {

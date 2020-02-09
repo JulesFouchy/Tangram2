@@ -17,7 +17,8 @@ public:
 	LayersManager(Instance& instance);
 	~LayersManager() = default;
 
-	entt::entity addLayer();
+	entt::entity createTestLayer();
+	entt::entity createPolygonLayer();
 
 	entt::entity getEntityHoveredBy(const glm::vec2& posInNDC);
 	entt::entity getEntityHoveredByMouse();

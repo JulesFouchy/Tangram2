@@ -18,7 +18,7 @@ public:
 	~LayersManager() = default;
 
 	entt::entity createTestLayer();
-	entt::entity createPolygonLayer();
+	entt::entity createPolygonLayer(const std::vector<glm::vec2>& vertices);
 
 	entt::entity getEntityHoveredBy(const glm::vec2& posInNDC);
 	entt::entity getEntityHoveredByMouse();

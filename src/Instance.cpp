@@ -40,7 +40,7 @@ Instance::Instance()
 	// Drawing board
 	createDrawingBoard();
 	//
-	m_shapeFactory.createPolygon({ glm::vec2(-0.3, -0.5), glm::vec2(0, 0), glm::vec2(0.8, -0.5), glm::vec2(-0.8, -0.5), glm::vec2(0.8, 0.5) });
+	//m_shapeFactory.createPolygon({ glm::vec2(-0.3, -0.5), glm::vec2(0, 0), glm::vec2(0.8, -0.5), glm::vec2(-0.8, -0.5), glm::vec2(0.8, 0.5) });
 	//
 	entt::entity id1;
 	{
@@ -60,7 +60,7 @@ Instance::Instance()
 		registry().get<Cmp::Parent>(id).id = id1;
 	}
 
-	layersManager().createPolygonLayer();
+	layersManager().createPolygonLayer({ glm::vec2(-0.3, -0.5), glm::vec2(0, 0), glm::vec2(0.8, -0.5), glm::vec2(-0.8, -0.5), glm::vec2(0.8, 0.5) });
 }
 
 

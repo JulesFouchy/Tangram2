@@ -5,6 +5,7 @@
 #include "Components/TransformMatrix.hpp"
 #include "Components/AspectRatio.hpp"
 #include "Components/Parent.hpp"
+#include "Components/Vertices.hpp"
 
 #include "Helper/DisplayInfos.hpp"
 
@@ -35,13 +36,15 @@ entt::entity LayersManager::createTestLayer() {
 	return id;
 }
 
-entt::entity LayersManager::createPolygonLayer() {
+entt::entity LayersManager::createPolygonLayer(const std::vector<glm::vec2>& vertices) {
 	entt::entity id = createLayerEntity();
+	I.registry().assign<entt::tag<"Polygon"_hs>>(id);
+	Cmp::Vertices& cmpVertices = I.registry().assign<Cmp::Vertices>(id, vertices, I.shapeFactory());
 
 	RenderSystem& RS = I.renderSystem();
 	Cmp::Texture& texture = I.registry().get<Cmp::Texture>(id);
 	RS.setRenderTarget_Texture(texture);
-		//RS.render
+		RS.renderPolygon(cmpVertices.list, 32.0f);
 	RS.setRenderTarget_Screen();
 
 	m_layersOrdered.push_back(id);

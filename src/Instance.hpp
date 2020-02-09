@@ -18,6 +18,7 @@ public:
 
 	glm::mat3 getMatrixPlusAspectRatio(entt::entity id);
 	glm::mat3 getMatrix(entt::entity id);
+	glm::mat3 getLocalTransform(entt::entity id);
 	glm::mat3 getParentModelMatrix(entt::entity id);
 
 	std::string getProjectPath();

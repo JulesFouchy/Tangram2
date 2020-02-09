@@ -45,9 +45,9 @@ Instance::Instance()
 	entt::entity id1;
 	{
 		entt::entity id = layersManager().addLayer();
-		glm::mat3& mat = registry().get<Cmp::TransformMatrix>(id).val;
-		mat = glm::translate(mat, glm::vec2(1.3f, 0.0f));
-		mat = glm::scale(mat, glm::vec2(0.15f));
+		//glm::mat3& mat = registry().get<Cmp::TransformMatrix>(id).val;
+		//mat = glm::translate(mat, glm::vec2(1.3f, 0.0f));
+		//mat = glm::scale(mat, glm::vec2(0.15f));
 		//registry().get<Cmp::AspectRatio>(id).val = 2.0f;
 		id1 = id;
 	}
@@ -95,8 +95,12 @@ glm::mat3 Instance::getMatrixPlusAspectRatio(entt::entity id) {
 }
 
 glm::mat3 Instance::getMatrix(entt::entity id) {
-	glm::mat3 model = registry().get<Cmp::TransformMatrix>(id).val;
+	glm::mat3 model = getLocalTransform(id);
 	return DisplayInfos::Matrix() * getParentModelMatrix(id) * model;
+}
+
+glm::mat3 Instance::getLocalTransform(entt::entity id) {
+	return registry().get<Cmp::TransformMatrix>(id).val;
 }
 
 glm::mat3 Instance::getParentModelMatrix(entt::entity id) {

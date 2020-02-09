@@ -73,11 +73,12 @@ void RenderSystem::renderSquare(const std::vector<entt::entity>& list, Shader& s
 
 void RenderSystem::renderPreviewTexture(const std::vector<entt::entity>& list) {
 	s_shaderTexture.bind();
-	s_shaderTexture.setUniformMat3f("u_mat", I.getMatrixPlusAspectRatio(I.drawingBoardId()));
 	GLCall(glActiveTexture(GL_TEXTURE0));
 	s_shaderTexture.setUniform1i("u_TextureSlot", 0);
 	// Loop
 	for (entt::entity e : list) {
+		// Matrix
+		s_shaderTexture.setUniformMat3f("u_mat", I.getMatrixPlusAspectRatio(I.drawingBoardId()) * I.getLocalTransform(e));
 		// Texture
 		Cmp::Texture& tex = I.registry().get<Cmp::Texture>(e);
 		GLCall(glBindTexture(GL_TEXTURE_2D, tex.id));

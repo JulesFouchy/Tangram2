@@ -3,6 +3,7 @@
 #include "Components/TransformMatrix.hpp"
 #include "Components/Parent.hpp"
 #include "Components/Children.hpp"
+#include "Components/VisualDependencies.hpp"
 #include "Components/AspectRatio.hpp"
 #include "Components/Vertices.hpp"
 
@@ -24,10 +25,21 @@
 #include "App.hpp"
 
 void Instance::onTransformMatrixChange(entt::entity e, entt::registry& R) {
-	R.assign_or_replace<entt::tag<"MustRecomputeTransformMatrix"_hs>>(e);
-	Cmp::Children& children = R.get<Cmp::Children>(e);
-	for (entt::entity child : children.list)
-		onTransformMatrixChange(child, R);
+	if (e != drawingBoardId()) {
+		onMustRecomputeTexture(e);
+		Cmp::Children& children = R.get<Cmp::Children>(e);
+		for (entt::entity child : children.list)
+			onTransformMatrixChange(child, R);
+	}
+}
+
+void Instance::onMustRecomputeTexture(entt::entity e) {
+	registry().assign_or_replace<entt::tag<"MustRecomputeTransformMatrix"_hs>>(e);
+	Cmp::VisualDependencies* dependencies = registry().try_get<Cmp::VisualDependencies>(e);
+	if (dependencies) {
+		for (entt::entity dependant : dependencies->list)
+			onMustRecomputeTexture(dependant);
+	}
 }
 
 Instance::Instance()

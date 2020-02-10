@@ -37,6 +37,7 @@ public:
 
 private:
 	void onTransformMatrixChange(entt::entity e, entt::registry& R);
+	void onMustRecomputeTexture(entt::entity e);
 
 friend class App;
 	void onLoopIteration();

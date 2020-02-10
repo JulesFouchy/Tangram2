@@ -5,6 +5,7 @@
 #include "Components/TransformMatrix.hpp"
 #include "Components/Parent.hpp"
 #include "Components/Children.hpp"
+#include "Components/VisualDependencies.hpp"
 #include "Components/Vertices.hpp"
 
 #include <glm/gtx/matrix_transform_2d.hpp>
@@ -21,6 +22,7 @@ entt::entity ShapeFactory::createPoint2D(glm::vec2 posInDrawingBoardSpace, entt:
 	transformMatrix = glm::scale(transformMatrix, glm::vec2(0.018f));
 	R.assign<Cmp::TransformMatrix>(e, Cmp::TransformMatrix(transformMatrix));
 	R.assign<Cmp::Parent>(e, entt::null);
+	R.assign<Cmp::VisualDependencies>(e).list.push_back(parent);
 	I.setParentOf(e, parent);
 	R.assign<Cmp::Children>(e);
 	return e;

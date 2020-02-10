@@ -21,41 +21,32 @@ LayersManager::LayersManager(Instance& instance)
 {}
 
 entt::entity LayersManager::createTestLayer() {
-	entt::entity id = createLayerEntity();
+	entt::entity e = createLayerEntity();
 
-	RenderSystem& RS = I.renderSystem();
-	Cmp::Texture& texture = I.registry().get<Cmp::Texture>(id);
-	RS.setRenderTarget_Texture(texture);
-	glClearColor(0.0, 0.0, 1.0, 1.0);
-	glClear(GL_COLOR_BUFFER_BIT);
-		RenderSystem::s_shaderTest.bind();
-		RenderSystem::s_shaderTest.setUniformMat3f("u_localTransformMat", glm::mat3(1.0f));
-		glBindVertexArray(RenderSystem::m1to1QuadVAOid);
-		glDrawArrays(GL_TRIANGLES, 0, 6);
-	RS.setRenderTarget_Screen();
-
-	m_layersOrdered.push_back(id);
-	return id;
+	m_layersOrdered.push_back(e);
+	return e;
 }
 
 entt::entity LayersManager::createPolygonLayer(const std::vector<glm::vec2>& vertices) {
-	entt::entity id = createLayerEntity();
-	I.registry().assign<entt::tag<"Polygon"_hs>>(id);
-	I.registry().assign<Cmp::Vertices>(id, vertices, id, I.shapeFactory());
+	entt::registry& R = I.registry();
+	entt::entity e = createLayerEntity();
 
-	m_layersOrdered.push_back(id);
-	return id;
+	R.assign<entt::tag<"Polygon"_hs>>(e);
+	R.assign<Cmp::Vertices>(e, vertices, e, I.shapeFactory());
+
+	m_layersOrdered.push_back(e);
+	return e;
 }
 
 entt::entity LayersManager::createLayerEntity() {
 	entt::registry& R = I.registry();
-	entt::entity id = R.create();
+	entt::entity e = R.create();
 
-	R.assign<Cmp::TransformMatrix>(id);
-	R.assign<Cmp::Parent>(id, I.drawingBoardId());
-	Cmp::Texture& texture = R.assign<Cmp::Texture>(id, I.renderSystem().previewWidth(), I.renderSystem().previewHeight());
+	R.assign<Cmp::TransformMatrix>(e);
+	R.assign<Cmp::Parent>(e, I.drawingBoardId());
+	R.assign<Cmp::Texture>(e, I.renderSystem().previewWidth(), I.renderSystem().previewHeight());
 
-	return id;
+	return e;
 }
 
 entt::entity LayersManager::getEntityHoveredBy(const glm::vec2& posInNDC) {

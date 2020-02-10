@@ -53,6 +53,7 @@ private:
 
 	entt::entity m_poly;
 	entt::entity m_testLayer;
+	entt::entity m_testLayer2;
 
 	std::string m_projectLocation;
 	std::string m_projectName;

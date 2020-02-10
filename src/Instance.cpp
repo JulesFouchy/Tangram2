@@ -42,14 +42,12 @@ Instance::Instance()
 	//
 	//m_shapeFactory.createPolygon({ glm::vec2(-0.3, -0.5), glm::vec2(0, 0), glm::vec2(0.8, -0.5), glm::vec2(-0.8, -0.5), glm::vec2(0.8, 0.5) });
 	//
-	entt::entity id1;
 	{
-		entt::entity id = layersManager().createTestLayer();
+		m_testLayer2 = layersManager().createTestLayer();
 		//glm::mat3& mat = registry().get<Cmp::TransformMatrix>(id).val;
 		//mat = glm::translate(mat, glm::vec2(1.3f, 0.0f));
 		//mat = glm::scale(mat, glm::vec2(0.15f));
 		//registry().get<Cmp::AspectRatio>(id).val = 2.0f;
-		id1 = id;
 	}
 	
 	{
@@ -57,10 +55,10 @@ Instance::Instance()
 		//glm::mat3& mat = registry().get<Cmp::TransformMatrix>(id).val;
 		//mat = glm::translate(mat, glm::vec2(1.0f, 0.0f));
 		//mat = glm::scale(mat, glm::vec2(0.3f));
-		//registry().get<Cmp::Parent>(m_testLayer).id = id1;
+		registry().get<Cmp::Parent>(m_testLayer).id = m_testLayer2;
 	}
 
-	m_poly = layersManager().createPolygonLayer({ glm::vec2(-0.3, -0.5), glm::vec2(0, 0), glm::vec2(0.8, -0.5), glm::vec2(-0.8, -0.5), glm::vec2(0.8, 0.5) });
+	//m_poly = layersManager().createPolygonLayer({ glm::vec2(-0.3, -0.5), glm::vec2(0, 0), glm::vec2(0.8, -0.5), glm::vec2(-0.8, -0.5), glm::vec2(0.8, 0.5) });
 }
 
 
@@ -84,14 +82,23 @@ void Instance::onLoopIteration(){
 	ImGui::SliderFloat("SmoothMin", &smoothMin, 0.0f, 256.0f);
 	ImGui::End();
 
-	layersManager().renderPolygonOnPreviewTexture(m_poly, smoothMin);
+	//layersManager().renderPolygonOnPreviewTexture(m_poly, smoothMin);
 
 
 	renderSystem().setRenderTarget_Texture(registry().get<Cmp::Texture>(m_testLayer));
-	glClearColor(0.0, 1.0, 1.0, 1.0);
+	glClearColor(0.0, 0.0, 0.0, 0.0);
 	glClear(GL_COLOR_BUFFER_BIT);
 	RenderSystem::s_shaderTest.bind();
 	RenderSystem::s_shaderTest.setUniformMat3f("u_localTransformMat", glm::scale(glm::inverse(getLocalTransform(m_testLayer)), glm::vec2(2.0f * registry().get<Cmp::AspectRatio>(drawingBoardId()).val, 2.0f)));
+	glBindVertexArray(RenderSystem::m1to1QuadVAOid);
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+	renderSystem().setRenderTarget_Screen();
+
+	renderSystem().setRenderTarget_Texture(registry().get<Cmp::Texture>(m_testLayer2));
+	glClearColor(0.0, 0.0, 0.0, 0.0);
+	glClear(GL_COLOR_BUFFER_BIT);
+	RenderSystem::s_shaderTest.bind();
+	RenderSystem::s_shaderTest.setUniformMat3f("u_localTransformMat", glm::scale(glm::inverse(getLocalTransform(m_testLayer2)), glm::vec2(2.0f * registry().get<Cmp::AspectRatio>(drawingBoardId()).val, 2.0f)));
 	glBindVertexArray(RenderSystem::m1to1QuadVAOid);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 	renderSystem().setRenderTarget_Screen();

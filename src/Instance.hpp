@@ -19,6 +19,7 @@ public:
 	glm::mat3 getMatrixPlusAspectRatio(entt::entity id);
 	glm::mat3 getMatrix(entt::entity id);
 	glm::mat3 getMatrixToDBSpace(entt::entity id);
+	glm::mat3 getMatrixToTextureSpace(entt::entity id);
 	glm::mat3 getLocalTransform(entt::entity id);
 	glm::mat3 getParentModelMatrix(entt::entity id);
 	glm::mat3 getParentModelMatrixExcludingDB(entt::entity id);

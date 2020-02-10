@@ -89,7 +89,7 @@ void Instance::onLoopIteration(){
 	glClearColor(0.0, 0.0, 0.0, 0.0);
 	glClear(GL_COLOR_BUFFER_BIT);
 	RenderSystem::s_shaderTest.bind();
-	RenderSystem::s_shaderTest.setUniformMat3f("u_localTransformMat", glm::scale(glm::inverse(getMatrixToDBSpace(m_testLayer)), glm::vec2(2.0f * registry().get<Cmp::AspectRatio>(drawingBoardId()).val, 2.0f)));
+	RenderSystem::s_shaderTest.setUniformMat3f("u_localTransformMat", getMatrixToTextureSpace(m_testLayer));
 	glBindVertexArray(RenderSystem::m1to1QuadVAOid);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 	renderSystem().setRenderTarget_Screen();
@@ -98,7 +98,7 @@ void Instance::onLoopIteration(){
 	glClearColor(0.0, 0.0, 0.0, 0.0);
 	glClear(GL_COLOR_BUFFER_BIT);
 	RenderSystem::s_shaderTest.bind();
-	RenderSystem::s_shaderTest.setUniformMat3f("u_localTransformMat", glm::scale(glm::inverse(getMatrixToDBSpace(m_testLayer2)), glm::vec2(2.0f * registry().get<Cmp::AspectRatio>(drawingBoardId()).val, 2.0f)));
+	RenderSystem::s_shaderTest.setUniformMat3f("u_localTransformMat", getMatrixToTextureSpace(m_testLayer2));
 	glBindVertexArray(RenderSystem::m1to1QuadVAOid);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 	renderSystem().setRenderTarget_Screen();
@@ -128,6 +128,10 @@ glm::mat3 Instance::getMatrix(entt::entity id) {
 glm::mat3 Instance::getMatrixToDBSpace(entt::entity id) {
 	glm::mat3 model = getLocalTransform(id);
 	return getParentModelMatrixExcludingDB(id) * model;
+}
+
+glm::mat3 Instance::getMatrixToTextureSpace(entt::entity id) {
+	return glm::scale(glm::inverse(getMatrixToDBSpace(id)), glm::vec2(2.0f * registry().get<Cmp::AspectRatio>(drawingBoardId()).val, 2.0f));
 }
 
 glm::mat3 Instance::getLocalTransform(entt::entity id) {

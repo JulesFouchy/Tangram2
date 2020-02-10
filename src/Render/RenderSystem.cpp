@@ -82,8 +82,7 @@ void RenderSystem::renderPolygon(entt::entity polygon, float smoothMin) {
 	s_shaderPolygon.bind();
 	s_shaderPolygon.setUniform1f("u_SmoothMin", smoothMin);
 	s_shaderPolygon.setUniform1f("u_AspectRatio", I.registry().get<Cmp::AspectRatio>(I.drawingBoardId()).val);
-	glm::mat3 matPoly = glm::scale(glm::inverse(I.getMatrixToDBSpace(polygon)), glm::vec2(2.0f * I.registry().get<Cmp::AspectRatio>(I.drawingBoardId()).val, 2.0f));
-	s_shaderPolygon.setUniformMat3f("u_localTransformMat", matPoly);
+	s_shaderPolygon.setUniformMat3f("u_localTransformMat", I.getMatrixToTextureSpace(polygon));
 	int k = 0;
 	Cmp::Vertices& vertices = I.registry().get<Cmp::Vertices>(polygon);
 	for (entt::entity vertex : vertices.list) {

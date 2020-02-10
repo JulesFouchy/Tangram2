@@ -41,6 +41,16 @@ void RenderSystem::render() {
 	});
 }
 
+void RenderSystem::checkTexturesToRecompute() {
+	I.registry().view<entt::tag<"Polygon"_hs>, entt::tag<"MustRecomputeTransformMatrix"_hs>>().each([this](auto e, auto&, auto&) {
+		computePreviewTexture_Polygon(e, 32.0f);
+		I.registry().remove<entt::tag<"MustRecomputeTransformMatrix"_hs>>(e);
+	});
+	I.registry().view<entt::tag<"TestLayer"_hs>, entt::tag<"MustRecomputeTransformMatrix"_hs>>().each([this](auto e, auto&, auto&) {
+		computePreviewTexture_ShaderLayer(e, s_shaderTest);
+		I.registry().remove<entt::tag<"MustRecomputeTransformMatrix"_hs>>(e);
+	});
+}
 
 void RenderSystem::_renderQuad(entt::entity e, Shader& shader, std::function<glm::mat3(entt::entity)> getMatrix) {
 	shader.bind();

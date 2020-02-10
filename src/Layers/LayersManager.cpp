@@ -21,7 +21,10 @@ LayersManager::LayersManager(Instance& instance)
 {}
 
 entt::entity LayersManager::createTestLayer() {
+	entt::registry& R = I.registry();
 	entt::entity e = createLayerEntity();
+
+	R.assign<entt::tag<"TestLayer"_hs>>(e);
 
 	m_layersOrdered.push_back(e);
 	return e;

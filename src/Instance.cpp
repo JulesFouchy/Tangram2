@@ -22,6 +22,10 @@
 
 #include "App.hpp"
 
+void Instance::onTransformMatrixChange(entt::entity e, entt::registry& R) {
+	R.assign_or_replace<entt::tag<"MustRecomputeTransformMatrix"_hs>>(e);
+}
+
 Instance::Instance()
 	: m_registry(),
 	  m_renderSystem(*this),
@@ -37,6 +41,9 @@ Instance::Instance()
 	while (MyFile::Exists(getProjectPath()) || App::Get().projectIsOpen(getProjectPath())) {
 		m_projectName = "UntitledProject" + std::to_string(k++);
 	}
+	// Events
+	registry().on_construct<Cmp::TransformMatrix>().connect<&Instance::onTransformMatrixChange>(*this);
+	registry().on_replace<Cmp::TransformMatrix>().connect<&Instance::onTransformMatrixChange>(*this);
 	// Drawing board
 	createDrawingBoard();
 	//
@@ -59,6 +66,7 @@ Instance::Instance()
 	}
 
 	m_poly = layersManager().createPolygonLayer({ glm::vec2(-0.3, -0.5), glm::vec2(0, 0), glm::vec2(0.8, -0.5), glm::vec2(-0.8, -0.5), glm::vec2(0.8, 0.5) });
+	//renderSystem().computePreviewTexture_Polygon(m_poly, 32.0f);
 }
 
 
@@ -75,6 +83,7 @@ Instance::Instance(const std::string& projectFolderpath)
 
 void Instance::onLoopIteration(){
 	renderSystem().render();
+	renderSystem().checkTexturesToRecompute();
 	inputSystem().update();
 
 	static float smoothMin = 32.0f;
@@ -82,10 +91,10 @@ void Instance::onLoopIteration(){
 	ImGui::SliderFloat("SmoothMin", &smoothMin, 0.0f, 256.0f);
 	ImGui::End();
 
-	renderSystem().computePreviewTexture_Polygon(m_poly, smoothMin);
-
-	renderSystem().computePreviewTexture_ShaderLayer(m_testLayer,  RenderSystem::s_shaderTest);
-	renderSystem().computePreviewTexture_ShaderLayer(m_testLayer2, RenderSystem::s_shaderTest);
+	//renderSystem().computePreviewTexture_Polygon(m_poly, smoothMin);
+	//
+	//renderSystem().computePreviewTexture_ShaderLayer(m_testLayer,  RenderSystem::s_shaderTest);
+	//renderSystem().computePreviewTexture_ShaderLayer(m_testLayer2, RenderSystem::s_shaderTest);
 }
 
 void Instance::createDrawingBoard() {

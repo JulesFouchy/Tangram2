@@ -34,6 +34,8 @@ public:
 	inline entt::entity& drawingBoardId() { return m_drawingBoardId; }
 
 private:
+	void onTransformMatrixChange(entt::entity e, entt::registry& R);
+
 friend class App;
 	void onLoopIteration();
 	void onEvent(const SDL_Event& e);

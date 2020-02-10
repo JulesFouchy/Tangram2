@@ -18,6 +18,7 @@ public:
 	static void ShutDown();
 
 	void render();
+	void checkTexturesToRecompute();
 
 	inline unsigned int previewWidth() { return m_renderBuffer.previewWidth(); }
 	inline unsigned int previewHeight() { return m_renderBuffer.previewHeight(); }

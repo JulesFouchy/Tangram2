@@ -27,7 +27,7 @@ private:
 	void renderQuad(const std::vector<entt::entity>& list, Shader& shader);
 	void renderSquare(const std::vector<entt::entity>& list, Shader& shader);
 	void renderPreviewTexture(const std::vector<entt::entity>& list);
-	void renderPolygon(const std::vector<entt::entity>& vertices, float smoothMin);
+	void renderPolygon(entt::entity polygon, float smoothMin);
 
 friend class LayersManager;
 friend class Instance;

@@ -73,8 +73,8 @@ float SDF(vec2 nuv){
 }
 
 void main() {
-    vec2 nuv = (vTexCoords*2.0 - 1.0) * vec2(u_AspectRatio, 1.0);
-
+    vec2 nuv = vTexCoords - vec2(u_AspectRatio, 1.0);
+    
     //float t = SDF(nuv)*0.5 + 0.5;
     //gl_FragColor = vec4(vec3(sin(t*60.0)*0.5+0.5), 1.0);
     //gl_FragColor = vec4(vec3(smoothstep(0.001, -0.001, SDF(nuv))), 1.0);

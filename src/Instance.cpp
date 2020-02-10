@@ -58,7 +58,7 @@ Instance::Instance()
 		registry().get<Cmp::Parent>(m_testLayer).id = m_testLayer2;
 	}
 
-	//m_poly = layersManager().createPolygonLayer({ glm::vec2(-0.3, -0.5), glm::vec2(0, 0), glm::vec2(0.8, -0.5), glm::vec2(-0.8, -0.5), glm::vec2(0.8, 0.5) });
+	m_poly = layersManager().createPolygonLayer({ glm::vec2(-0.3, -0.5), glm::vec2(0, 0), glm::vec2(0.8, -0.5), glm::vec2(-0.8, -0.5), glm::vec2(0.8, 0.5) });
 }
 
 
@@ -82,7 +82,7 @@ void Instance::onLoopIteration(){
 	ImGui::SliderFloat("SmoothMin", &smoothMin, 0.0f, 256.0f);
 	ImGui::End();
 
-	//layersManager().renderPolygonOnPreviewTexture(m_poly, smoothMin);
+	layersManager().renderPolygonOnPreviewTexture(m_poly, smoothMin);
 
 
 	renderSystem().setRenderTarget_Texture(registry().get<Cmp::Texture>(m_testLayer));

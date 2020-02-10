@@ -55,11 +55,10 @@ entt::entity LayersManager::createPolygonLayer(const std::vector<glm::vec2>& ver
 void LayersManager::renderPolygonOnPreviewTexture(entt::entity polygon, float smoothMin) {
 	RenderSystem& RS = I.renderSystem();
 	Cmp::Texture& texture = I.registry().get<Cmp::Texture>(polygon);
-	Cmp::Vertices& vertices = I.registry().get<Cmp::Vertices>(polygon);
 	RS.setRenderTarget_Texture(texture);
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
-		RS.renderPolygon(vertices.list, smoothMin);
+		RS.renderPolygon(polygon, smoothMin);
 	RS.setRenderTarget_Screen();
 }
 

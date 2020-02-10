@@ -6,6 +6,7 @@
 #include "Components/AspectRatio.hpp"
 
 #include <glm/gtc/matrix_access.hpp>
+#include <glm/gtx/matrix_transform_2d.hpp>
 
 #include "Debugging/glException.hpp"
 #include <glad/glad.h>
@@ -77,14 +78,16 @@ void RenderSystem::renderPreviewTexture(const std::vector<entt::entity>& list) {
 	GLCall(glBindTexture(GL_TEXTURE_2D, 0));
 }
 
-void RenderSystem::renderPolygon(const std::vector<entt::entity>& vertices, float smoothMin) {
+void RenderSystem::renderPolygon(entt::entity polygon, float smoothMin) {
 	s_shaderPolygon.bind();
 	s_shaderPolygon.setUniform1f("u_SmoothMin", smoothMin);
 	s_shaderPolygon.setUniform1f("u_AspectRatio", I.registry().get<Cmp::AspectRatio>(I.drawingBoardId()).val);
+	glm::mat3 matPoly = glm::scale(glm::inverse(I.getMatrixToDBSpace(polygon)), glm::vec2(2.0f * I.registry().get<Cmp::AspectRatio>(I.drawingBoardId()).val, 2.0f));
+	s_shaderPolygon.setUniformMat3f("u_localTransformMat", matPoly);
 	int k = 0;
-	for (entt::entity vertex : vertices) {
+	Cmp::Vertices& vertices = I.registry().get<Cmp::Vertices>(polygon);
+	for (entt::entity vertex : vertices.list) {
 		s_shaderPolygon.setUniform2f("u_vertices[" + std::to_string(k) + "]", glm::vec2(glm::column(I.getLocalTransform(vertex), 2)));
-		s_shaderPolygon.setUniformMat3f("u_localTransformMat", glm::mat3(I.getLocalTransform(vertex)));
 		k++;
 	}
 	glBindVertexArray(m1to1QuadVAOid);

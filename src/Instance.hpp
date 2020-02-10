@@ -16,13 +16,13 @@ public:
 	Instance(const std::string& projectFolderpath);
 	~Instance() = default;
 
-	glm::mat3 getMatrixPlusAspectRatio(entt::entity id);
-	glm::mat3 getMatrix(entt::entity id);
-	glm::mat3 getMatrixToDBSpace(entt::entity id);
-	glm::mat3 getMatrixToTextureSpace(entt::entity id);
-	glm::mat3 getLocalTransform(entt::entity id);
-	glm::mat3 getParentModelMatrix(entt::entity id);
-	glm::mat3 getParentModelMatrixExcludingDB(entt::entity id);
+	glm::mat3 getLocalTransform(entt::entity e);
+	glm::mat3 getMatrixPlusAspectRatio(entt::entity e);
+	glm::mat3 getMatrix(entt::entity e);
+	glm::mat3 getMatrixToDBSpace(entt::entity e);
+	glm::mat3 getMatrixToTextureSpace(entt::entity e);
+	glm::mat3 getParentModelMatrix(entt::entity e);
+	glm::mat3 getParentModelMatrixExcludingDB(entt::entity e);
 
 	std::string getProjectPath();
 

@@ -44,17 +44,17 @@ Instance::Instance()
 	//
 	{
 		m_testLayer2 = layersManager().createTestLayer();
-		glm::mat3& mat = registry().get<Cmp::TransformMatrix>(m_testLayer2).val;
+		//glm::mat3& mat = registry().get<Cmp::TransformMatrix>(m_testLayer2).val();
 		//mat = glm::translate(mat, glm::vec2(1.3f, 0.0f));
-		mat = glm::scale(mat, glm::vec2(0.85f));
+		//mat = glm::scale(mat, glm::vec2(0.85f));
 		//registry().get<Cmp::AspectRatio>(id).val = 2.0f;
 	}
 	
 	{
 		m_testLayer = layersManager().createTestLayer();
-		glm::mat3& mat = registry().get<Cmp::TransformMatrix>(m_testLayer).val;
+		//glm::mat3& mat = registry().get<Cmp::TransformMatrix>(m_testLayer).val;
 		//mat = glm::translate(mat, glm::vec2(1.0f, 0.0f));
-		mat = glm::scale(mat, glm::vec2(0.5f));
+		//mat = glm::scale(mat, glm::vec2(0.5f));
 		registry().get<Cmp::Parent>(m_testLayer).id = m_testLayer2;
 	}
 
@@ -90,50 +90,51 @@ void Instance::onLoopIteration(){
 
 void Instance::createDrawingBoard() {
 	m_drawingBoardId = registry().create();
-	glm::mat3& mat = registry().assign<Cmp::TransformMatrix>(drawingBoardId()).val;
+	glm::mat3 mat(1.0f);
 	mat = glm::scale(mat, glm::vec2(0.8f));
 	mat = glm::rotate(mat, 0.1f);
+	registry().assign<Cmp::TransformMatrix>(drawingBoardId(), mat);
 	registry().assign<Cmp::AspectRatio>(drawingBoardId(), 16.0f / 9.0f);
 }
 
-glm::mat3 Instance::getMatrixPlusAspectRatio(entt::entity id) {
-	glm::mat3 model = registry().get<Cmp::TransformMatrix>(id).val;
-	Cmp::AspectRatio* ratio = registry().try_get<Cmp::AspectRatio>(id);
+glm::mat3 Instance::getLocalTransform(entt::entity e) {
+	return registry().get<Cmp::TransformMatrix>(e).val();
+}
+
+glm::mat3 Instance::getMatrix(entt::entity e) {
+	glm::mat3 model = getLocalTransform(e);
+	return DisplayInfos::Matrix() * getParentModelMatrix(e) * model;
+}
+
+glm::mat3 Instance::getMatrixPlusAspectRatio(entt::entity e) {
+	glm::mat3 model = getLocalTransform(e);
+	Cmp::AspectRatio* ratio = registry().try_get<Cmp::AspectRatio>(e);
 	if (ratio)
 		model = glm::scale(model, glm::vec2(ratio->val, 1.0f));
-	return DisplayInfos::Matrix() * getParentModelMatrix(id) * model;
+	return DisplayInfos::Matrix() * getParentModelMatrix(e) * model;
 }
 
-glm::mat3 Instance::getMatrix(entt::entity id) {
-	glm::mat3 model = getLocalTransform(id);
-	return DisplayInfos::Matrix() * getParentModelMatrix(id) * model;
+glm::mat3 Instance::getMatrixToDBSpace(entt::entity e) {
+	glm::mat3 model = getLocalTransform(e);
+	return getParentModelMatrixExcludingDB(e) * model;
 }
 
-glm::mat3 Instance::getMatrixToDBSpace(entt::entity id) {
-	glm::mat3 model = getLocalTransform(id);
-	return getParentModelMatrixExcludingDB(id) * model;
+glm::mat3 Instance::getMatrixToTextureSpace(entt::entity e) {
+	return glm::scale(glm::inverse(getMatrixToDBSpace(e)), glm::vec2(2.0f * registry().get<Cmp::AspectRatio>(drawingBoardId()).val, 2.0f));
 }
 
-glm::mat3 Instance::getMatrixToTextureSpace(entt::entity id) {
-	return glm::scale(glm::inverse(getMatrixToDBSpace(id)), glm::vec2(2.0f * registry().get<Cmp::AspectRatio>(drawingBoardId()).val, 2.0f));
-}
-
-glm::mat3 Instance::getLocalTransform(entt::entity id) {
-	return registry().get<Cmp::TransformMatrix>(id).val;
-}
-
-glm::mat3 Instance::getParentModelMatrix(entt::entity id) {
-	Cmp::Parent* parent = registry().try_get<Cmp::Parent>(id);
+glm::mat3 Instance::getParentModelMatrix(entt::entity e) {
+	Cmp::Parent* parent = registry().try_get<Cmp::Parent>(e);
 	if (parent)
-		return getParentModelMatrix(parent->id) * registry().get<Cmp::TransformMatrix>(parent->id).val;
+		return getParentModelMatrix(parent->id) * getLocalTransform(parent->id);
 	else
 		return glm::mat3(1.0f);
 }
 
-glm::mat3 Instance::getParentModelMatrixExcludingDB(entt::entity id) {
-	Cmp::Parent* parent = registry().try_get<Cmp::Parent>(id);
+glm::mat3 Instance::getParentModelMatrixExcludingDB(entt::entity e) {
+	Cmp::Parent* parent = registry().try_get<Cmp::Parent>(e);
 	if (parent && parent->id != drawingBoardId())
-		return getParentModelMatrixExcludingDB(parent->id) * registry().get<Cmp::TransformMatrix>(parent->id).val;
+		return getParentModelMatrixExcludingDB(parent->id) * getLocalTransform(parent->id);
 	else
 		return glm::mat3(1.0f);
 }

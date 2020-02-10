@@ -35,8 +35,8 @@ void InputState_Rest::onLeftClicDown() {
 }
 
 void InputState_Rest::onWheelScroll(float dl) {
-	glm::mat3& mat = I.registry().get<Cmp::TransformMatrix>(I.drawingBoardId()).val;
-	mat = glm::scale(mat, glm::vec2(pow(0.95f, -dl)));
+	glm::mat3 mat = I.registry().get<Cmp::TransformMatrix>(I.drawingBoardId()).val();
+	I.registry().replace<Cmp::TransformMatrix>(I.drawingBoardId(), glm::scale(mat, glm::vec2(pow(0.95f, -dl))));
 }
 
 void InputState_Rest::onKeyDown(SDL_Scancode key) {

@@ -14,7 +14,7 @@ InputState_Translate::InputState_Translate(Instance& instance, entt::entity targ
 	: IInputState(instance),
 	  m_targetID(targetID),
 	  m_mouseInitialPosInScreen(DisplayInfos::MousePositionInScreen()),
-	  m_initialMat(I.registry().get<Cmp::TransformMatrix>(targetID).val)
+	  m_initialMat(I.registry().get<Cmp::TransformMatrix>(targetID).val())
 {}
 
 void InputState_Translate::onLeftClicUp() {
@@ -24,5 +24,5 @@ void InputState_Translate::onLeftClicUp() {
 void InputState_Translate::update() {
 	glm::vec2 dl = DisplayInfos::MousePositionInScreen() - m_mouseInitialPosInScreen;
 	dl = glm::inverse(I.getParentModelMatrix(m_targetID)) * glm::vec3(dl, 0.0f);
-	I.registry().get<Cmp::TransformMatrix>(m_targetID).val = glm::translate(glm::mat3(1.0f), dl) * m_initialMat;
+	I.registry().replace<Cmp::TransformMatrix>(m_targetID, glm::translate(glm::mat3(1.0f), dl) * m_initialMat);
 }

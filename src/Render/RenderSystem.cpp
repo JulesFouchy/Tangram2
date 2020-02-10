@@ -14,10 +14,10 @@
 
 unsigned int RenderSystem::m1to1QuadVBOid;
 unsigned int RenderSystem::m1to1QuadVAOid;
-Shader RenderSystem::s_shaderTest         ("res/shaders/default.vert", "res/shaders/test.frag", false);
+Shader RenderSystem::s_shaderTest         ("res/shaders/defaultDrawOnTexture.vert", "res/shaders/test.frag", false);
 Shader RenderSystem::s_shaderDrawingBoard ("res/shaders/default.vert", "res/shaders/drawingBoard.frag", false);
 Shader RenderSystem::s_shaderPoint        ("res/shaders/default.vert", "res/shaders/point.frag", false);
-Shader RenderSystem::s_shaderPolygon      ("res/shaders/default.vert", "res/shaders/polygon.frag", false);
+Shader RenderSystem::s_shaderPolygon      ("res/shaders/defaultDrawOnTexture.vert", "res/shaders/polygon.frag", false);
 Shader RenderSystem::s_shaderTexture      ("res/shaders/default.vert", "res/shaders/texture.frag", false);
 
 RenderSystem::RenderSystem(Instance& instance)
@@ -65,7 +65,7 @@ void RenderSystem::renderPreviewTexture(const std::vector<entt::entity>& list) {
 	// Loop
 	for (entt::entity e : list) {
 		// Matrix
-		s_shaderTexture.setUniformMat3f("u_mat", I.getMatrixPlusAspectRatio(e));
+		s_shaderTexture.setUniformMat3f("u_mat", I.getMatrixPlusAspectRatio(I.drawingBoardId()));
 		// Texture
 		Cmp::Texture& tex = I.registry().get<Cmp::Texture>(e);
 		GLCall(glBindTexture(GL_TEXTURE_2D, tex.id));
@@ -84,7 +84,7 @@ void RenderSystem::renderPolygon(const std::vector<entt::entity>& vertices, floa
 	int k = 0;
 	for (entt::entity vertex : vertices) {
 		s_shaderPolygon.setUniform2f("u_vertices[" + std::to_string(k) + "]", glm::vec2(glm::column(I.getLocalTransform(vertex), 2)));
-		s_shaderPolygon.setUniformMat3f("u_mat", glm::mat3(1.0f));
+		s_shaderPolygon.setUniformMat3f("u_localTransformMat", glm::mat3(I.getLocalTransform(vertex)));
 		k++;
 	}
 	glBindVertexArray(m1to1QuadVAOid);

@@ -52,6 +52,7 @@ private:
 	entt::entity m_drawingBoardId;
 
 	entt::entity m_poly;
+	entt::entity m_testLayer;
 
 	std::string m_projectLocation;
 	std::string m_projectName;

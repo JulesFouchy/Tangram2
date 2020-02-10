@@ -30,6 +30,7 @@ private:
 	void renderPolygon(const std::vector<entt::entity>& vertices, float smoothMin);
 
 friend class LayersManager;
+friend class Instance;
 	inline void setRenderTarget_Texture(Cmp::Texture& texture) { m_renderBuffer.setRenderTarget_Texture(texture); }
 	inline void setRenderTarget_Screen() { m_renderBuffer.setRenderTarget_Screen(); }
 

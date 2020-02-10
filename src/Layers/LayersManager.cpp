@@ -26,8 +26,10 @@ entt::entity LayersManager::createTestLayer() {
 	RenderSystem& RS = I.renderSystem();
 	Cmp::Texture& texture = I.registry().get<Cmp::Texture>(id);
 	RS.setRenderTarget_Texture(texture);
+	glClearColor(0.0, 0.0, 1.0, 1.0);
+	glClear(GL_COLOR_BUFFER_BIT);
 		RenderSystem::s_shaderTest.bind();
-		RenderSystem::s_shaderTest.setUniformMat3f("u_mat", glm::mat3(1.0f));
+		RenderSystem::s_shaderTest.setUniformMat3f("u_localTransformMat", glm::mat3(1.0f));
 		glBindVertexArray(RenderSystem::m1to1QuadVAOid);
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 	RS.setRenderTarget_Screen();

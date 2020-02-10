@@ -153,7 +153,11 @@ glm::mat3 Instance::getMatrixToDBSpace(entt::entity e) {
 }
 
 glm::mat3 Instance::getMatrixToTextureSpace(entt::entity e) {
-	return glm::scale(glm::inverse(getMatrixToDBSpace(e)), glm::vec2(2.0f * registry().get<Cmp::AspectRatio>(drawingBoardId()).val, 2.0f));
+	glm::mat3 mat = glm::inverse(getMatrixToDBSpace(e));
+	float DBratio = registry().get<Cmp::AspectRatio>(drawingBoardId()).val;
+	mat = glm::scale(mat, glm::vec2(2.0f*DBratio, 2.0f));
+	mat = glm::translate(glm::mat3(1.0f), -glm::vec2(DBratio, 1.0f)) * mat;
+	return mat;
 }
 
 glm::mat3 Instance::getParentModelMatrix(entt::entity e) {

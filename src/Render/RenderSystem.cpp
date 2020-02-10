@@ -95,7 +95,6 @@ void RenderSystem::computePreviewTexture_Polygon(entt::entity e, float smoothMin
 	glClear(GL_COLOR_BUFFER_BIT);
 		s_shaderPolygon.bind();
 		s_shaderPolygon.setUniform1f("u_SmoothMin", smoothMin);
-		s_shaderPolygon.setUniform1f("u_AspectRatio", I.registry().get<Cmp::AspectRatio>(I.drawingBoardId()).val);
 		s_shaderPolygon.setUniformMat3f("u_localTransformMat", I.getMatrixToTextureSpace(e));
 		int k = 0;
 		Cmp::Vertices& vertices = I.registry().get<Cmp::Vertices>(e);

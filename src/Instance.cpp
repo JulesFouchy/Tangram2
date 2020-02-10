@@ -84,24 +84,8 @@ void Instance::onLoopIteration(){
 
 	layersManager().renderPolygonOnPreviewTexture(m_poly, smoothMin);
 
-
-	renderSystem().setRenderTarget_Texture(registry().get<Cmp::Texture>(m_testLayer));
-	glClearColor(0.0, 0.0, 0.0, 0.0);
-	glClear(GL_COLOR_BUFFER_BIT);
-	RenderSystem::s_shaderTest.bind();
-	RenderSystem::s_shaderTest.setUniformMat3f("u_localTransformMat", getMatrixToTextureSpace(m_testLayer));
-	glBindVertexArray(RenderSystem::m1to1QuadVAOid);
-	glDrawArrays(GL_TRIANGLES, 0, 6);
-	renderSystem().setRenderTarget_Screen();
-
-	renderSystem().setRenderTarget_Texture(registry().get<Cmp::Texture>(m_testLayer2));
-	glClearColor(0.0, 0.0, 0.0, 0.0);
-	glClear(GL_COLOR_BUFFER_BIT);
-	RenderSystem::s_shaderTest.bind();
-	RenderSystem::s_shaderTest.setUniformMat3f("u_localTransformMat", getMatrixToTextureSpace(m_testLayer2));
-	glBindVertexArray(RenderSystem::m1to1QuadVAOid);
-	glDrawArrays(GL_TRIANGLES, 0, 6);
-	renderSystem().setRenderTarget_Screen();
+	renderSystem().computePreviewTexture_ShaderLayer(m_testLayer,  RenderSystem::s_shaderTest);
+	renderSystem().computePreviewTexture_ShaderLayer(m_testLayer2, RenderSystem::s_shaderTest);
 }
 
 void Instance::createDrawingBoard() {

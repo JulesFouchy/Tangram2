@@ -93,6 +93,18 @@ void RenderSystem::renderPolygon(entt::entity polygon, float smoothMin) {
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 }
 
+
+void RenderSystem::computePreviewTexture_ShaderLayer(entt::entity e, Shader& shader) {
+	setRenderTarget_Texture(I.registry().get<Cmp::Texture>(e));
+	glClearColor(0.0, 0.0, 0.0, 0.0);
+	glClear(GL_COLOR_BUFFER_BIT);
+		shader.bind();
+		shader.setUniformMat3f("u_localTransformMat", I.getMatrixToTextureSpace(e));
+		glBindVertexArray(RenderSystem::m1to1QuadVAOid);
+		glDrawArrays(GL_TRIANGLES, 0, 6);
+	setRenderTarget_Screen();
+}
+
 void RenderSystem::Initialize() {
 	s_shaderTest.compile();
 	s_shaderDrawingBoard.compile();

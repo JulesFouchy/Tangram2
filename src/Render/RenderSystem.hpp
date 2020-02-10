@@ -28,6 +28,7 @@ private:
 	void renderSquare(const std::vector<entt::entity>& list, Shader& shader);
 	void renderPreviewTexture(const std::vector<entt::entity>& list);
 	void renderPolygon(entt::entity polygon, float smoothMin);
+	void computePreviewTexture_ShaderLayer(entt::entity e, Shader& shader);
 
 friend class LayersManager;
 friend class Instance;

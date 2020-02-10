@@ -16,6 +16,8 @@ public:
 	Instance(const std::string& projectFolderpath);
 	~Instance() = default;
 
+	void setParentOf(entt::entity child, entt::entity parent);
+
 	glm::mat3 getLocalTransform(entt::entity e);
 	glm::mat3 getMatrixPlusAspectRatio(entt::entity e);
 	glm::mat3 getMatrix(entt::entity e);

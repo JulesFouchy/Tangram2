@@ -2,6 +2,7 @@
 
 #include "Components/TransformMatrix.hpp"
 #include "Components/Parent.hpp"
+#include "Components/Children.hpp"
 #include "Components/AspectRatio.hpp"
 #include "Components/Vertices.hpp"
 
@@ -24,6 +25,9 @@
 
 void Instance::onTransformMatrixChange(entt::entity e, entt::registry& R) {
 	R.assign_or_replace<entt::tag<"MustRecomputeTransformMatrix"_hs>>(e);
+	Cmp::Children& children = R.get<Cmp::Children>(e);
+	for (entt::entity child : children.list)
+		onTransformMatrixChange(child, R);
 }
 
 Instance::Instance()
@@ -42,7 +46,7 @@ Instance::Instance()
 		m_projectName = "UntitledProject" + std::to_string(k++);
 	}
 	// Events
-	registry().on_construct<Cmp::TransformMatrix>().connect<&Instance::onTransformMatrixChange>(*this);
+	//registry().on_construct<Cmp::TransformMatrix>().connect<&Instance::onTransformMatrixChange>(*this);
 	registry().on_replace<Cmp::TransformMatrix>().connect<&Instance::onTransformMatrixChange>(*this);
 	// Drawing board
 	createDrawingBoard();
@@ -62,7 +66,7 @@ Instance::Instance()
 		//glm::mat3& mat = registry().get<Cmp::TransformMatrix>(m_testLayer).val;
 		//mat = glm::translate(mat, glm::vec2(1.0f, 0.0f));
 		//mat = glm::scale(mat, glm::vec2(0.5f));
-		registry().get<Cmp::Parent>(m_testLayer).id = m_testLayer2;
+		setParentOf(m_testLayer, m_testLayer2);
 	}
 
 	m_poly = layersManager().createPolygonLayer({ glm::vec2(-0.3, -0.5), glm::vec2(0, 0), glm::vec2(0.8, -0.5), glm::vec2(-0.8, -0.5), glm::vec2(0.8, 0.5) });
@@ -104,6 +108,12 @@ void Instance::createDrawingBoard() {
 	mat = glm::rotate(mat, 0.1f);
 	registry().assign<Cmp::TransformMatrix>(drawingBoardId(), mat);
 	registry().assign<Cmp::AspectRatio>(drawingBoardId(), 16.0f / 9.0f);
+	registry().assign<Cmp::Children>(drawingBoardId());
+}
+
+void Instance::setParentOf(entt::entity child, entt::entity parent) {
+	registry().get<Cmp::Parent>(child).id = parent;
+	registry().get<Cmp::Children>(parent).list.push_back(child);
 }
 
 glm::mat3 Instance::getLocalTransform(entt::entity e) {

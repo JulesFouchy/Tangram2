@@ -12,7 +12,6 @@ public:
 	~ShapeFactory() = default;
 
 	entt::entity createPoint2D(glm::vec2 posInScreenSpace, entt::entity parent) const;
-	entt::entity createPolygon(const std::vector<glm::vec2>& vertices) const;
 private:
 	Instance& I;
 };

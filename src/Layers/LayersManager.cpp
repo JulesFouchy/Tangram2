@@ -5,6 +5,7 @@
 #include "Components/TransformMatrix.hpp"
 #include "Components/AspectRatio.hpp"
 #include "Components/Parent.hpp"
+#include "Components/Children.hpp"
 #include "Components/Vertices.hpp"
 
 #include "Helper/DisplayInfos.hpp"
@@ -46,9 +47,11 @@ entt::entity LayersManager::createLayerEntity() {
 	entt::entity e = R.create();
 
 	R.assign<Cmp::TransformMatrix>(e);
-	R.assign<Cmp::Parent>(e, I.drawingBoardId());
+	R.assign<Cmp::Parent>(e, entt::null);
+	I.setParentOf(e, I.drawingBoardId());
+	R.assign<Cmp::Children>(e);
 	R.assign<Cmp::Texture>(e, I.renderSystem().previewWidth(), I.renderSystem().previewHeight());
-
+	R.assign<entt::tag<"MustRecomputeTransformMatrix"_hs>>(e);
 	return e;
 }
 

@@ -67,17 +67,19 @@ Instance::Instance()
 	//
 	{
 		m_testLayer2 = layersManager().createTestLayer();
-		//glm::mat3& mat = registry().get<Cmp::TransformMatrix>(m_testLayer2).val();
+		//glm::mat3 mat = registry().get<Cmp::TransformMatrix>(m_testLayer2).val();
 		//mat = glm::translate(mat, glm::vec2(1.3f, 0.0f));
 		//mat = glm::scale(mat, glm::vec2(0.85f));
+		//registry().replace<Cmp::TransformMatrix>(m_testLayer2, mat);
 		//registry().get<Cmp::AspectRatio>(id).val = 2.0f;
 	}
 	
 	{
 		m_testLayer = layersManager().createTestLayer();
-		//glm::mat3& mat = registry().get<Cmp::TransformMatrix>(m_testLayer).val;
+		//glm::mat3 mat = registry().get<Cmp::TransformMatrix>(m_testLayer).val();
 		//mat = glm::translate(mat, glm::vec2(1.0f, 0.0f));
 		//mat = glm::scale(mat, glm::vec2(0.5f));
+		//registry().replace<Cmp::TransformMatrix>(m_testLayer, mat);
 		setParentOf(m_testLayer, m_testLayer2);
 	}
 

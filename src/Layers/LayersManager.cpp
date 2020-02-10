@@ -43,23 +43,8 @@ entt::entity LayersManager::createPolygonLayer(const std::vector<glm::vec2>& ver
 	I.registry().assign<entt::tag<"Polygon"_hs>>(id);
 	I.registry().assign<Cmp::Vertices>(id, vertices, id, I.shapeFactory());
 
-	renderPolygonOnPreviewTexture(id, 32.0f);
-
 	m_layersOrdered.push_back(id);
 	return id;
-}
-
-
-#include <imgui/imgui.h>
-
-void LayersManager::renderPolygonOnPreviewTexture(entt::entity polygon, float smoothMin) {
-	RenderSystem& RS = I.renderSystem();
-	Cmp::Texture& texture = I.registry().get<Cmp::Texture>(polygon);
-	RS.setRenderTarget_Texture(texture);
-		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
-		RS.renderPolygon(polygon, smoothMin);
-	RS.setRenderTarget_Screen();
 }
 
 entt::entity LayersManager::createLayerEntity() {

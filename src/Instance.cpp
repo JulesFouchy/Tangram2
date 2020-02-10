@@ -82,7 +82,7 @@ void Instance::onLoopIteration(){
 	ImGui::SliderFloat("SmoothMin", &smoothMin, 0.0f, 256.0f);
 	ImGui::End();
 
-	layersManager().renderPolygonOnPreviewTexture(m_poly, smoothMin);
+	renderSystem().computePreviewTexture_Polygon(m_poly, smoothMin);
 
 	renderSystem().computePreviewTexture_ShaderLayer(m_testLayer,  RenderSystem::s_shaderTest);
 	renderSystem().computePreviewTexture_ShaderLayer(m_testLayer2, RenderSystem::s_shaderTest);

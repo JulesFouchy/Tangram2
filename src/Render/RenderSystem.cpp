@@ -78,21 +78,25 @@ void RenderSystem::renderPreviewTexture(const std::vector<entt::entity>& list) {
 	GLCall(glBindTexture(GL_TEXTURE_2D, 0));
 }
 
-void RenderSystem::renderPolygon(entt::entity polygon, float smoothMin) {
-	s_shaderPolygon.bind();
-	s_shaderPolygon.setUniform1f("u_SmoothMin", smoothMin);
-	s_shaderPolygon.setUniform1f("u_AspectRatio", I.registry().get<Cmp::AspectRatio>(I.drawingBoardId()).val);
-	s_shaderPolygon.setUniformMat3f("u_localTransformMat", I.getMatrixToTextureSpace(polygon));
-	int k = 0;
-	Cmp::Vertices& vertices = I.registry().get<Cmp::Vertices>(polygon);
-	for (entt::entity vertex : vertices.list) {
-		s_shaderPolygon.setUniform2f("u_vertices[" + std::to_string(k) + "]", glm::vec2(glm::column(I.getLocalTransform(vertex), 2)));
-		k++;
-	}
-	glBindVertexArray(m1to1QuadVAOid);
-	glDrawArrays(GL_TRIANGLES, 0, 6);
-}
 
+void RenderSystem::computePreviewTexture_Polygon(entt::entity e, float smoothMin) {
+	setRenderTarget_Texture(I.registry().get<Cmp::Texture>(e));
+	glClearColor(0.0, 0.0, 0.0, 0.0);
+	glClear(GL_COLOR_BUFFER_BIT);
+		s_shaderPolygon.bind();
+		s_shaderPolygon.setUniform1f("u_SmoothMin", smoothMin);
+		s_shaderPolygon.setUniform1f("u_AspectRatio", I.registry().get<Cmp::AspectRatio>(I.drawingBoardId()).val);
+		s_shaderPolygon.setUniformMat3f("u_localTransformMat", I.getMatrixToTextureSpace(e));
+		int k = 0;
+		Cmp::Vertices& vertices = I.registry().get<Cmp::Vertices>(e);
+		for (entt::entity vertex : vertices.list) {
+			s_shaderPolygon.setUniform2f("u_vertices[" + std::to_string(k) + "]", glm::vec2(glm::column(I.getLocalTransform(vertex), 2)));
+			k++;
+		}
+		glBindVertexArray(m1to1QuadVAOid);
+		glDrawArrays(GL_TRIANGLES, 0, 6);
+	setRenderTarget_Screen();
+}
 
 void RenderSystem::computePreviewTexture_ShaderLayer(entt::entity e, Shader& shader) {
 	setRenderTarget_Texture(I.registry().get<Cmp::Texture>(e));

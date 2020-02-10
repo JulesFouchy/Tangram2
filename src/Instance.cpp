@@ -44,17 +44,17 @@ Instance::Instance()
 	//
 	{
 		m_testLayer2 = layersManager().createTestLayer();
-		//glm::mat3& mat = registry().get<Cmp::TransformMatrix>(id).val;
+		glm::mat3& mat = registry().get<Cmp::TransformMatrix>(m_testLayer2).val;
 		//mat = glm::translate(mat, glm::vec2(1.3f, 0.0f));
-		//mat = glm::scale(mat, glm::vec2(0.15f));
+		mat = glm::scale(mat, glm::vec2(0.85f));
 		//registry().get<Cmp::AspectRatio>(id).val = 2.0f;
 	}
 	
 	{
 		m_testLayer = layersManager().createTestLayer();
-		//glm::mat3& mat = registry().get<Cmp::TransformMatrix>(id).val;
+		glm::mat3& mat = registry().get<Cmp::TransformMatrix>(m_testLayer).val;
 		//mat = glm::translate(mat, glm::vec2(1.0f, 0.0f));
-		//mat = glm::scale(mat, glm::vec2(0.3f));
+		mat = glm::scale(mat, glm::vec2(0.5f));
 		registry().get<Cmp::Parent>(m_testLayer).id = m_testLayer2;
 	}
 
@@ -89,7 +89,7 @@ void Instance::onLoopIteration(){
 	glClearColor(0.0, 0.0, 0.0, 0.0);
 	glClear(GL_COLOR_BUFFER_BIT);
 	RenderSystem::s_shaderTest.bind();
-	RenderSystem::s_shaderTest.setUniformMat3f("u_localTransformMat", glm::scale(glm::inverse(getLocalTransform(m_testLayer)), glm::vec2(2.0f * registry().get<Cmp::AspectRatio>(drawingBoardId()).val, 2.0f)));
+	RenderSystem::s_shaderTest.setUniformMat3f("u_localTransformMat", glm::scale(glm::inverse(getMatrixToDBSpace(m_testLayer)), glm::vec2(2.0f * registry().get<Cmp::AspectRatio>(drawingBoardId()).val, 2.0f)));
 	glBindVertexArray(RenderSystem::m1to1QuadVAOid);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 	renderSystem().setRenderTarget_Screen();
@@ -98,7 +98,7 @@ void Instance::onLoopIteration(){
 	glClearColor(0.0, 0.0, 0.0, 0.0);
 	glClear(GL_COLOR_BUFFER_BIT);
 	RenderSystem::s_shaderTest.bind();
-	RenderSystem::s_shaderTest.setUniformMat3f("u_localTransformMat", glm::scale(glm::inverse(getLocalTransform(m_testLayer2)), glm::vec2(2.0f * registry().get<Cmp::AspectRatio>(drawingBoardId()).val, 2.0f)));
+	RenderSystem::s_shaderTest.setUniformMat3f("u_localTransformMat", glm::scale(glm::inverse(getMatrixToDBSpace(m_testLayer2)), glm::vec2(2.0f * registry().get<Cmp::AspectRatio>(drawingBoardId()).val, 2.0f)));
 	glBindVertexArray(RenderSystem::m1to1QuadVAOid);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 	renderSystem().setRenderTarget_Screen();
@@ -145,7 +145,7 @@ glm::mat3 Instance::getParentModelMatrix(entt::entity id) {
 glm::mat3 Instance::getParentModelMatrixExcludingDB(entt::entity id) {
 	Cmp::Parent* parent = registry().try_get<Cmp::Parent>(id);
 	if (parent && parent->id != drawingBoardId())
-		return getParentModelMatrix(parent->id) * registry().get<Cmp::TransformMatrix>(parent->id).val;
+		return getParentModelMatrixExcludingDB(parent->id) * registry().get<Cmp::TransformMatrix>(parent->id).val;
 	else
 		return glm::mat3(1.0f);
 }

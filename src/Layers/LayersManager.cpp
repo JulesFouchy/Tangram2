@@ -54,7 +54,6 @@ entt::entity LayersManager::createLayerEntity() {
 	R.assign<Cmp::TransformMatrix>(id);
 	R.assign<Cmp::Parent>(id, I.drawingBoardId());
 	Cmp::Texture& texture = R.assign<Cmp::Texture>(id, I.renderSystem().previewWidth(), I.renderSystem().previewHeight());
-	R.assign<Cmp::AspectRatio>(id, R.get<Cmp::AspectRatio>(I.drawingBoardId()));
 
 	return id;
 }

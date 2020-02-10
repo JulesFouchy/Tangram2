@@ -36,9 +36,9 @@ void RenderSystem::render() {
 	//	renderPolygon(vertices.list, smoothMin);
 	//});
 	// Points 2D
-	I.registry().view<entt::tag<"Point2D"_hs>>().each([this](auto entity, auto& tag) {
-		renderSquare({ entity }, s_shaderPoint);
-	});
+	//I.registry().view<entt::tag<"Point2D"_hs>>().each([this](auto entity, auto& tag) {
+	//	renderSquare({ entity }, s_shaderPoint);
+	//});
 }
 
 void RenderSystem::checkTexturesToRecompute() {

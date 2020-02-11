@@ -42,13 +42,13 @@ void RenderSystem::render() {
 }
 
 void RenderSystem::checkTexturesToRecompute() {
-	I.registry().view<entt::tag<"Polygon"_hs>, entt::tag<"MustRecomputeTransformMatrix"_hs>>().each([this](auto e, auto&, auto&) {
+	I.registry().view<entt::tag<"Polygon"_hs>>().each([this](auto e, auto&) {
 		computePreviewTexture_Polygon(e, 32.0f);
-		I.registry().remove<entt::tag<"MustRecomputeTransformMatrix"_hs>>(e);
+		//I.registry().remove<entt::tag<"MustRecomputeTransformMatrix"_hs>>(e);
 	});
-	I.registry().view<entt::tag<"TestLayer"_hs>, entt::tag<"MustRecomputeTransformMatrix"_hs>>().each([this](auto e, auto&, auto&) {
+	I.registry().view<entt::tag<"TestLayer"_hs>>().each([this](auto e, auto&) {
 		computePreviewTexture_ShaderLayer(e, s_shaderTest);
-		I.registry().remove<entt::tag<"MustRecomputeTransformMatrix"_hs>>(e);
+		//I.registry().remove<entt::tag<"MustRecomputeTransformMatrix"_hs>>(e);
 	});
 }
 

@@ -258,8 +258,8 @@ void Instance::saveProject(const std::string& folderpath) {
 		registry().snapshot()
 			.entities(registryArchive)
 			.destroyed(registryArchive)
-			.component<Cmp::AspectRatio, Cmp::TransformMatrix, Cmp::Parent, Cmp::Vertices,
-						entt::tag<"Point2D"_hs>, entt::tag<"Polygon"_hs>>(registryArchive);
+			.component<Cmp::AspectRatio, Cmp::Children, Cmp::Parent, Cmp::Texture, Cmp::TransformMatrix, Cmp::Vertices, Cmp::VisualDependencies,
+						entt::tag<"Point2D"_hs>, entt::tag<"Polygon"_hs>, entt::tag<"TestLayer"_hs>>(registryArchive);
 	}
 	Log::separationLine();
 }
@@ -281,8 +281,8 @@ void Instance::openProject(const std::string& folderpath) {
 		registry().loader()
 			.entities(registryArchive)
 			.destroyed(registryArchive)
-			.component<Cmp::AspectRatio, Cmp::TransformMatrix, Cmp::Parent, Cmp::Vertices,
-				entt::tag<"Point2D"_hs>, entt::tag<"Polygon"_hs>>(registryArchive);
+			.component<Cmp::AspectRatio, Cmp::Children, Cmp::Parent, Cmp::Texture, Cmp::TransformMatrix, Cmp::Vertices, Cmp::VisualDependencies,
+			entt::tag<"Point2D"_hs>, entt::tag<"Polygon"_hs>, entt::tag<"TestLayer"_hs>>(registryArchive);
 	}
 	Log::separationLine();
 }

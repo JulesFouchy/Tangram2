@@ -24,6 +24,10 @@
 
 #include "App.hpp"
 
+static void deleteTexture(entt::entity e, entt::registry& R) {
+	R.get<Cmp::Texture>(e).Delete();
+}
+
 void Instance::onTransformMatrixChange(entt::entity e, entt::registry& R) {
 	if (e != drawingBoardId()) {
 		onMustRecomputeTexture(e);
@@ -46,6 +50,7 @@ void Instance::Construct() {
 	// Events
 	//registry().on_construct<Cmp::TransformMatrix>().connect<&Instance::onTransformMatrixChange>(*this);
 	registry().on_replace<Cmp::TransformMatrix>().connect<&Instance::onTransformMatrixChange>(*this);
+	registry().on_destroy<Cmp::Texture>().connect<&deleteTexture>();
 }
 
 Instance::Instance()
@@ -86,7 +91,6 @@ Instance::Instance()
 		//registry().replace<Cmp::TransformMatrix>(m_testLayer, mat);
 		setParentOf(m_testLayer, m_testLayer2);
 	}
-
 	m_poly = layersManager().createPolygonLayer({ glm::vec2(-0.3, -0.5), glm::vec2(0, 0), glm::vec2(0.8, -0.5), glm::vec2(-0.8, -0.5), glm::vec2(0.8, 0.5) });
 	//renderSystem().computePreviewTexture_Polygon(m_poly, 32.0f);
 }

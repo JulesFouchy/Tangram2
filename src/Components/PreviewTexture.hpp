@@ -4,14 +4,17 @@
 #include "Debugging/glException.hpp"
 #include <glad/glad.h>
 
+#include "Debugging/Log.hpp"
+
 #include <cereal/access.hpp>
 
 namespace Cmp {
 struct Texture {
-	Texture() = default;
-	//void Delete() {
-	//	glDeleteTextures(1, &id);
-	//}
+	Texture() = default; // required by registry.snapshot()
+	void Delete() { // called by registry.on_destroy<Cmp::Texture>
+		spdlog::error("Delete Texture {}", id);
+		glDeleteTextures(1, &id);
+	}
 
 	Texture(unsigned int width, unsigned int height,
 			GLint GLpixelInternalFormat = GL_RGBA8, GLenum GLpixelFormat = GL_RGBA, GLenum GLpixelType = GL_UNSIGNED_BYTE, GLint interpolationMode = GL_LINEAR, GLint wrapMode = GL_CLAMP_TO_EDGE)
@@ -43,6 +46,7 @@ private:
 		// Set size
 		GLCall(glTexImage2D(GL_TEXTURE_2D, 0, m_GLpixelInternalFormat, width, height, 0, m_GLpixelFormat, m_GLpixelType, nullptr));
 		GLCall(glBindTexture(GL_TEXTURE_2D, 0));
+		spdlog::warn("Create Texture {}", id);
 	}
 
 private:

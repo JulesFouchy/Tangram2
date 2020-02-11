@@ -51,7 +51,7 @@ entt::entity LayersManager::createLayerEntity() {
 	I.setParentOf(e, I.drawingBoardId());
 	R.assign<Cmp::Children>(e);
 	R.assign<Cmp::Texture>(e, I.renderSystem().previewWidth(), I.renderSystem().previewHeight());
-	R.assign<entt::tag<"MustRecomputeTransformMatrix"_hs>>(e);
+	R.assign<entt::tag<"MustRecomputeTexture"_hs>>(e);
 	return e;
 }
 

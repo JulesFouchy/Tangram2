@@ -34,12 +34,18 @@ void Instance::onTransformMatrixChange(entt::entity e, entt::registry& R) {
 }
 
 void Instance::onMustRecomputeTexture(entt::entity e) {
-	registry().assign_or_replace<entt::tag<"MustRecomputeTransformMatrix"_hs>>(e);
+	registry().assign_or_replace<entt::tag<"MustRecomputeTexture"_hs>>(e);
 	Cmp::VisualDependencies* dependencies = registry().try_get<Cmp::VisualDependencies>(e);
 	if (dependencies) {
 		for (entt::entity dependant : dependencies->list)
 			onMustRecomputeTexture(dependant);
 	}
+}
+
+void Instance::Construct() {
+	// Events
+	//registry().on_construct<Cmp::TransformMatrix>().connect<&Instance::onTransformMatrixChange>(*this);
+	registry().on_replace<Cmp::TransformMatrix>().connect<&Instance::onTransformMatrixChange>(*this);
 }
 
 Instance::Instance()
@@ -51,15 +57,13 @@ Instance::Instance()
 	  m_projectLocation(MyFile::RootDir+"/MyTangramProjects"),
 	  m_bUserChoseProjectName(false)
 {
+	Construct();
 	// Project default name
 	m_projectName = "UntitledProject0";
 	int k = 1;
 	while (MyFile::Exists(getProjectPath()) || App::Get().projectIsOpen(getProjectPath())) {
 		m_projectName = "UntitledProject" + std::to_string(k++);
 	}
-	// Events
-	//registry().on_construct<Cmp::TransformMatrix>().connect<&Instance::onTransformMatrixChange>(*this);
-	registry().on_replace<Cmp::TransformMatrix>().connect<&Instance::onTransformMatrixChange>(*this);
 	// Drawing board
 	createDrawingBoard();
 	//
@@ -96,6 +100,7 @@ Instance::Instance(const std::string& projectFolderpath)
 	  m_shapeFactory(*this),
 	  m_bUserChoseProjectName(true)
 {
+	Construct();
 	openProject(projectFolderpath);
 }
 
@@ -284,5 +289,8 @@ void Instance::openProject(const std::string& folderpath) {
 			.component<Cmp::AspectRatio, Cmp::Children, Cmp::Parent, Cmp::Texture, Cmp::TransformMatrix, Cmp::Vertices, Cmp::VisualDependencies,
 			entt::tag<"Point2D"_hs>, entt::tag<"Polygon"_hs>, entt::tag<"TestLayer"_hs>>(registryArchive);
 	}
+	auto& layersWithPrevTexture = registry().view<Cmp::Texture>();
+	for (entt::entity e : layersWithPrevTexture)
+		registry().assign<entt::tag<"MustRecomputeTexture"_hs>>(e);
 	Log::separationLine();
 }

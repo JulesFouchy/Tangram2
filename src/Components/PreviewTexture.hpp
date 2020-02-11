@@ -9,9 +9,9 @@
 namespace Cmp {
 struct Texture {
 	Texture() = default;
-	~Texture() {
-		glDeleteTextures(1, &id);
-	}
+	//void Delete() {
+	//	glDeleteTextures(1, &id);
+	//}
 
 	Texture(unsigned int width, unsigned int height,
 			GLint GLpixelInternalFormat = GL_RGBA8, GLenum GLpixelFormat = GL_RGBA, GLenum GLpixelType = GL_UNSIGNED_BYTE, GLint interpolationMode = GL_LINEAR, GLint wrapMode = GL_CLAMP_TO_EDGE)

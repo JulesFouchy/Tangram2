@@ -15,7 +15,7 @@ RenderBuffer::~RenderBuffer() {
 }
 
 void RenderBuffer::setRenderTarget_Texture(Cmp::Texture& texture) {
-	assert(texture.width == m_previewWidth && texture.height == m_previewHeight);
+	//assert(texture.width == m_previewWidth && texture.height == m_previewHeight);
 	// Bind Framebuffer
 	GLCall(glBindFramebuffer(GL_FRAMEBUFFER, m_frameBufferId));
 	// Set viewport

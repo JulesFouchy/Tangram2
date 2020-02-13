@@ -2,6 +2,7 @@
 #include "InputState_Translate.hpp"
 #include "InputState_GUI.hpp"
 #include "Window_SaveAsProject.hpp"
+#include "Window_ExportImage.hpp"
 
 #include "Instance.hpp"
 #include "Helper/DisplayInfos.hpp"
@@ -42,8 +43,7 @@ void InputState_Rest::onWheelScroll(float dl) {
 void InputState_Rest::onKeyDown(SDL_Scancode key) {
 	if (DisplayInfos::KeyIsDown(SDL_SCANCODE_LCTRL)) {
 		if (key == SDL_SCANCODE_E) {
-			std::string filepath = FileBrowser::GetFileSave(FileFilter::Image);
-			spdlog::info("Saving file '{}'", filepath);
+			I.inputSystem().setGUIState<Window_ExportImage>();
 		}
 		else if (key == SDL_SCANCODE_I) {
 			std::string filepath = FileBrowser::GetFileOpen(FileFilter::Image);

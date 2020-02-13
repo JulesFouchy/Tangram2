@@ -41,7 +41,7 @@ void RenderSystem::render() {
 	//});
 }
 
-void RenderSystem::exportImage(unsigned int width, unsigned int height) {
+void RenderSystem::exportImage(unsigned int width, unsigned int height, const std::string& filepath) {
 	Cmp::Texture renderTexture(width, height);
 	setRenderTarget_Texture(renderTexture);
 	glClearColor(0.0, 0.0, 0.0, 0.0);

@@ -18,7 +18,6 @@ public:
 	static void ShutDown();
 
 	void render();
-	void exportImage(unsigned int width, unsigned int height);
 	void checkTexturesToRecompute();
 
 	inline unsigned int previewWidth() { return m_renderBuffer.previewWidth(); }
@@ -31,6 +30,8 @@ private:
 	void renderPreviewTexture(const std::vector<entt::entity>& list);
 	void computePreviewTexture_Polygon(entt::entity e, float smoothMin);
 	void computePreviewTexture_ShaderLayer(entt::entity e, Shader& shader);
+friend class Window_ExportImage;
+	void exportImage(unsigned int width, unsigned int height, const std::string& filepath);
 
 friend class LayersManager;
 friend class Instance;

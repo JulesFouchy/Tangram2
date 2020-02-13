@@ -28,6 +28,7 @@ private:
 	void renderQuad(const std::vector<entt::entity>& list, Shader& shader);
 	void renderSquare(const std::vector<entt::entity>& list, Shader& shader);
 	void renderPreviewTexture(const std::vector<entt::entity>& list);
+	void blendTextures(Cmp::Texture& source, Cmp::Texture& destination);
 	void computePreviewTexture_Polygon(entt::entity e, float smoothMin);
 	void computePreviewTexture_ShaderLayer(entt::entity e, Shader& shader);
 friend class Window_ExportImage;
@@ -46,6 +47,7 @@ private:
 	static Shader s_shaderPoint;
 	static Shader s_shaderPolygon;
 	static Shader s_shaderTexture;
+	static Shader s_shaderBlend;
 	static unsigned int m1to1QuadVBOid;
 	static unsigned int m1to1QuadVAOid;
 };

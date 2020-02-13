@@ -84,14 +84,14 @@ Instance::Instance()
 	}
 	
 	{
-		m_testLayer = layersManager().createTestLayer();
+		//m_testLayer = layersManager().createTestLayer();
 		//glm::mat3 mat = registry().get<Cmp::TransformMatrix>(m_testLayer).val();
 		//mat = glm::translate(mat, glm::vec2(1.0f, 0.0f));
 		//mat = glm::scale(mat, glm::vec2(0.5f));
 		//registry().replace<Cmp::TransformMatrix>(m_testLayer, mat);
-		setParentOf(m_testLayer, m_testLayer2);
+		//setParentOf(m_testLayer, m_testLayer2);
 	}
-	m_poly = layersManager().createPolygonLayer({ glm::vec2(-0.3, -0.5), glm::vec2(0, 0), glm::vec2(0.8, -0.5), glm::vec2(-0.8, -0.5), glm::vec2(0.8, 0.5) });
+	//m_poly = layersManager().createPolygonLayer({ glm::vec2(-0.3, -0.5), glm::vec2(0, 0), glm::vec2(0.8, -0.5), glm::vec2(-0.8, -0.5), glm::vec2(0.8, 0.5) });
 	//renderSystem().computePreviewTexture_Polygon(m_poly, 32.0f);
 }
 

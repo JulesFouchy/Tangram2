@@ -23,6 +23,7 @@ Shader RenderSystem::s_shaderDrawingBoard ("res/shaders/default.vert", "res/shad
 Shader RenderSystem::s_shaderPoint        ("res/shaders/default.vert", "res/shaders/point.frag", false);
 Shader RenderSystem::s_shaderPolygon      ("res/shaders/defaultDrawOnTexture.vert", "res/shaders/polygon.frag", false);
 Shader RenderSystem::s_shaderTexture      ("res/shaders/default.vert", "res/shaders/texture.frag", false);
+Shader RenderSystem::s_shaderBlend        ("res/shaders/blendDefault.vert", "res/shaders/blendDefault.frag", false);
 
 RenderSystem::RenderSystem(Instance& instance)
 	: ISystem(instance)
@@ -137,6 +138,25 @@ void RenderSystem::renderPreviewTexture(const std::vector<entt::entity>& list) {
 }
 
 
+void RenderSystem::blendTextures(Cmp::Texture& source, Cmp::Texture& destination) {
+	s_shaderBlend.bind();
+	setRenderTarget_Texture(destination);
+	// Bind source texture
+	GLCall(glActiveTexture(GL_TEXTURE0));
+	GLCall(glBindTexture(GL_TEXTURE_2D, source.id));
+	s_shaderBlend.setUniform1i("uSrc", 0);
+	// Bind destination texture
+	GLCall(glActiveTexture(GL_TEXTURE1));
+	GLCall(glBindTexture(GL_TEXTURE_2D, destination.id));
+	s_shaderBlend.setUniform1i("uDst", 1);
+	// Draw
+	glBindVertexArray(m1to1QuadVAOid);
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+	//
+	setRenderTarget_Screen();
+}
+
+
 void RenderSystem::computePreviewTexture_Polygon(entt::entity e, float smoothMin) {
 	setRenderTarget_Texture(I.registry().get<Cmp::Texture>(e));
 	glClearColor(0.0, 0.0, 0.0, 0.0);
@@ -172,6 +192,7 @@ void RenderSystem::Initialize() {
 	s_shaderPoint.compile();
 	s_shaderPolygon.compile();
 	s_shaderTexture.compile();
+	s_shaderBlend.compile();
 	GLCall(glGenVertexArrays(1, &m1to1QuadVAOid));
 	GLCall(glGenBuffers(1, &m1to1QuadVBOid));
 	// Vertices data

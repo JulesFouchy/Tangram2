@@ -41,6 +41,33 @@ void RenderSystem::render() {
 	//});
 }
 
+void RenderSystem::exportImage(unsigned int width, unsigned int height) {
+	Cmp::Texture renderTexture(width, height);
+	setRenderTarget_Texture(renderTexture);
+	glClearColor(0.0, 0.0, 0.0, 0.0);
+	glClear(GL_COLOR_BUFFER_BIT);
+	for (entt::entity e : I.layersManager().m_layersOrdered) {
+		if (I.registry().has<entt::tag<"TestLayer"_hs>>(e)) {
+			s_shaderTest.bind();
+			s_shaderTest.setUniformMat3f("u_localTransformMat", I.getMatrixToTextureSpace(e));
+		}
+		else if (I.registry().has<entt::tag<"Polygon"_hs>>(e)) {
+			s_shaderPolygon.bind();
+			s_shaderPolygon.setUniform1f("u_SmoothMin", 32.0f);
+			s_shaderPolygon.setUniformMat3f("u_localTransformMat", I.getMatrixToTextureSpace(e));
+			int k = 0;
+			Cmp::Vertices& vertices = I.registry().get<Cmp::Vertices>(e);
+			for (entt::entity vertex : vertices.list) {
+				s_shaderPolygon.setUniform2f("u_vertices[" + std::to_string(k) + "]", glm::vec2(glm::column(I.getLocalTransform(vertex), 2)));
+				k++;
+			}
+		}
+		glBindVertexArray(m1to1QuadVAOid);
+		glDrawArrays(GL_TRIANGLES, 0, 6);
+	}
+	setRenderTarget_Screen();
+}
+
 void RenderSystem::checkTexturesToRecompute() {
 	I.registry().view<entt::tag<"Polygon"_hs>, entt::tag<"MustRecomputeTexture"_hs>>().each([this](auto e, auto&, auto&) {
 		computePreviewTexture_Polygon(e, 32.0f);

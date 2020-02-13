@@ -18,6 +18,7 @@ public:
 	static void ShutDown();
 
 	void render();
+	void exportImage(unsigned int width, unsigned int height);
 	void checkTexturesToRecompute();
 
 	inline unsigned int previewWidth() { return m_renderBuffer.previewWidth(); }

@@ -11,6 +11,9 @@
 #include "Debugging/glException.hpp"
 #include <glad/glad.h>
 
+#include "stb_image/stb_image_write.h"
+
+#include "Helper/String.hpp"
 #include "Helper/DisplayInfos.hpp"
 
 unsigned int RenderSystem::m1to1QuadVBOid;
@@ -42,6 +45,9 @@ void RenderSystem::render() {
 }
 
 void RenderSystem::exportImage(unsigned int width, unsigned int height, const std::string& filepath) {
+	spdlog::info("[Exporting as] " + filepath);
+	std::string fileExtension = MyString::GetFileExtension(filepath);
+	//
 	Cmp::Texture renderTexture(width, height);
 	setRenderTarget_Texture(renderTexture);
 	glClearColor(0.0, 0.0, 0.0, 0.0);
@@ -65,6 +71,21 @@ void RenderSystem::exportImage(unsigned int width, unsigned int height, const st
 		glBindVertexArray(m1to1QuadVAOid);
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 	}
+	// Save pixels
+	unsigned char* data = new unsigned char[4 * width * height];
+	glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, data);
+	stbi_flip_vertically_on_write(1);
+	if (fileExtension == "png") {
+		stbi_write_png(filepath.c_str(), width, height, 4, data, 0);
+	}
+	else if (fileExtension == "jpg") {
+		stbi_write_jpg(filepath.c_str(), width, height, 4, data, 100);
+	}
+	else {
+		spdlog::error("Unknown file extension : |{}|", fileExtension);
+	}
+	delete[] data;
+	// Unbind
 	setRenderTarget_Screen();
 }
 

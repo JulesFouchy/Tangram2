@@ -20,8 +20,8 @@ public:
 	void render();
 	void checkTexturesToRecompute();
 
-	inline unsigned int previewWidth() { return m_renderBuffer.previewWidth(); }
-	inline unsigned int previewHeight() { return m_renderBuffer.previewHeight(); }
+	inline unsigned int previewWidth() { return 1000; }
+	inline unsigned int previewHeight() { return 1000; }
 
 private:
 	void _renderQuad(entt::entity e, Shader& shader, std::function<glm::mat3(entt::entity)> getMatrix);

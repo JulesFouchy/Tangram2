@@ -15,11 +15,10 @@ RenderBuffer::~RenderBuffer() {
 }
 
 void RenderBuffer::setRenderTarget_Texture(Cmp::Texture& texture) {
-	//assert(texture.width == m_previewWidth && texture.height == m_previewHeight);
 	// Bind Framebuffer
 	GLCall(glBindFramebuffer(GL_FRAMEBUFFER, m_frameBufferId));
 	// Set viewport
-	GLCall(glViewport(0, 0, m_previewWidth, m_previewHeight));
+	GLCall(glViewport(0, 0, texture.width, texture.height));
 	// Bind and Attach texture
 	GLCall(glBindTexture(GL_TEXTURE_2D, texture.id));
 	GLCall(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture.id, 0));

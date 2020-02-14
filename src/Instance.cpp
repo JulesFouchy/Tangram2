@@ -122,16 +122,6 @@ void Instance::onLoopIteration(){
 	renderSystem().render();
 	renderSystem().checkTexturesToRecompute();
 	inputSystem().update();
-
-	static float smoothMin = 32.0f;
-	ImGui::Begin("Test");
-	ImGui::SliderFloat("SmoothMin", &smoothMin, 0.0f, 256.0f);
-	ImGui::End();
-
-	//renderSystem().computeTexture_Polygon(m_poly, smoothMin);
-	//
-	//renderSystem().computeTexture_Shader(m_testLayer,  RenderSystem::s_shaderTest);
-	//renderSystem().computeTexture_Shader(m_testLayer2, RenderSystem::s_shaderTest);
 }
 
 void Instance::createDrawingBoard() {

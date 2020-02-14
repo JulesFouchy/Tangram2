@@ -81,7 +81,7 @@ void main() {
     float alphaFill = evenOdd(nuv);
     vec3 colorStroke = vec3(0.8, 0.2, 0.4);
     vec3 colorFill = vec3(0.3, 0.6, 0.9);
-    vec3 color = colorFill;
+    vec3 color = alphaStroke * colorStroke + (1.-alphaStroke) * colorFill;
     if( alphaStroke >= alphaFill)
         color = colorStroke;
     gl_FragColor = vec4(color, alphaStroke + alphaFill);

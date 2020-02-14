@@ -8,6 +8,7 @@ public:
 	~InputState_Rest() = default;
 
 	void onLeftClicDown() override;
+	void onWheelDown() override;
 	void onWheelScroll(float dl) override;
 	void onKeyDown(SDL_Scancode key) override;
 };

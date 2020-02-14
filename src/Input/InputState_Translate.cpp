@@ -10,15 +10,22 @@
 #include "Debugging/Log.hpp"
 
 
-InputState_Translate::InputState_Translate(Instance& instance, entt::entity targetID)
+InputState_Translate::InputState_Translate(Instance& instance, entt::entity targetID, MouseButton enterExitButton)
 	: IInputState(instance),
 	  m_targetID(targetID),
 	  m_mouseInitialPosInScreen(DisplayInfos::MousePositionInScreen()),
-	  m_initialMat(I.registry().get<Cmp::TransformMatrix>(targetID).val())
+	  m_initialMat(I.registry().get<Cmp::TransformMatrix>(targetID).val()),
+	  m_enterExitButton(enterExitButton)
 {}
 
 void InputState_Translate::onLeftClicUp() {
-	I.inputSystem().setState<InputState_Rest>();
+	if (m_enterExitButton == MouseButton::Left)
+		I.inputSystem().setState<InputState_Rest>();
+}
+
+void InputState_Translate::onWheelUp() {
+	if (m_enterExitButton == MouseButton::Wheel)
+		I.inputSystem().setState<InputState_Rest>();
 }
 
 void InputState_Translate::update() {

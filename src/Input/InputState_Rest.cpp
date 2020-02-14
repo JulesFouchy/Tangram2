@@ -20,19 +20,13 @@ InputState_Rest::InputState_Rest(Instance& instance)
 {}
 
 void InputState_Rest::onLeftClicDown() {
-	if (DisplayInfos::KeyIsDown(SDL_SCANCODE_SPACE))
-		I.inputSystem().m_currentState = std::make_unique<InputState_Translate>(I, I.drawingBoardId());
-	else {
-		entt::entity hoveredEntity = I.layersManager().getEntityHoveredByMouse();
-		if (I.registry().valid(hoveredEntity))
-			I.inputSystem().m_currentState = std::make_unique<InputState_Translate>(I, hoveredEntity);
-		else {
-			// Create point2D
-			//glm::vec2 pos = DisplayInfos::MousePositionInNormalizedDeviceCoordinates();
-			//glm::vec2 posInDBSpace = glm::inverse(I.getMatrix(I.drawingBoardId())) * glm::vec3(pos, 1.0f);
-			//I.shapeFactory().createPoint2D(posInDBSpace);
-		}
-	}
+	entt::entity hoveredEntity = I.layersManager().getEntityHoveredByMouse();
+	if (I.registry().valid(hoveredEntity))
+		I.inputSystem().m_currentState = std::make_unique<InputState_Translate>(I, hoveredEntity, MouseButton::Left);
+}
+
+void InputState_Rest::onWheelDown() {
+	I.inputSystem().m_currentState = std::make_unique<InputState_Translate>(I, I.drawingBoardId(), MouseButton::Wheel);
 }
 
 void InputState_Rest::onWheelScroll(float dl) {

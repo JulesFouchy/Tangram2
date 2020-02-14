@@ -214,7 +214,7 @@ void Instance::onEvent(const SDL_Event& e) {
 				inputSystem().onRightClicDown();
 			}
 			else if (e.button.button == SDL_BUTTON_MIDDLE) {
-
+				inputSystem().onWheelDown();
 			}
 		}
 		break;
@@ -228,7 +228,7 @@ void Instance::onEvent(const SDL_Event& e) {
 				inputSystem().onRightClicUp();
 			}
 			else if (e.button.button == SDL_BUTTON_MIDDLE) {
-
+				inputSystem().onWheelUp();
 			}
 		}
 		break;

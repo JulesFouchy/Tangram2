@@ -17,6 +17,8 @@ public:
 	virtual void onLeftClicUp() {}
 	virtual void onRightClicDown() {}
 	virtual void onRightClicUp() {}
+	virtual void onWheelDown() {}
+	virtual void onWheelUp() {}
 	virtual void onKeyDown(SDL_Scancode key) {}
 	virtual void onKeyUp(SDL_Scancode key) {}
 	virtual void onWheelScroll(float dl) {}

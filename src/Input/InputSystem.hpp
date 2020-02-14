@@ -22,6 +22,8 @@ public:
 	inline void onLeftClicUp()              { m_currentState->onLeftClicUp(); }
 	inline void onRightClicDown()           { m_currentState->onRightClicDown(); }
 	inline void onRightClicUp()             { m_currentState->onRightClicUp(); }
+	inline void onWheelDown()               { m_currentState->onWheelDown(); }
+	inline void onWheelUp()                 { m_currentState->onWheelUp(); }
 	inline void onKeyDown(SDL_Scancode key) { m_currentState->onKeyDown(key); }
 	inline void onKeyUp(SDL_Scancode key)	{ m_currentState->onKeyUp(key); }
 	inline void onWheelScroll(float dl)     { m_currentState->onWheelScroll(dl); }

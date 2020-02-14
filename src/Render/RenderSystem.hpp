@@ -32,8 +32,13 @@ private:
 	void renderQuad(const std::vector<entt::entity>& list, Shader& shader);
 	void renderSquare(const std::vector<entt::entity>& list, Shader& shader);
 	void renderTextures(const std::vector<entt::entity>& list);
+
 	void blendTextures(const std::vector<entt::entity>& sources, Cmp::Texture& destination);
 	void blendTextures(Cmp::Texture& source, Cmp::Texture& destination);
+
+	void beginBlendTexture(Cmp::Texture& destination);
+	void doBlendTexture(Cmp::Texture& source);
+	void endBlendTexture();
 
 	void drawShader(entt::entity e);
 	void drawPolygon(entt::entity e);

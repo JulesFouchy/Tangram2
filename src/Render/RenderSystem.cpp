@@ -124,38 +124,37 @@ void RenderSystem::renderTextures(const std::vector<entt::entity>& list) {
 }
 
 void RenderSystem::blendTextures(const std::vector<entt::entity>& sources, Cmp::Texture& destination) {
-	setRenderTarget_Texture(destination);
-	s_shaderBlend.bind();
-	// Bind destination texture
-	GLCall(glActiveTexture(GL_TEXTURE1));
-	GLCall(glBindTexture(GL_TEXTURE_2D, destination.id));
-	s_shaderBlend.setUniform1i("uDst", 1);
-	//
+	beginBlendTexture(destination);
 	for (entt::entity sourceEnt : sources) {
 		Cmp::Texture& source = I.registry().get<Cmp::Texture>(sourceEnt);
-		// Bind source texture
-		GLCall(glActiveTexture(GL_TEXTURE0));
-		GLCall(glBindTexture(GL_TEXTURE_2D, source.id));
-		s_shaderBlend.setUniform1i("uSrc", 0);
-		// Draw
-		drawFullscreen();
+		doBlendTexture(source);
 	}
-	setRenderTarget_Screen();
+	endBlendTexture();
 }
 
 void RenderSystem::blendTextures(Cmp::Texture& source, Cmp::Texture& destination) {
+	beginBlendTexture(destination);
+	doBlendTexture(source);
+	endBlendTexture();
+}
+
+void RenderSystem::beginBlendTexture(Cmp::Texture& destination) {
 	setRenderTarget_Texture(destination);
 	s_shaderBlend.bind();
 	// Bind destination texture
 	GLCall(glActiveTexture(GL_TEXTURE1));
 	GLCall(glBindTexture(GL_TEXTURE_2D, destination.id));
 	s_shaderBlend.setUniform1i("uDst", 1);
+}
+void RenderSystem::doBlendTexture(Cmp::Texture& source) {
 	// Bind source texture
 	GLCall(glActiveTexture(GL_TEXTURE0));
 	GLCall(glBindTexture(GL_TEXTURE_2D, source.id));
 	s_shaderBlend.setUniform1i("uSrc", 0);
 	// Draw
 	drawFullscreen();
+}
+void RenderSystem::endBlendTexture() {
 	setRenderTarget_Screen();
 }
 

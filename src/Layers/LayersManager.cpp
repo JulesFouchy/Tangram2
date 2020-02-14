@@ -18,7 +18,8 @@
 #include "Render/RenderSystem.hpp"
 
 LayersManager::LayersManager(Instance& instance)
-	: ISystem(instance)
+	: ISystem(instance), 
+	  m_selectedLayer(entt::null)
 {}
 
 entt::entity LayersManager::createTestLayer() {
@@ -52,6 +53,7 @@ entt::entity LayersManager::createLayerEntity() {
 	R.assign<Cmp::Children>(e);
 	R.assign<Cmp::Texture>(e, I.renderSystem().previewWidth(), I.renderSystem().previewHeight());
 	R.assign<entt::tag<"MustRecomputeTexture"_hs>>(e);
+	R.assign<entt::tag<"Layer"_hs>>(e);
 	return e;
 }
 

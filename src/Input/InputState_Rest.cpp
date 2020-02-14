@@ -21,6 +21,10 @@ InputState_Rest::InputState_Rest(Instance& instance)
 
 void InputState_Rest::onLeftClicDown() {
 	entt::entity hoveredEntity = I.layersManager().getEntityHoveredByMouse();
+	if (I.registry().valid(hoveredEntity) && I.registry().has<entt::tag<"Layer"_hs>>(hoveredEntity))
+		I.layersManager().setSelectedLayer(hoveredEntity);
+	else
+		I.layersManager().setSelectedLayer(entt::null);
 	if (I.registry().valid(hoveredEntity))
 		I.inputSystem().m_currentState = std::make_unique<InputState_Translate>(I, hoveredEntity, MouseButton::Left);
 }

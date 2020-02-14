@@ -26,10 +26,12 @@ public:
 private:
 	entt::entity createLayerEntity();
 	bool isEntityHoveredBy(entt::entity e, const glm::vec2& posInNDC);
+friend class InputState_Rest;
+	inline void setSelectedLayer(entt::entity e) { m_selectedLayer = e; }
 
 private:
 	std::vector<entt::entity> m_layersOrdered;
-
+	entt::entity m_selectedLayer;
 
 	//Serialization
 	friend class cereal::access;

@@ -22,10 +22,7 @@ App::App(SDL_Window* window)
 	  m_window(window), m_running(true)
 {
 	onWindowResize();
-	//glEnable(GL_BLEND); 
-	//glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE_MINUS_DST_ALPHA, GL_ONE); // a.k.a. newAlpha = srcAlpha + dstAlpha - srcAlpha*dstAlpha
-																							   // a.k.a. the amount of light that each layer let's through are multiplied together
-																							   // a.k.a. stacking partially transparent layers slowly gives us a less and less transparent image
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
 void App::addInstance() {

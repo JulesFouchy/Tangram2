@@ -84,14 +84,24 @@ Instance::Instance()
 	}
 	
 	{
-		//m_testLayer = layersManager().createTestLayer();
+		m_testLayer = layersManager().createTestLayer();
 		//glm::mat3 mat = registry().get<Cmp::TransformMatrix>(m_testLayer).val();
 		//mat = glm::translate(mat, glm::vec2(1.0f, 0.0f));
 		//mat = glm::scale(mat, glm::vec2(0.5f));
 		//registry().replace<Cmp::TransformMatrix>(m_testLayer, mat);
-		//setParentOf(m_testLayer, m_testLayer2);
+		setParentOf(m_testLayer, m_testLayer2);
 	}
-	//m_poly = layersManager().createPolygonLayer({ glm::vec2(-0.3, -0.5), glm::vec2(0, 0), glm::vec2(0.8, -0.5), glm::vec2(-0.8, -0.5), glm::vec2(0.8, 0.5) });
+	layersManager().createTestLayer();
+	layersManager().createTestLayer();
+	layersManager().createTestLayer();
+	layersManager().createTestLayer();
+	layersManager().createTestLayer();
+	layersManager().createTestLayer();
+	layersManager().createTestLayer();
+	layersManager().createTestLayer();
+	layersManager().createTestLayer();
+	layersManager().createTestLayer();
+	m_poly = layersManager().createPolygonLayer({ glm::vec2(-0.3, -0.5), glm::vec2(0, 0), glm::vec2(0.8, -0.5), glm::vec2(-0.8, -0.5), glm::vec2(0.8, 0.5) });
 	//renderSystem().computePreviewTexture_Polygon(m_poly, 32.0f);
 }
 
@@ -132,6 +142,7 @@ void Instance::createDrawingBoard() {
 	registry().assign<Cmp::TransformMatrix>(drawingBoardId(), mat);
 	registry().assign<Cmp::AspectRatio>(drawingBoardId(), 16.0f / 9.0f);
 	registry().assign<Cmp::Children>(drawingBoardId());
+	registry().assign<Cmp::Texture>(drawingBoardId(), 1000, 1000);
 }
 
 void Instance::setParentOf(entt::entity child, entt::entity parent) {

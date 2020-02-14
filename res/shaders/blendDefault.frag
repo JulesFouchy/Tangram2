@@ -13,8 +13,9 @@ void main() {
 	vec3 dstCol = dstCmp.rgb;
 	float dstAlpha = dstCmp.a;
 	
-	vec3 color = srcAlpha * srcCol + (1.-srcAlpha) * dstCol;
 	float alpha = srcAlpha + dstAlpha - srcAlpha*dstAlpha;
+	float blendf = srcAlpha / alpha;
+	vec3 color = blendf * srcCol + (1.-blendf) * dstCol;
 
 	gl_FragColor = vec4(color, alpha);
 }

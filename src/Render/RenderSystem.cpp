@@ -34,7 +34,14 @@ void RenderSystem::render() {
 	renderQuad({ I.drawingBoardId() }, s_shaderDrawingBoard);
 	// Layers
 	//renderQuad(I.layersManager().m_layersOrdered, s_shaderTest);
-	renderPreviewTexture(I.layersManager().m_layersOrdered);
+	Cmp::Texture& dbTexture = I.registry().get<Cmp::Texture>(I.drawingBoardId());
+	setRenderTarget_Texture(dbTexture);
+	glClearColor(0, 0, 0, 0);
+	glClear(GL_COLOR_BUFFER_BIT);
+	blendTextures(I.layersManager().m_layersOrdered, dbTexture);
+	glEnable(GL_BLEND);
+	renderPreviewTexture({ I.drawingBoardId() });
+	glDisable(GL_BLEND);
 	// Polygons
 	//I.registry().view<entt::tag<"Polygon"_hs>, Cmp::Vertices>().each([this](auto entity, auto& tag, auto& vertices) {
 	//	renderPolygon(vertices.list, smoothMin);
@@ -50,10 +57,13 @@ void RenderSystem::exportImage(unsigned int width, unsigned int height, const st
 	std::string fileExtension = MyString::GetFileExtension(filepath);
 	//
 	Cmp::Texture renderTexture(width, height);
+	Cmp::Texture tmpTexture(width, height);
 	setRenderTarget_Texture(renderTexture);
-	glClearColor(0.0, 0.0, 0.0, 0.0);
+	glClearColor(0, 0, 0, 0);
 	glClear(GL_COLOR_BUFFER_BIT);
 	for (entt::entity e : I.layersManager().m_layersOrdered) {
+		setRenderTarget_Texture(tmpTexture);
+		glClearColor(0, 0, 0, 0);
 		if (I.registry().has<entt::tag<"TestLayer"_hs>>(e)) {
 			s_shaderTest.bind();
 			s_shaderTest.setUniformMat3f("u_localTransformMat", I.getMatrixToTextureSpace(e));
@@ -71,8 +81,11 @@ void RenderSystem::exportImage(unsigned int width, unsigned int height, const st
 		}
 		glBindVertexArray(m1to1QuadVAOid);
 		glDrawArrays(GL_TRIANGLES, 0, 6);
+		//
+		blendTextures(tmpTexture, renderTexture);
 	}
 	// Save pixels
+	setRenderTarget_Texture(renderTexture);
 	unsigned char* data = new unsigned char[4 * width * height];
 	glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, data);
 	stbi_flip_vertically_on_write(1);
@@ -137,22 +150,41 @@ void RenderSystem::renderPreviewTexture(const std::vector<entt::entity>& list) {
 	GLCall(glBindTexture(GL_TEXTURE_2D, 0));
 }
 
-
-void RenderSystem::blendTextures(Cmp::Texture& source, Cmp::Texture& destination) {
-	s_shaderBlend.bind();
+void RenderSystem::blendTextures(const std::vector<entt::entity>& sources, Cmp::Texture& destination) {
 	setRenderTarget_Texture(destination);
-	// Bind source texture
-	GLCall(glActiveTexture(GL_TEXTURE0));
-	GLCall(glBindTexture(GL_TEXTURE_2D, source.id));
-	s_shaderBlend.setUniform1i("uSrc", 0);
+	s_shaderBlend.bind();
 	// Bind destination texture
 	GLCall(glActiveTexture(GL_TEXTURE1));
 	GLCall(glBindTexture(GL_TEXTURE_2D, destination.id));
 	s_shaderBlend.setUniform1i("uDst", 1);
+	//
+	for (entt::entity sourceEnt : sources) {
+		Cmp::Texture& source = I.registry().get<Cmp::Texture>(sourceEnt);
+		// Bind source texture
+		GLCall(glActiveTexture(GL_TEXTURE0));
+		GLCall(glBindTexture(GL_TEXTURE_2D, source.id));
+		s_shaderBlend.setUniform1i("uSrc", 0);
+		// Draw
+		glBindVertexArray(m1to1QuadVAOid);
+		glDrawArrays(GL_TRIANGLES, 0, 6);
+	}
+	setRenderTarget_Screen();
+}
+
+void RenderSystem::blendTextures(Cmp::Texture& source, Cmp::Texture& destination) {
+	setRenderTarget_Texture(destination);
+	s_shaderBlend.bind();
+	// Bind destination texture
+	GLCall(glActiveTexture(GL_TEXTURE1));
+	GLCall(glBindTexture(GL_TEXTURE_2D, destination.id));
+	s_shaderBlend.setUniform1i("uDst", 1);
+	// Bind source texture
+	GLCall(glActiveTexture(GL_TEXTURE0));
+	GLCall(glBindTexture(GL_TEXTURE_2D, source.id));
+	s_shaderBlend.setUniform1i("uSrc", 0);
 	// Draw
 	glBindVertexArray(m1to1QuadVAOid);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
-	//
 	setRenderTarget_Screen();
 }
 

@@ -28,6 +28,7 @@ private:
 	void renderQuad(const std::vector<entt::entity>& list, Shader& shader);
 	void renderSquare(const std::vector<entt::entity>& list, Shader& shader);
 	void renderPreviewTexture(const std::vector<entt::entity>& list);
+	void blendTextures(const std::vector<entt::entity>& sources, Cmp::Texture& destination);
 	void blendTextures(Cmp::Texture& source, Cmp::Texture& destination);
 	void computePreviewTexture_Polygon(entt::entity e, float smoothMin);
 	void computePreviewTexture_ShaderLayer(entt::entity e, Shader& shader);

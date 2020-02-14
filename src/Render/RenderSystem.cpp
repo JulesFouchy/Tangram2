@@ -33,23 +33,13 @@ void RenderSystem::render() {
 	// Drawing Board
 	renderQuad({ I.drawingBoardId() }, s_shaderDrawingBoard);
 	// Layers
-	//renderQuad(I.layersManager().m_layersOrdered, s_shaderTest);
 	Cmp::Texture& dbTexture = I.registry().get<Cmp::Texture>(I.drawingBoardId());
 	setRenderTarget_Texture(dbTexture);
-	glClearColor(0, 0, 0, 0);
-	glClear(GL_COLOR_BUFFER_BIT);
+	clear();
 	blendTextures(I.layersManager().m_layersOrdered, dbTexture);
 	glEnable(GL_BLEND);
-	renderPreviewTexture({ I.drawingBoardId() });
+	renderTextures({ I.drawingBoardId() });
 	glDisable(GL_BLEND);
-	// Polygons
-	//I.registry().view<entt::tag<"Polygon"_hs>, Cmp::Vertices>().each([this](auto entity, auto& tag, auto& vertices) {
-	//	renderPolygon(vertices.list, smoothMin);
-	//});
-	// Points 2D
-	//I.registry().view<entt::tag<"Point2D"_hs>>().each([this](auto entity, auto& tag) {
-	//	renderSquare({ entity }, s_shaderPoint);
-	//});
 }
 
 void RenderSystem::exportImage(unsigned int width, unsigned int height, const std::string& filepath) {
@@ -59,28 +49,16 @@ void RenderSystem::exportImage(unsigned int width, unsigned int height, const st
 	Cmp::Texture renderTexture(width, height);
 	Cmp::Texture tmpTexture(width, height);
 	setRenderTarget_Texture(renderTexture);
-	glClearColor(0, 0, 0, 0);
-	glClear(GL_COLOR_BUFFER_BIT);
+	clear();
 	for (entt::entity e : I.layersManager().m_layersOrdered) {
 		setRenderTarget_Texture(tmpTexture);
-		glClearColor(0, 0, 0, 0);
+		clear();
 		if (I.registry().has<entt::tag<"TestLayer"_hs>>(e)) {
-			s_shaderTest.bind();
-			s_shaderTest.setUniformMat3f("u_localTransformMat", I.getMatrixToTextureSpace(e));
+			drawShader(e);
 		}
 		else if (I.registry().has<entt::tag<"Polygon"_hs>>(e)) {
-			s_shaderPolygon.bind();
-			s_shaderPolygon.setUniform1f("u_SmoothMin", 32.0f);
-			s_shaderPolygon.setUniformMat3f("u_localTransformMat", I.getMatrixToTextureSpace(e));
-			int k = 0;
-			Cmp::Vertices& vertices = I.registry().get<Cmp::Vertices>(e);
-			for (entt::entity vertex : vertices.list) {
-				s_shaderPolygon.setUniform2f("u_vertices[" + std::to_string(k) + "]", glm::vec2(glm::column(I.getLocalTransform(vertex), 2)));
-				k++;
-			}
+			drawPolygon(e);
 		}
-		glBindVertexArray(m1to1QuadVAOid);
-		glDrawArrays(GL_TRIANGLES, 0, 6);
 		//
 		blendTextures(tmpTexture, renderTexture);
 	}
@@ -89,15 +67,12 @@ void RenderSystem::exportImage(unsigned int width, unsigned int height, const st
 	unsigned char* data = new unsigned char[4 * width * height];
 	glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, data);
 	stbi_flip_vertically_on_write(1);
-	if (fileExtension == "png") {
+	if (fileExtension == "png")
 		stbi_write_png(filepath.c_str(), width, height, 4, data, 0);
-	}
-	else if (fileExtension == "jpg") {
+	else if (fileExtension == "jpg")
 		stbi_write_jpg(filepath.c_str(), width, height, 4, data, 100);
-	}
-	else {
+	else
 		spdlog::error("Unknown file extension : |{}|", fileExtension);
-	}
 	delete[] data;
 	// Unbind
 	setRenderTarget_Screen();
@@ -105,11 +80,11 @@ void RenderSystem::exportImage(unsigned int width, unsigned int height, const st
 
 void RenderSystem::checkTexturesToRecompute() {
 	I.registry().view<entt::tag<"Polygon"_hs>, entt::tag<"MustRecomputeTexture"_hs>>().each([this](auto e, auto&, auto&) {
-		computePreviewTexture_Polygon(e, 32.0f);
+		computeTexture_Polygon(e);
 		I.registry().remove<entt::tag<"MustRecomputeTexture"_hs>>(e);
 	});
 	I.registry().view<entt::tag<"TestLayer"_hs>, entt::tag<"MustRecomputeTexture"_hs>>().each([this](auto e, auto&, auto&) {
-		computePreviewTexture_ShaderLayer(e, s_shaderTest);
+		computeTexture_Shader(e);
 		I.registry().remove<entt::tag<"MustRecomputeTexture"_hs>>(e);
 	});
 }
@@ -117,8 +92,7 @@ void RenderSystem::checkTexturesToRecompute() {
 void RenderSystem::_renderQuad(entt::entity e, Shader& shader, std::function<glm::mat3(entt::entity)> getMatrix) {
 	shader.bind();
 	shader.setUniformMat3f("u_mat", getMatrix(e));
-	glBindVertexArray(m1to1QuadVAOid);
-	glDrawArrays(GL_TRIANGLES, 0, 6);
+	drawFullscreen();
 }
 
 void RenderSystem::renderQuad(const std::vector<entt::entity>& list, Shader& shader) {
@@ -131,7 +105,7 @@ void RenderSystem::renderSquare(const std::vector<entt::entity>& list, Shader& s
 		_renderQuad(entity, shader, [this](entt::entity e) { return I.getMatrix(e); });
 }
 
-void RenderSystem::renderPreviewTexture(const std::vector<entt::entity>& list) {
+void RenderSystem::renderTextures(const std::vector<entt::entity>& list) {
 	s_shaderTexture.bind();
 	GLCall(glActiveTexture(GL_TEXTURE0));
 	s_shaderTexture.setUniform1i("u_TextureSlot", 0);
@@ -143,8 +117,7 @@ void RenderSystem::renderPreviewTexture(const std::vector<entt::entity>& list) {
 		Cmp::Texture& tex = I.registry().get<Cmp::Texture>(e);
 		GLCall(glBindTexture(GL_TEXTURE_2D, tex.id));
 		// Draw
-		glBindVertexArray(m1to1QuadVAOid);
-		glDrawArrays(GL_TRIANGLES, 0, 6);
+		drawFullscreen();
 	}
 	// Unbind
 	GLCall(glBindTexture(GL_TEXTURE_2D, 0));
@@ -165,8 +138,7 @@ void RenderSystem::blendTextures(const std::vector<entt::entity>& sources, Cmp::
 		GLCall(glBindTexture(GL_TEXTURE_2D, source.id));
 		s_shaderBlend.setUniform1i("uSrc", 0);
 		// Draw
-		glBindVertexArray(m1to1QuadVAOid);
-		glDrawArrays(GL_TRIANGLES, 0, 6);
+		drawFullscreen();
 	}
 	setRenderTarget_Screen();
 }
@@ -183,39 +155,58 @@ void RenderSystem::blendTextures(Cmp::Texture& source, Cmp::Texture& destination
 	GLCall(glBindTexture(GL_TEXTURE_2D, source.id));
 	s_shaderBlend.setUniform1i("uSrc", 0);
 	// Draw
+	drawFullscreen();
+	setRenderTarget_Screen();
+}
+
+void RenderSystem::drawShader(entt::entity e) {
+	s_shaderTest.bind();
+	s_shaderTest.setUniformMat3f("u_localTransformMat", I.getMatrixToTextureSpace(e));
+	drawFullscreen();
+}
+
+void RenderSystem::drawPolygon(entt::entity e) {
+	s_shaderPolygon.bind();
+	s_shaderPolygon.setUniform1f("u_SmoothMin", 32.0f);
+	s_shaderPolygon.setUniformMat3f("u_localTransformMat", I.getMatrixToTextureSpace(e));
+	int k = 0;
+	Cmp::Vertices& vertices = I.registry().get<Cmp::Vertices>(e);
+	for (entt::entity vertex : vertices.list) {
+		s_shaderPolygon.setUniform2f("u_vertices[" + std::to_string(k) + "]", glm::vec2(glm::column(I.getLocalTransform(vertex), 2)));
+		k++;
+	}
+	drawFullscreen();
+}
+
+void RenderSystem::drawFullscreen() {
 	glBindVertexArray(m1to1QuadVAOid);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
+}
+
+void RenderSystem::clear() {
+	glClearColor(0, 0, 0, 0);
+	glClear(GL_COLOR_BUFFER_BIT);
+}
+
+void RenderSystem::beginComputeTexture(entt::entity e) {
+	setRenderTarget_Texture(I.registry().get<Cmp::Texture>(e));
+	clear();
+}
+
+void RenderSystem::endComputeTexture() {
 	setRenderTarget_Screen();
 }
 
-
-void RenderSystem::computePreviewTexture_Polygon(entt::entity e, float smoothMin) {
-	setRenderTarget_Texture(I.registry().get<Cmp::Texture>(e));
-	glClearColor(0.0, 0.0, 0.0, 0.0);
-	glClear(GL_COLOR_BUFFER_BIT);
-		s_shaderPolygon.bind();
-		s_shaderPolygon.setUniform1f("u_SmoothMin", smoothMin);
-		s_shaderPolygon.setUniformMat3f("u_localTransformMat", I.getMatrixToTextureSpace(e));
-		int k = 0;
-		Cmp::Vertices& vertices = I.registry().get<Cmp::Vertices>(e);
-		for (entt::entity vertex : vertices.list) {
-			s_shaderPolygon.setUniform2f("u_vertices[" + std::to_string(k) + "]", glm::vec2(glm::column(I.getLocalTransform(vertex), 2)));
-			k++;
-		}
-		glBindVertexArray(m1to1QuadVAOid);
-		glDrawArrays(GL_TRIANGLES, 0, 6);
-	setRenderTarget_Screen();
+void RenderSystem::computeTexture_Shader(entt::entity e) {
+	beginComputeTexture(e);
+	drawShader(e);
+	endComputeTexture();
 }
 
-void RenderSystem::computePreviewTexture_ShaderLayer(entt::entity e, Shader& shader) {
-	setRenderTarget_Texture(I.registry().get<Cmp::Texture>(e));
-	glClearColor(0.0, 0.0, 0.0, 0.0);
-	glClear(GL_COLOR_BUFFER_BIT);
-		shader.bind();
-		shader.setUniformMat3f("u_localTransformMat", I.getMatrixToTextureSpace(e));
-		glBindVertexArray(RenderSystem::m1to1QuadVAOid);
-		glDrawArrays(GL_TRIANGLES, 0, 6);
-	setRenderTarget_Screen();
+void RenderSystem::computeTexture_Polygon(entt::entity e) {
+	beginComputeTexture(e);
+	drawPolygon(e);
+	endComputeTexture();
 }
 
 void RenderSystem::Initialize() {

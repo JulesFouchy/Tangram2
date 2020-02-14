@@ -24,16 +24,27 @@ public:
 	inline unsigned int previewHeight() { return 1000; }
 
 private:
+	friend class Window_ExportImage;
+	void exportImage(unsigned int width, unsigned int height, const std::string& filepath);
+
+private:
 	void _renderQuad(entt::entity e, Shader& shader, std::function<glm::mat3(entt::entity)> getMatrix);
 	void renderQuad(const std::vector<entt::entity>& list, Shader& shader);
 	void renderSquare(const std::vector<entt::entity>& list, Shader& shader);
-	void renderPreviewTexture(const std::vector<entt::entity>& list);
+	void renderTextures(const std::vector<entt::entity>& list);
 	void blendTextures(const std::vector<entt::entity>& sources, Cmp::Texture& destination);
 	void blendTextures(Cmp::Texture& source, Cmp::Texture& destination);
-	void computePreviewTexture_Polygon(entt::entity e, float smoothMin);
-	void computePreviewTexture_ShaderLayer(entt::entity e, Shader& shader);
-friend class Window_ExportImage;
-	void exportImage(unsigned int width, unsigned int height, const std::string& filepath);
+
+	void drawShader(entt::entity e);
+	void drawPolygon(entt::entity e);
+
+	void clear();
+	void drawFullscreen();
+
+	void beginComputeTexture(entt::entity e);
+	void endComputeTexture();
+	void computeTexture_Shader(entt::entity e);
+	void computeTexture_Polygon(entt::entity e);
 
 friend class LayersManager;
 friend class Instance;

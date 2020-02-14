@@ -91,18 +91,18 @@ Instance::Instance()
 		//registry().replace<Cmp::TransformMatrix>(m_testLayer, mat);
 		setParentOf(m_testLayer, m_testLayer2);
 	}
-	layersManager().createTestLayer();
-	layersManager().createTestLayer();
-	layersManager().createTestLayer();
-	layersManager().createTestLayer();
-	layersManager().createTestLayer();
-	layersManager().createTestLayer();
-	layersManager().createTestLayer();
-	layersManager().createTestLayer();
-	layersManager().createTestLayer();
-	layersManager().createTestLayer();
+	//layersManager().createTestLayer();
+	//layersManager().createTestLayer();
+	//layersManager().createTestLayer();
+	//layersManager().createTestLayer();
+	//layersManager().createTestLayer();
+	//layersManager().createTestLayer();
+	//layersManager().createTestLayer();
+	//layersManager().createTestLayer();
+	//layersManager().createTestLayer();
+	//layersManager().createTestLayer();
 	m_poly = layersManager().createPolygonLayer({ glm::vec2(-0.3, -0.5), glm::vec2(0, 0), glm::vec2(0.8, -0.5), glm::vec2(-0.8, -0.5), glm::vec2(0.8, 0.5) });
-	//renderSystem().computePreviewTexture_Polygon(m_poly, 32.0f);
+	//renderSystem().computeTexture_Polygon(m_poly, 32.0f);
 }
 
 
@@ -128,10 +128,10 @@ void Instance::onLoopIteration(){
 	ImGui::SliderFloat("SmoothMin", &smoothMin, 0.0f, 256.0f);
 	ImGui::End();
 
-	//renderSystem().computePreviewTexture_Polygon(m_poly, smoothMin);
+	//renderSystem().computeTexture_Polygon(m_poly, smoothMin);
 	//
-	//renderSystem().computePreviewTexture_ShaderLayer(m_testLayer,  RenderSystem::s_shaderTest);
-	//renderSystem().computePreviewTexture_ShaderLayer(m_testLayer2, RenderSystem::s_shaderTest);
+	//renderSystem().computeTexture_Shader(m_testLayer,  RenderSystem::s_shaderTest);
+	//renderSystem().computeTexture_Shader(m_testLayer2, RenderSystem::s_shaderTest);
 }
 
 void Instance::createDrawingBoard() {

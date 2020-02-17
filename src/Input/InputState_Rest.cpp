@@ -8,6 +8,7 @@
 #include "Helper/DisplayInfos.hpp"
 #include "Helper/File.hpp"
 
+#include "Helper/Geometry.hpp"
 #include "Components/TransformMatrix.hpp"
 #include <glm/gtx/matrix_transform_2d.hpp>
 #include "Components/Parent.hpp"
@@ -52,7 +53,8 @@ void InputState_Rest::onWheelDown() {
 
 void InputState_Rest::onWheelScroll(float dl) {
 	glm::mat3 mat = I.registry().get<Cmp::TransformMatrix>(I.drawingBoardId()).val();
-	I.registry().replace<Cmp::TransformMatrix>(I.drawingBoardId(), glm::scale(mat, glm::vec2(pow(0.95f, -dl))));
+	glm::vec2 transformCenter = glm::inverse(mat) * glm::vec3(DisplayInfos::MousePositionInScreen(), 1.0f);
+	I.registry().replace<Cmp::TransformMatrix>(I.drawingBoardId(), MyMaths::Scale(mat, glm::vec2(pow(0.95f, -dl)), transformCenter));
 }
 
 void InputState_Rest::onKeyDown(SDL_Scancode key) {

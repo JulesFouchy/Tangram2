@@ -2,6 +2,8 @@
 
 #include "Instance.hpp"
 
+#include "GUISystem.hpp"
+
 #include "Components/Vertices.hpp"
 #include "Components/AspectRatio.hpp"
 #include "Components/ParametersList.hpp"
@@ -44,13 +46,15 @@ void RenderSystem::render() {
 	renderTextures({ I.drawingBoardId() });
 	glDisable(GL_BLEND);
 	// Points2D
-	glEnable(GL_BLEND);
-	I.registry().view<entt::tag<"Point2D"_hs>>().each([this](auto entity, auto& tag) {
-		Cmp::Parent* parent = I.registry().try_get<Cmp::Parent>(entity);
-		if (!parent || parent->id == I.layersManager().selectedLayer())
-			renderSquare({ entity }, s_shaderPoint);
-	});
-	glDisable(GL_BLEND);
+	if (GUISystem::ShowGUI()) {
+		glEnable(GL_BLEND);
+		I.registry().view<entt::tag<"Point2D"_hs>>().each([this](auto entity, auto& tag) {
+			Cmp::Parent* parent = I.registry().try_get<Cmp::Parent>(entity);
+			if (!parent || parent->id == I.layersManager().selectedLayer())
+				renderSquare({ entity }, s_shaderPoint);
+			});
+		glDisable(GL_BLEND);
+	}
 }
 
 void RenderSystem::exportImage(unsigned int width, unsigned int height, const std::string& filepath) {

@@ -8,12 +8,14 @@
 #include "Components/GUI/SliderFloat.hpp"
 #include "Components/GUI/ColorPicker3.hpp"
 
+bool GUISystem::s_bShowGUI = true;
+
 GUISystem::GUISystem(Instance& instance)
-	: ISystem(instance), m_bShowGUI(true)
+	: ISystem(instance)
 {}
 
 void GUISystem::render() {
-	if (m_bShowGUI) {
+	if (s_bShowGUI) {
 		entt::registry& R = I.registry();
 		entt::entity selLayer = I.layersManager().selectedLayer();
 		if (I.registry().valid(selLayer)) {

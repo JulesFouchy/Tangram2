@@ -75,7 +75,7 @@ void InputState_Rest::onKeyDown(SDL_Scancode key) {
 	// no modifier key
 	else {
 		if (key == SDL_SCANCODE_TAB) {
-			I.guiSystem().toggleOnOff();
+			GUISystem::ToggleOnOff();
 		}
 	}
 }

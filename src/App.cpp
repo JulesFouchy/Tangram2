@@ -90,7 +90,7 @@ void App::handleEvents() {
 		bool bHandled = false;
 		switch (e.type) {
 		case SDL_KEYDOWN:
-			if (!ImGui::GetIO().WantCaptureKeyboard) {
+			//if (!ImGui::GetIO().WantCaptureKeyboard) {
 				if (e.key.keysym.scancode == SDL_SCANCODE_F11) {
 					switchFullScreenMode();
 					bHandled = true;
@@ -116,7 +116,7 @@ void App::handleEvents() {
 						bHandled = true;
 					}
 				}
-			}
+			//}
 			break;
 
 		case SDL_WINDOWEVENT:
@@ -167,20 +167,22 @@ void App::onLoopIteration() {
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplSDL2_NewFrame(m_window);
 	ImGui::NewFrame();
-	// ImGui Debug and Demo
-#ifndef NDEBUG 
-	ImGui::Begin("Debug");
-	ImGui::Checkbox("Show Demo Window", &m_bShowImGuiDemoWindow);
-	ImGui::Text("Application average %.1f FPS", ImGui::GetIO().Framerate);
-	ImGui::End();
-	if (m_bShowImGuiDemoWindow) // Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
-		ImGui::ShowDemoWindow(&m_bShowImGuiDemoWindow);
-#endif
-	// Main menu bar
-	ImGui::BeginMainMenuBar();
-	ImGui::EndMainMenuBar();
-	// Instances window
-	ImGui_InstancesWindow();
+	if (GUISystem::ShowGUI()) {
+		// ImGui Debug and Demo
+		#ifndef NDEBUG 
+			ImGui::Begin("Debug");
+			ImGui::Checkbox("Show Demo Window", &m_bShowImGuiDemoWindow);
+			ImGui::Text("Application average %.1f FPS", ImGui::GetIO().Framerate);
+			ImGui::End();
+			if (m_bShowImGuiDemoWindow) // Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
+				ImGui::ShowDemoWindow(&m_bShowImGuiDemoWindow);
+		#endif
+		// Main menu bar
+		ImGui::BeginMainMenuBar();
+		ImGui::EndMainMenuBar();
+		// Instances window
+		ImGui_InstancesWindow();
+	}
 	// Actual application code
 	if (m_activeInstanceIt != m_instances.end())
 		activeInstance().onLoopIteration();

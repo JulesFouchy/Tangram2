@@ -7,12 +7,13 @@ public:
 	GUISystem(Instance& instance);
 	~GUISystem() = default;
 
+	static inline bool ShowGUI() { return s_bShowGUI; }
 private:
 friend class Instance;
 	void render();
 friend class InputState_Rest;
-	inline void toggleOnOff() { m_bShowGUI = !m_bShowGUI; }
+	static inline void ToggleOnOff() { s_bShowGUI = !s_bShowGUI; }
 
 private:
-	bool m_bShowGUI;
+	static bool s_bShowGUI;
 };

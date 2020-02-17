@@ -59,6 +59,7 @@ Instance::Instance()
 	  m_inputSystem(*this),
 	  m_layersManager(*this),
 	  m_shapeFactory(*this),
+	  m_guiSystem(*this),
 	  m_projectLocation(MyFile::RootDir+"/MyTangramProjects"),
 	  m_bUserChoseProjectName(false)
 {
@@ -112,6 +113,7 @@ Instance::Instance(const std::string& projectFolderpath)
 	  m_inputSystem(*this),
 	  m_layersManager(*this),
 	  m_shapeFactory(*this),
+	  m_guiSystem(*this),
 	  m_bUserChoseProjectName(true)
 {
 	Construct();
@@ -122,6 +124,7 @@ void Instance::onLoopIteration(){
 	renderSystem().render();
 	renderSystem().checkTexturesToRecompute();
 	inputSystem().update();
+	m_guiSystem.render();
 }
 
 void Instance::createDrawingBoard() {

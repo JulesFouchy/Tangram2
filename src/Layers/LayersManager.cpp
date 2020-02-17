@@ -7,6 +7,8 @@
 #include "Components/Parent.hpp"
 #include "Components/Children.hpp"
 #include "Components/Vertices.hpp"
+#include "Components/ParametersList.hpp"
+#include "Components/GUI/SliderFloat.hpp"
 
 #include "Helper/DisplayInfos.hpp"
 
@@ -39,6 +41,11 @@ entt::entity LayersManager::createPolygonLayer(const std::vector<glm::vec2>& ver
 	R.assign<entt::tag<"Polygon"_hs>>(e);
 	R.assign<Cmp::Vertices>(e, vertices, e, I.shapeFactory());
 
+	Cmp::Parameters& params = R.get<Cmp::Parameters>(e);
+	entt::entity e2 = R.create();
+	R.assign<Cmp::SliderFloat>(e2, "Smooth Min", 0.036f, 0.0f, 0.1f);
+	params.list.push_back(e2);
+
 	m_layersOrdered.push_back(e);
 	return e;
 }
@@ -47,13 +54,14 @@ entt::entity LayersManager::createLayerEntity() {
 	entt::registry& R = I.registry();
 	entt::entity e = R.create();
 
+	R.assign<entt::tag<"Layer"_hs>>(e);
 	R.assign<Cmp::TransformMatrix>(e);
 	R.assign<Cmp::Parent>(e, entt::null);
 	I.setParentOf(e, I.drawingBoardId());
 	R.assign<Cmp::Children>(e);
 	R.assign<Cmp::Texture>(e, I.renderSystem().previewWidth(), I.renderSystem().previewHeight());
 	R.assign<entt::tag<"MustRecomputeTexture"_hs>>(e);
-	R.assign<entt::tag<"Layer"_hs>>(e);
+	R.assign<Cmp::Parameters>(e);
 	return e;
 }
 

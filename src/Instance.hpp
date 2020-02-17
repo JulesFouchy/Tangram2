@@ -9,6 +9,7 @@ union SDL_Event;
 #include "Input/InputSystem.hpp"
 #include "Layers/LayersManager.hpp"
 #include "Shapes/ShapeFactory.hpp"
+#include "Render/GUISystem.hpp"
 
 class Instance {
 public:
@@ -34,6 +35,7 @@ public:
 	inline InputSystem& inputSystem() { return m_inputSystem; }
 	inline LayersManager& layersManager() { return m_layersManager; }
 	inline ShapeFactory& shapeFactory() { return m_shapeFactory; }
+	//inline GUISystem& guiSystem() { return m_guiSystem; }
 	inline entt::entity& drawingBoardId() { return m_drawingBoardId; }
 
 private:
@@ -56,6 +58,7 @@ private:
 	InputSystem m_inputSystem;
 	LayersManager m_layersManager;
 	ShapeFactory m_shapeFactory;
+	GUISystem m_guiSystem;
 	entt::entity m_drawingBoardId;
 
 	entt::entity m_poly;

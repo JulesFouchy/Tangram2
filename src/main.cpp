@@ -11,7 +11,6 @@
 #include "Systems/RenderSystem.hpp"
 #include "Helper/DisplayInfos.hpp"
 #include "GUI/FileBrowser.hpp"
-#include "OpenGL/Texture2D.hpp"
 
 #include <SDL2/SDL.h>
 #include <glad/glad.h>
@@ -111,7 +110,6 @@ int main(int argc, char *argv[]) {
 		App::Initialize(window);
 		DisplayInfos::Initialize();
 		FileBrowser::Initialize();
-		Texture2D::Initialize();
 
 		// ------ Actual App
 

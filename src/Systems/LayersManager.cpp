@@ -17,8 +17,6 @@
 
 #include "Debugging/Log.hpp"
 
-#include "OpenGL/Texture2D.hpp"
-
 LayersManager::LayersManager(Instance& instance)
 	: ISystem(instance), 
 	  m_selectedLayer(entt::null)

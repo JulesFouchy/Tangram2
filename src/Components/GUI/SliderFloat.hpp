@@ -17,6 +17,7 @@ struct SliderFloat {
 	SliderFloat(const std::string& name, float defaultValue, float minValue, float maxValue, const std::string& format = "%.3f", float power = 1.0f)
 		: name(name), val(defaultValue), minVal(minValue), maxVal(maxValue), format(format), power(power)
 	{}
+	SliderFloat() = default;
 
 private:
 	//Serialization

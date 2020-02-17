@@ -18,6 +18,7 @@ struct ColorPicker3 {
 	ColorPicker3(const std::string& name, const glm::vec3& val, ImGuiColorEditFlags flags = 0)
 		: name(name), val(val), flags(flags)
 	{}
+	ColorPicker3() = default;
 
 private:
 	//Serialization

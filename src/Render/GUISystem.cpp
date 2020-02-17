@@ -15,6 +15,7 @@ GUISystem::GUISystem(Instance& instance)
 void GUISystem::render() {
 	entt::registry& R = I.registry();
 	entt::entity selLayer = I.layersManager().selectedLayer();
+	spdlog::info((int)selLayer);
 	if (I.registry().valid(selLayer)) {
 		ImGui::Begin("Parameters");
 		for (entt::entity guiElement : R.get<Cmp::Parameters>(selLayer).list) {

@@ -5,11 +5,11 @@ union SDL_Event;
 #include <entt/entt.hpp>
 #include <string>
 
-#include "Render/RenderSystem.hpp"
 #include "Input/InputSystem.hpp"
-#include "Layers/LayersManager.hpp"
+#include "Systems/RenderSystem.hpp"
+#include "Systems/GUISystem.hpp"
+#include "Systems/LayersManager.hpp"
 #include "Shapes/ShapeFactory.hpp"
-#include "Render/GUISystem.hpp"
 
 class Instance {
 public:

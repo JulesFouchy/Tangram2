@@ -8,7 +8,7 @@
 
 #include "Debugging/Log.hpp"
 
-#include "Render/RenderSystem.hpp"
+#include "Systems/RenderSystem.hpp"
 #include "Helper/DisplayInfos.hpp"
 #include "GUI/FileBrowser.hpp"
 #include "OpenGL/Texture2D.hpp"

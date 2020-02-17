@@ -2,6 +2,8 @@
 
 #include "Instance.hpp"
 
+#include "RenderSystem.hpp"
+
 #include "Components/TransformMatrix.hpp"
 #include "Components/AspectRatio.hpp"
 #include "Components/Parent.hpp"
@@ -9,15 +11,13 @@
 #include "Components/Vertices.hpp"
 #include "Components/ParametersList.hpp"
 #include "Components/GUI/SliderFloat.hpp"
+#include "Components/PreviewTexture.hpp"
 
 #include "Helper/DisplayInfos.hpp"
 
 #include "Debugging/Log.hpp"
 
 #include "OpenGL/Texture2D.hpp"
-#include "Components/PreviewTexture.hpp"
-
-#include "Render/RenderSystem.hpp"
 
 LayersManager::LayersManager(Instance& instance)
 	: ISystem(instance), 

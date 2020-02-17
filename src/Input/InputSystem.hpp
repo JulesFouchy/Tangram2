@@ -1,6 +1,6 @@
 #pragma once
 
-#include "System/ISystem.hpp"
+#include "Systems/ISystem.hpp"
 
 #include "IInputState.hpp"
 

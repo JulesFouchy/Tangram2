@@ -1,6 +1,6 @@
 #pragma once
 
-#include "System/ISystem.hpp"
+#include "ISystem.hpp"
 
 #include "OpenGL/Shader.hpp"
 

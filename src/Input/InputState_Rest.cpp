@@ -10,6 +10,7 @@
 
 #include "Components/TransformMatrix.hpp"
 #include <glm/gtx/matrix_transform_2d.hpp>
+#include "Components/Parent.hpp"
 
 #include "GUI/FileBrowser.hpp"
 #include "Debugging/Log.hpp"
@@ -19,12 +20,28 @@ InputState_Rest::InputState_Rest(Instance& instance)
 	: IInputState(instance)
 {}
 
+entt::entity InputState_Rest::getFirstLayerOf(entt::entity e) {
+	entt::registry& R = I.registry();
+	if (R.valid(e)) {
+		if (R.has<entt::tag<"Layer"_hs>>(e))
+			return e;
+		else {
+			Cmp::Parent* parent = R.try_get<Cmp::Parent>(e);
+			if (parent)
+				return getFirstLayerOf(parent->id);
+			else
+				return entt::null;
+		}
+	}
+	else
+		return entt::null;
+}
+
 void InputState_Rest::onLeftClicDown() {
 	entt::entity hoveredEntity = I.layersManager().getEntityHoveredByMouse();
-	if (I.registry().valid(hoveredEntity) && I.registry().has<entt::tag<"Layer"_hs>>(hoveredEntity))
-		I.layersManager().setSelectedLayer(hoveredEntity);
-	else
-		I.layersManager().setSelectedLayer(entt::null);
+	// Get clicked layer
+	I.layersManager().setSelectedLayer(getFirstLayerOf(hoveredEntity));
+	// Translate 
 	if (I.registry().valid(hoveredEntity))
 		I.inputSystem().m_currentState = std::make_unique<InputState_Translate>(I, hoveredEntity, MouseButton::Left);
 }

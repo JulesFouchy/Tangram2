@@ -127,7 +127,7 @@ void Instance::onLoopIteration(){
 	renderSystem().render();
 	renderSystem().checkTexturesToRecompute();
 	inputSystem().update();
-	m_guiSystem.render();
+	guiSystem().render();
 }
 
 void Instance::createDrawingBoard() {

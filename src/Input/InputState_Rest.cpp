@@ -56,6 +56,7 @@ void InputState_Rest::onWheelScroll(float dl) {
 }
 
 void InputState_Rest::onKeyDown(SDL_Scancode key) {
+	// CTRL
 	if (DisplayInfos::KeyIsDown(SDL_SCANCODE_LCTRL)) {
 		if (key == SDL_SCANCODE_E) {
 			I.inputSystem().setGUIState<Window_ExportImage>();
@@ -69,6 +70,12 @@ void InputState_Rest::onKeyDown(SDL_Scancode key) {
 				I.inputSystem().setGUIState<Window_SaveAsProject>();
 			else
 				I.saveProject(I.getProjectPath());
+		}
+	}
+	// no modifier key
+	else {
+		if (key == SDL_SCANCODE_TAB) {
+			I.guiSystem().toggleOnOff();
 		}
 	}
 }

@@ -99,10 +99,6 @@ void App::handleEvents() {
 					switchFullScreenMode();
 					bHandled = true;
 				}
-				else if (e.key.keysym.scancode == SDL_SCANCODE_TAB) {
-					switchInstance();
-					bHandled = true;
-				}
 				if (DisplayInfos::KeyIsDown(SDL_SCANCODE_LCTRL)) {
 					if (e.key.keysym.scancode == SDL_SCANCODE_O) {
 						std::string folderPath = FileBrowser::GetFolder();

@@ -10,4 +10,9 @@ public:
 private:
 friend class Instance;
 	void render();
+friend class InputState_Rest;
+	inline void toggleOnOff() { m_bShowGUI = !m_bShowGUI; }
+
+private:
+	bool m_bShowGUI;
 };

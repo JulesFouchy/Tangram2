@@ -35,7 +35,7 @@ public:
 	inline InputSystem& inputSystem() { return m_inputSystem; }
 	inline LayersManager& layersManager() { return m_layersManager; }
 	inline ShapeFactory& shapeFactory() { return m_shapeFactory; }
-	//inline GUISystem& guiSystem() { return m_guiSystem; }
+	inline GUISystem& guiSystem() { return m_guiSystem; }
 	inline entt::entity& drawingBoardId() { return m_drawingBoardId; }
 
 private:

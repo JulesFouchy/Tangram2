@@ -23,6 +23,8 @@ public:
 	entt::entity getEntityHoveredBy(const glm::vec2& posInNDC);
 	entt::entity getEntityHoveredByMouse();
 
+	inline entt::entity selectedLayer() { return m_selectedLayer; }
+
 private:
 	entt::entity createLayerEntity();
 	bool isEntityHoveredBy(entt::entity e, const glm::vec2& posInNDC);

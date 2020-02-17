@@ -18,6 +18,7 @@ public:
 	static void ShutDown();
 
 	void render();
+	void showGUI();
 	void checkTexturesToRecompute();
 
 	inline unsigned int previewWidth() { return 1000; }

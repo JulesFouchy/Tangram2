@@ -6,6 +6,7 @@
 #include "Components/AspectRatio.hpp"
 #include "Components/ParametersList.hpp"
 #include "Components/GUI/SliderFloat.hpp"
+#include "Components/Parent.hpp"
 
 #include <glm/gtc/matrix_access.hpp>
 #include <glm/gtx/matrix_transform_2d.hpp>
@@ -41,6 +42,14 @@ void RenderSystem::render() {
 	blendTextures(I.layersManager().m_layersOrdered, dbTexture);
 	glEnable(GL_BLEND);
 	renderTextures({ I.drawingBoardId() });
+	glDisable(GL_BLEND);
+	// Points2D
+	glEnable(GL_BLEND);
+	I.registry().view<entt::tag<"Point2D"_hs>>().each([this](auto entity, auto& tag) {
+		Cmp::Parent* parent = I.registry().try_get<Cmp::Parent>(entity);
+		if (!parent || parent->id == I.layersManager().selectedLayer())
+			renderSquare({ entity }, s_shaderPoint);
+	});
 	glDisable(GL_BLEND);
 }
 

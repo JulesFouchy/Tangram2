@@ -241,15 +241,13 @@ void Instance::onEvent(const SDL_Event& e) {
 
 
 	case SDL_KEYDOWN:
-		if (!ImGui::GetIO().WantCaptureKeyboard) {
+		//if (!ImGui::GetIO().WantCaptureKeyboard)
 			inputSystem().onKeyDown(e.key.keysym.scancode);
-		}
 		break;
 
 	case SDL_KEYUP:
-		if (!ImGui::GetIO().WantCaptureKeyboard) {
+		//if (!ImGui::GetIO().WantCaptureKeyboard)
 			inputSystem().onKeyUp(e.key.keysym.scancode);
-		}
 		break;
 
 	default:

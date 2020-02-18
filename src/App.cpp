@@ -35,6 +35,12 @@ void App::addInstance(const std::string& folderpath) {
 	m_activeInstanceIt = --m_instances.end();
 }
 
+void App::removeInstance(std::list<Instance>::iterator it) {
+	if (it == m_activeInstanceIt)
+		m_activeInstanceIt = m_instances.end();
+	m_instances.erase(it);
+}
+
 void App::switchInstance() {
 	m_activeInstanceIt++;
 	if (m_activeInstanceIt == m_instances.end())
@@ -59,13 +65,30 @@ bool App::projectIsOpen(const std::string& projectPath) {
 
 void App::ImGui_InstancesWindow() {
 	ImGui::Begin("Instances");
-	for (auto it = m_instances.begin(); it != m_instances.end(); ++it) {
-		ImGui::PushID(&(*it));
-		if (ImGui::Selectable(it->getProjectPath().c_str(), it == m_activeInstanceIt)) {
-			m_activeInstanceIt = it;
+
+	std::list<Instance>::iterator toRemove = m_instances.end();
+	if (ImGui::BeginTabBar("MyTabBar", 0)) {
+		for (auto it = m_instances.begin(); it != m_instances.end(); ++it) {
+			if (ImGui::BeginTabItem(it->getProjectName().c_str(), &it->m_open, ImGuiTabItemFlags_None)) {
+				m_activeInstanceIt = it;
+				ImGui::EndTabItem();
+			}
+			if (!it->m_open)
+				toRemove = it;
 		}
-		ImGui::PopID();
+		if (toRemove != m_instances.end())
+			removeInstance(toRemove);
+		ImGui::EndTabBar();
 	}
+
+	//for (auto it = m_instances.begin(); it != m_instances.end(); ++it) {
+	//	ImGui::PushID(&(*it));
+	//	if (ImGui::Selectable(it->getProjectPath().c_str(), it == m_activeInstanceIt)) {
+	//		m_activeInstanceIt = it;
+	//	}
+	//	ImGui::PopID();
+	//}
+
 	ImGui::End();
 }
 

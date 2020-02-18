@@ -28,6 +28,7 @@ public:
 	glm::mat3 getParentModelMatrix(entt::entity e);
 	glm::mat3 getParentModelMatrixExcludingDB(entt::entity e);
 
+	inline const std::string& getProjectName() { return m_projectName; }
 	std::string getProjectPath();
 
 	inline entt::registry& registry() { return m_registry; }
@@ -68,4 +69,6 @@ private:
 	std::string m_projectLocation;
 	std::string m_projectName;
 	bool m_bUserChoseProjectName;
+
+	bool m_open = true; // used by the main tab bar to know when tab was closed and instance should be deleted
 };

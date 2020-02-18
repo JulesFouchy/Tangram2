@@ -15,6 +15,7 @@ private:
 
 	void addInstance();
 	void addInstance(const std::string& folderpath);
+	void removeInstance(std::list<Instance>::iterator it);
 	void switchInstance();
 	Instance& activeInstance();
 	std::list<Instance>::iterator itToInstanceWithPath(const std::string& path);

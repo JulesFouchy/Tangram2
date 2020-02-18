@@ -68,7 +68,7 @@ void App::ImGui_InstancesWindow() {
 	MyImGui::BeginInstancesMenu();
 
 	std::list<Instance>::iterator toRemove = m_instances.end();
-	if (ImGui::BeginTabBar("MyTabBar", 0)) {
+	if (ImGui::BeginTabBar("MyTabBar", ImGuiTabBarFlags_Reorderable | ImGuiTabBarFlags_AutoSelectNewTabs)) {
 		for (auto it = m_instances.begin(); it != m_instances.end(); ++it) {
 			if (ImGui::BeginTabItem(it->getProjectName().c_str(), &it->m_open, ImGuiTabItemFlags_None)) {
 				m_activeInstanceIt = it;

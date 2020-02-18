@@ -3,6 +3,7 @@
 #include <imgui/imgui.h>
 #include <imgui/imgui_impl_sdl.h>
 #include <imgui/imgui_impl_opengl3.h>
+#include "MyImGui/MyImGui.hpp"
 
 #include <debug_break/debug_break.h>
 
@@ -83,7 +84,7 @@ int main(int argc, char *argv[]) {
 		const char* glslVersion = "#version 130";
 #endif
 		IMGUI_CHECKVERSION();
-		ImGui::CreateContext();
+		MyImGui::CreateContext();
 		ImGui::StyleColorsClassic();
 
 		ImGuiIO& io = ImGui::GetIO(); (void)io;

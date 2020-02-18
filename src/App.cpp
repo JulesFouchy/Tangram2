@@ -3,6 +3,7 @@
 #include <imgui/imgui.h>
 #include <imgui/imgui_impl_sdl.h>
 #include <imgui/imgui_impl_opengl3.h>
+#include "MyImGui/MyImGui.hpp"
 
 #include "Helper/DisplayInfos.hpp"
 #include "Helper/File.hpp"
@@ -64,7 +65,7 @@ bool App::projectIsOpen(const std::string& projectPath) {
 }
 
 void App::ImGui_InstancesWindow() {
-	ImGui::Begin("Instances");
+	MyImGui::BeginInstancesMenu();
 
 	std::list<Instance>::iterator toRemove = m_instances.end();
 	if (ImGui::BeginTabBar("MyTabBar", 0)) {
@@ -80,14 +81,6 @@ void App::ImGui_InstancesWindow() {
 			removeInstance(toRemove);
 		ImGui::EndTabBar();
 	}
-
-	//for (auto it = m_instances.begin(); it != m_instances.end(); ++it) {
-	//	ImGui::PushID(&(*it));
-	//	if (ImGui::Selectable(it->getProjectPath().c_str(), it == m_activeInstanceIt)) {
-	//		m_activeInstanceIt = it;
-	//	}
-	//	ImGui::PopID();
-	//}
 
 	ImGui::End();
 }
@@ -202,6 +195,10 @@ void App::onLoopIteration() {
 		#endif
 		// Main menu bar
 		ImGui::BeginMainMenuBar();
+		if (ImGui::BeginMenu("File")) {
+			ImGui::Text("Hello !");
+			ImGui::EndMenu();
+		}
 		ImGui::EndMainMenuBar();
 		// Instances window
 		ImGui_InstancesWindow();

@@ -123,6 +123,11 @@ Instance::Instance(const std::string& projectFolderpath)
 	openProject(projectFolderpath);
 }
 
+Instance::~Instance() {
+	auto view = m_registry.view<Cmp::Texture>();
+	m_registry.destroy(view.begin(), view.end()); // make sure that the "destructor" of textures is called
+}
+
 void Instance::onLoopIteration(){
 	renderSystem().render();
 	renderSystem().checkTexturesToRecompute();

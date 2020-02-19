@@ -16,7 +16,7 @@ public:
 	Instance();
 	Instance(const std::string& projectFolderpath);
 	void Construct();
-	~Instance() = default;
+	~Instance();
 
 	void setParentOf(entt::entity child, entt::entity parent);
 

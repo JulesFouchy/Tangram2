@@ -138,8 +138,8 @@ void Instance::onLoopIteration(){
 void Instance::createDrawingBoard() {
 	m_drawingBoardId = registry().create();
 	glm::mat3 mat(1.0f);
-	mat = glm::scale(mat, glm::vec2(0.8f));
-	mat = glm::rotate(mat, 0.1f);
+	//mat = glm::scale(mat, glm::vec2(0.8f));
+	//mat = glm::rotate(mat, 0.1f);
 	registry().assign<Cmp::TransformMatrix>(drawingBoardId(), mat);
 	registry().assign<Cmp::AspectRatio>(drawingBoardId(), 16.0f / 9.0f);
 	registry().assign<Cmp::Children>(drawingBoardId());

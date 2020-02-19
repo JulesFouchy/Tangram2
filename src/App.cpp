@@ -12,8 +12,6 @@
 
 #include "Debugging/Log.hpp"
 
-#include "Components/AspectRatio.hpp"
-
 #include <SDL2/SDL.h>
 #include <glad/glad.h>
 
@@ -67,15 +65,12 @@ bool App::projectIsOpen(const std::string& projectPath) {
 }
 
 void App::ImGui_InstancesWindow() {
-	float imgHeight = 50.0f;
-	MyImGui::BeginInstancesMenu(imgHeight);
+	MyImGui::BeginInstancesMenu();
 
 	std::list<Instance>::iterator toRemove = m_instances.end();
 	if (ImGui::BeginTabBar("MyTabBar", ImGuiTabBarFlags_Reorderable | ImGuiTabBarFlags_AutoSelectNewTabs)) {
 		for (auto it = m_instances.begin(); it != m_instances.end(); ++it) {
-			unsigned int texID = it->registry().get<Cmp::Texture>(it->drawingBoardId()).id;
-			float aspect = it->registry().get<Cmp::AspectRatio>(it->drawingBoardId()).val;
-			if (ImGui::BeginTabItemWithImage((ImTextureID)texID, ImVec2(imgHeight * aspect, imgHeight), it->getProjectName().c_str(), &it->m_open, ImGuiTabItemFlags_None)) {
+			if (ImGui::BeginTabItem(it->getProjectName().c_str(), &it->m_open, ImGuiTabItemFlags_None)) {
 				m_activeInstanceIt = it;
 				ImGui::EndTabItem();
 			}

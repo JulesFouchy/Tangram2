@@ -7257,8 +7257,7 @@ ImVec2 ImGui::TabItemCalcSize(const char* label, bool has_close_button)
         size.x += g.Style.FramePadding.x + (g.Style.ItemInnerSpacing.x + g.FontSize); // We use Y intentionally to fit the close button circle.
     else
         size.x += g.Style.FramePadding.x + 1.0f;
-    return ImVec2(89, 50);
-    //return ImVec2(ImMin(size.x, TabBarCalcMaxTabWidth()), size.y);
+    return ImVec2(ImMin(size.x, TabBarCalcMaxTabWidth()), size.y);
 }
 
 void ImGui::TabItemBackground(ImDrawList* draw_list, const ImRect& bb, ImGuiTabItemFlags flags, ImU32 col)
@@ -7357,7 +7356,7 @@ bool ImGui::BeginTabItemWithImage(ImTextureID texture, ImVec2 imageSizeInTab, co
         return false;
     }
     /*-------- Only this line changed -------------*/
-    bool ret = TabItemExWithImage(tab_bar, texture, imageSizeInTab, label, p_open, flags, NULL);
+    bool ret = TabItemExWithImage(tab_bar, texture, label, p_open, flags, NULL);
     /*---------------------------------------------*/
     if (ret && !(flags & ImGuiTabItemFlags_NoPushId))
     {
@@ -7367,7 +7366,7 @@ bool ImGui::BeginTabItemWithImage(ImTextureID texture, ImVec2 imageSizeInTab, co
     return ret;
 }
 
-bool    ImGui::TabItemExWithImage(ImGuiTabBar* tab_bar, ImTextureID texture, ImVec2 imageSizeInTab, const char* label, bool* p_open, ImGuiTabItemFlags flags, ImGuiWindow* docked_window)
+bool    ImGui::TabItemExWithImage(ImGuiTabBar* tab_bar, ImTextureID texture, const char* label, bool* p_open, ImGuiTabItemFlags flags, ImGuiWindow* docked_window)
 {
     // Layout whole tab bar if not already done
     if (tab_bar->WantLayout)
@@ -7397,7 +7396,7 @@ bool    ImGui::TabItemExWithImage(ImGuiTabBar* tab_bar, ImTextureID texture, ImV
         flags |= ImGuiTabItemFlags_NoCloseButton;
 
     // Calculate tab contents size
-    ImVec2 size = imageSizeInTab;
+    ImVec2 size = ImVec2(89, 50);// TabItemCalcSize(label, p_open != NULL);
 
     // Acquire tab data
     ImGuiTabItem* tab = TabBarFindTabByID(tab_bar, id);
@@ -7473,7 +7472,7 @@ bool    ImGui::TabItemExWithImage(ImGuiTabBar* tab_bar, ImTextureID texture, ImV
     const ImVec2 backup_main_cursor_pos = window->DC.CursorPos;
 
     // Layout
-    //size.x = tab->Width;
+    size.x = tab->Width;
     window->DC.CursorPos = tab_bar->BarRect.Min + ImVec2(IM_FLOOR(tab->Offset - tab_bar->ScrollingAnim), 0.0f);
     ImVec2 pos = window->DC.CursorPos;
     ImRect bb(pos, pos + size);
@@ -7597,8 +7596,12 @@ bool    ImGui::TabItemExWithImage(ImGuiTabBar* tab_bar, ImTextureID texture, ImV
 
     // Render tab label, process close button
     const ImGuiID close_button_id = p_open ? window->GetID((void*)((intptr_t)id + 1)) : 0;
-    /*-----------THIS LINE CHANGED-----------*/
+    /*--------------------------------------------*/
+    /*-----------ONLY THIS LINE CHANGED-----------*/
+    /*--------------------------------------------*/
     bool just_closed = TabItemImageAndCloseButton(display_draw_list, bb, flags, tab_bar->FramePadding, texture, label, id, close_button_id);
+    /*--------------------------------------------*/
+    /*--------------------------------------------*/
     /*--------------------------------------------*/
     if (just_closed && p_open != NULL)
     {
@@ -7613,7 +7616,7 @@ bool    ImGui::TabItemExWithImage(ImGuiTabBar* tab_bar, ImTextureID texture, ImV
 
     // Tooltip (FIXME: Won't work over the close button because ItemOverlap systems messes up with HoveredIdTimer)
     // We test IsItemHovered() to discard e.g. when another item is active or drag and drop over the tab bar (which g.HoveredId ignores)
-    if (g.HoveredId == id && !held && g.HoveredIdNotActiveTimer > 0.09f && IsItemHovered())
+    if (g.HoveredId == id && !held && g.HoveredIdNotActiveTimer > 0.50f && IsItemHovered())
         if (!(tab_bar->Flags & ImGuiTabBarFlags_NoTooltip))
             SetTooltip("%.*s", (int)(FindRenderedTextEnd(label) - label), label);
 
@@ -7637,14 +7640,6 @@ bool ImGui::TabItemImageAndCloseButton(ImDrawList* draw_list, const ImRect& bb, 
         RenderTextClippedEx(draw_list, unsaved_marker_pos, bb.Max - frame_padding, TAB_UNSAVED_MARKER, NULL, NULL);
     }
     ImRect text_ellipsis_clip_bb = text_pixel_clip_bb;
-
-    /*--------------------------------------------*/
-    /*-----------ONLY THIS LINE CHANGED-----------*/
-    /*--------------------------------------------*/
-    draw_list->AddImage((ImTextureID)texture, text_ellipsis_clip_bb.Min, text_ellipsis_clip_bb.Max, ImVec2(0, 1), ImVec2(1, 0));
-    /*--------------------------------------------*/
-    /*--------------------------------------------*/
-    /*--------------------------------------------*/
 
     // Close Button
     // We are relying on a subtle and confusing distinction between 'hovered' and 'g.HoveredId' which happens because we are using ImGuiButtonFlags_AllowOverlapMode + SetItemAllowOverlap()
@@ -7673,7 +7668,15 @@ bool ImGui::TabItemImageAndCloseButton(ImDrawList* draw_list, const ImRect& bb, 
         text_pixel_clip_bb.Max.x -= close_button_sz;
     }
 
-    //float ellipsis_max_x = close_button_visible ? text_pixel_clip_bb.Max.x : bb.Max.x - 1.0f;
+    float ellipsis_max_x = close_button_visible ? text_pixel_clip_bb.Max.x : bb.Max.x - 1.0f;
+
+    /*--------------------------------------------*/
+    /*-----------ONLY THIS LINE CHANGED-----------*/
+    /*--------------------------------------------*/
+    draw_list->AddImage((ImTextureID)texture, text_ellipsis_clip_bb.Min, text_ellipsis_clip_bb.Max, ImVec2(0, 1), ImVec2(1, 0));
+    /*--------------------------------------------*/
+    /*--------------------------------------------*/
+    /*--------------------------------------------*/
 
     return close_button_pressed;
 }

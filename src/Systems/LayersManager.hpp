@@ -30,6 +30,8 @@ private:
 	bool isEntityHoveredBy(entt::entity e, const glm::vec2& posInNDC);
 friend class InputState_Rest;
 	inline void setSelectedLayer(entt::entity e) { m_selectedLayer = e; }
+friend class GUISystem;
+	const std::vector<entt::entity>& getLayersOrdered() { return m_layersOrdered; }
 
 private:
 	std::vector<entt::entity> m_layersOrdered;

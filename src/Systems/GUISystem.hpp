@@ -9,6 +9,7 @@ public:
 
 	static inline bool ShowGUI() { return s_bShowGUI; }
 private:
+	void LayersWindow();
 friend class Instance;
 	void render();
 friend class InputState_Rest;

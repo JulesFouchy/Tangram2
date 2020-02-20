@@ -202,6 +202,8 @@ void App::onLoopIteration() {
 		ImGui::EndMainMenuBar();
 		// Instances window
 		ImGui_InstancesWindow();
+		// Right side window
+		MyImGui::RightSideWindow();
 	}
 	// Actual application code
 	if (m_activeInstanceIt != m_instances.end())

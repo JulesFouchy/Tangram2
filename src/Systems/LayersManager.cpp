@@ -17,6 +17,7 @@
 #include "Components/ShaderReference.hpp"
 
 #include "Helper/DisplayInfos.hpp"
+#include "Helper/String.hpp"
 
 #include "Debugging/Log.hpp"
 
@@ -42,8 +43,11 @@ entt::entity LayersManager::createFragmentLayer(const std::string& vertexFilepat
 	entt::entity e = createLayerEntity();
 
 	R.assign<entt::tag<"FragmentLayer"_hs>>(e);
-	R.assign<Cmp::Name>(e, "Fragment" + std::to_string(m_nbFragmentLayers));
-	m_nbFragmentLayers++;
+	std::string shaderName = MyString::RemoveFolderHierarchy(MyString::RemoveFileExtension(fragmentFilepath));
+	if (m_nbFragmentLayersByName.find(shaderName) == m_nbFragmentLayersByName.end())
+		m_nbFragmentLayersByName[shaderName] = 0;
+	R.assign<Cmp::Name>(e, shaderName + std::to_string(m_nbFragmentLayersByName[shaderName]));
+	m_nbFragmentLayersByName[shaderName]++;
 
 	entt::entity shader = instantiateShader(vertexFilepath, fragmentFilepath, R);
 	R.assign<Cmp::ShaderReference>(e, shader);

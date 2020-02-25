@@ -14,6 +14,7 @@
 #include "Components/PreviewTexture.hpp"
 #include "Components/Name.hpp"
 #include "Components/Shader.hpp"
+#include "Components/ShaderReference.hpp"
 
 #include "Helper/DisplayInfos.hpp"
 
@@ -31,6 +32,21 @@ entt::entity LayersManager::createTestLayer() {
 	R.assign<entt::tag<"TestLayer"_hs>>(e);
 	R.assign<Cmp::Name>(e, "Test" + std::to_string(m_nbTestLayers));
 	m_nbTestLayers++;
+
+	m_layersOrdered.push_back(e);
+	return e;
+}
+
+entt::entity LayersManager::createFragmentLayer(const std::string& vertexFilepath, const std::string& fragmentFilepath) {
+	entt::registry& R = I.registry();
+	entt::entity e = createLayerEntity();
+
+	R.assign<entt::tag<"FragmentLayer"_hs>>(e);
+	R.assign<Cmp::Name>(e, "Fragment" + std::to_string(m_nbFragmentLayers));
+	m_nbFragmentLayers++;
+
+	entt::entity shader = instantiateShader(vertexFilepath, fragmentFilepath, R);
+	R.assign<Cmp::ShaderReference>(e, shader);
 
 	m_layersOrdered.push_back(e);
 	return e;
@@ -69,9 +85,9 @@ entt::entity LayersManager::createLayerEntity() {
 	return e;
 }
 
-entt::entity LayersManager::instantiateShader(const std::string& fragmentFilepath, entt::registry& R) const {
+entt::entity LayersManager::instantiateShader(const std::string& vertexFilepath, const std::string& fragmentFilepath, entt::registry& R) const {
 	entt::entity e = R.create();
-	R.assign<Cmp::Shader>(e);
+	R.assign<Cmp::Shader>(e, vertexFilepath, fragmentFilepath);
 	return e;
 }
 

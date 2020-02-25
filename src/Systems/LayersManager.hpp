@@ -18,6 +18,7 @@ public:
 	~LayersManager() = default;
 
 	entt::entity createTestLayer();
+	entt::entity createFragmentLayer(const std::string& vertexFilepath, const std::string& fragmentFilepath);
 	entt::entity createPolygonLayer(const std::vector<glm::vec2>& vertices);
 
 	entt::entity getEntityHoveredBy(const glm::vec2& posInNDC);
@@ -34,10 +35,11 @@ friend class InputState_Rest;
 	inline void setSelectedLayer(entt::entity e) { m_selectedLayer = e; }
 friend class GUISystem;
 	const std::vector<entt::entity>& getLayersOrdered() { return m_layersOrdered; }
-	entt::entity instantiateShader(const std::string& fragmentFilepath, entt::registry& R) const;
+	entt::entity instantiateShader(const std::string& vertexFilepath, const std::string& fragmentFilepath, entt::registry& R) const;
 
 private:
 	unsigned int m_nbTestLayers = 0;
+	unsigned int m_nbFragmentLayers = 0;
 	unsigned int m_nbPolygonLayers = 0;
 
 private:

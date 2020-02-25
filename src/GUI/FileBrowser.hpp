@@ -6,7 +6,8 @@
 
 enum class FileFilter {
 	None,
-	Image
+	Image,
+	FragmentShader
 };
 
 class FileBrowser {

@@ -37,6 +37,7 @@ std::string FileBrowser::GetFileOpen(FileFilter filter) {
 		case FileFilter::None:
 			break;
 		case FileFilter::Image:
+		{
 			COMDLG_FILTERSPEC imageOpenFilter[] =
 			{
 				{ L"Image", L"*.png;*.jpg;*.jpeg" },
@@ -44,6 +45,17 @@ std::string FileBrowser::GetFileOpen(FileFilter filter) {
 				{ L"JPEG", L"*.jpg;*.jpeg" },
 			};
 			dialog->SetFileTypes(_countof(imageOpenFilter), imageOpenFilter);
+		}
+			break;
+		case FileFilter::FragmentShader:
+		{
+			COMDLG_FILTERSPEC fragmentShaderFilter[] =
+			{
+				{ L"fragment", L"*.frag;*.glsl" },
+				{ L"All Files", L"*" }
+			};
+			dialog->SetFileTypes(_countof(fragmentShaderFilter), fragmentShaderFilter);
+		}
 			break;
 		}
 	// Show browser
@@ -66,12 +78,24 @@ std::string FileBrowser::GetFileSave(FileFilter filter) {
 		case FileFilter::None:
 			break;
 		case FileFilter::Image:
+		{
 			COMDLG_FILTERSPEC imageSaveFilter[] =
 			{
 				{ L"PNG", L"*.png" },
 				{ L"JPEG", L"*.jpg;*.jpeg" },
 			};
 			dialog->SetFileTypes(_countof(imageSaveFilter), imageSaveFilter);
+		}
+			break;
+		case FileFilter::FragmentShader:
+		{
+			COMDLG_FILTERSPEC fragmentShaderFilter[] =
+			{
+				{ L"fragment", L"*.frag;*.glsl" },
+				{ L"All Files", L"*" }
+			};
+			dialog->SetFileTypes(_countof(fragmentShaderFilter), fragmentShaderFilter);
+		}
 			break;
 		}
 	// Enable auto fill of extension

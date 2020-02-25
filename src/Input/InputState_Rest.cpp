@@ -3,6 +3,7 @@
 #include "InputState_GUI.hpp"
 #include "Window_SaveAsProject.hpp"
 #include "Window_ExportImage.hpp"
+#include "Window_CreateFragmentLayer.hpp"
 
 #include "Instance.hpp"
 #include "Helper/DisplayInfos.hpp"
@@ -72,6 +73,9 @@ void InputState_Rest::onKeyDown(SDL_Scancode key) {
 				I.inputSystem().setGUIState<Window_SaveAsProject>();
 			else
 				I.saveProject(I.getProjectPath());
+		}
+		else if (key == SDL_SCANCODE_F) {
+			I.inputSystem().setGUIState<Window_CreateFragmentLayer>();
 		}
 	}
 	// no modifier key

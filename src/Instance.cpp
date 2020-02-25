@@ -9,6 +9,7 @@
 #include "Components/ParametersList.hpp"
 #include "Components/GUI/SliderFloat.hpp"
 #include "Components/GUI/ColorPicker3.hpp"
+#include "Components/Name.hpp"
 
 #include "glm/gtx/matrix_transform_2d.hpp"
 
@@ -278,9 +279,10 @@ void Instance::saveProject(const std::string& folderpath) {
 			.entities(registryArchive)
 			.destroyed(registryArchive)
 			.component<Cmp::AspectRatio, Cmp::Children, Cmp::Parent, Cmp::Texture, Cmp::TransformMatrix, Cmp::Vertices, Cmp::VisualDependencies,
-						entt::tag<"Point2D"_hs>, entt::tag<"Layer"_hs>,
-						entt::tag<"Polygon"_hs>, entt::tag<"TestLayer"_hs>,
-						Cmp::Parameters, Cmp::SliderFloat, Cmp::ColorPicker3>(registryArchive);
+			Cmp::Name,
+			entt::tag<"Point2D"_hs>, entt::tag<"Layer"_hs>,
+			entt::tag<"Polygon"_hs>, entt::tag<"TestLayer"_hs>,
+			Cmp::Parameters, Cmp::SliderFloat, Cmp::ColorPicker3>(registryArchive);
 	}
 	Log::separationLine();
 }
@@ -303,6 +305,7 @@ void Instance::openProject(const std::string& folderpath) {
 			.entities(registryArchive)
 			.destroyed(registryArchive)
 			.component<Cmp::AspectRatio, Cmp::Children, Cmp::Parent, Cmp::Texture, Cmp::TransformMatrix, Cmp::Vertices, Cmp::VisualDependencies,
+			Cmp::Name,
 			entt::tag<"Point2D"_hs>, entt::tag<"Layer"_hs>,
 			entt::tag<"Polygon"_hs>, entt::tag<"TestLayer"_hs>,
 			Cmp::Parameters, Cmp::SliderFloat, Cmp::ColorPicker3>(registryArchive);

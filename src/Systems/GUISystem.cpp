@@ -9,6 +9,7 @@
 #include "Components/GUI/SliderFloat.hpp"
 #include "Components/GUI/ColorPicker3.hpp"
 #include "Components/AspectRatio.hpp"
+#include "Components/Name.hpp"
 
 bool GUISystem::s_bShowGUI = true;
 
@@ -38,7 +39,7 @@ void GUISystem::LayersWindow() {
 		//if (layer == I.layersManager().m_selectedLayer)
 		//	ImGui::InputText("", &str);
 		//else
-			ImGui::Text(("Layer" + std::to_string(k)).c_str());
+			ImGui::Text(I.registry().get<Cmp::Name>(layer).val.c_str());
 		//ImGui::PopStyleVar();
 		ImGui::EndGroup();
 		//if (ImGui::IsItemActivated()) {

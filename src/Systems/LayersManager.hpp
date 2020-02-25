@@ -36,6 +36,10 @@ friend class GUISystem;
 	const std::vector<entt::entity>& getLayersOrdered() { return m_layersOrdered; }
 
 private:
+	unsigned int m_nbTestLayers = 0;
+	unsigned int m_nbPolygonLayers = 0;
+
+private:
 	std::vector<entt::entity> m_layersOrdered;
 	entt::entity m_selectedLayer;
 

@@ -12,6 +12,7 @@
 #include "Components/ParametersList.hpp"
 #include "Components/GUI/SliderFloat.hpp"
 #include "Components/PreviewTexture.hpp"
+#include "Components/Name.hpp"
 
 #include "Helper/DisplayInfos.hpp"
 
@@ -27,6 +28,8 @@ entt::entity LayersManager::createTestLayer() {
 	entt::entity e = createLayerEntity();
 
 	R.assign<entt::tag<"TestLayer"_hs>>(e);
+	R.assign<Cmp::Name>(e, "Test" + std::to_string(m_nbTestLayers));
+	m_nbTestLayers++;
 
 	m_layersOrdered.push_back(e);
 	return e;
@@ -38,6 +41,8 @@ entt::entity LayersManager::createPolygonLayer(const std::vector<glm::vec2>& ver
 
 	R.assign<entt::tag<"Polygon"_hs>>(e);
 	R.assign<Cmp::Vertices>(e, vertices, e, I.shapeFactory());
+	R.assign<Cmp::Name>(e, "Polygon" + std::to_string(m_nbPolygonLayers));
+	m_nbPolygonLayers++;
 
 	Cmp::Parameters& params = R.get<Cmp::Parameters>(e);
 	entt::entity e2 = R.create();

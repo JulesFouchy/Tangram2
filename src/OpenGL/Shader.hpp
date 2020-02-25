@@ -5,6 +5,8 @@
 
 #include <glm/glm.hpp>
 
+#include "ShaderHelper.hpp"
+
 class Shader {
 public:
 	Shader(const std::string& vertexShaderFilepath, const std::string& fragmentShaderFilepath, bool compileShader = true);
@@ -35,9 +37,6 @@ private:
 	unsigned int m_shaderId;
 	std::string m_vertexShaderFilepath;
 	std::string m_fragmentShaderFilepath;
-	/* Utilities to open files and compile shaders */
-	std::string parseFile(const std::string& filepath);
-	unsigned int compileShader(unsigned int type, const std::string& source);
 
 	bool m_bCreatedSuccessfully;
 };

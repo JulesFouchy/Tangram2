@@ -2,9 +2,6 @@
 
 #include <glad/glad.h>
 
-#include <fstream>
-#include <iostream>
-
 #include "Debugging/Log.hpp"
 
 Shader::Shader(const std::string& vertexShaderFilepath, const std::string& fragmentShaderFilepath, bool compileShader)
@@ -29,8 +26,8 @@ void Shader::compile() {
 	if (m_shaderId != -1)
 		glDeleteProgram(m_shaderId);
 	m_shaderId = glCreateProgram();
-	unsigned int vs = compileShader(GL_VERTEX_SHADER, parseFile(m_vertexShaderFilepath));
-	unsigned int fs = compileShader(GL_FRAGMENT_SHADER, parseFile(m_fragmentShaderFilepath));
+	unsigned int vs = ShaderHelper::compileShader(GL_VERTEX_SHADER, ShaderHelper::parseFile(m_vertexShaderFilepath));
+	unsigned int fs = ShaderHelper::compileShader(GL_FRAGMENT_SHADER, ShaderHelper::parseFile(m_fragmentShaderFilepath));
 
 	glAttachShader(m_shaderId, vs);
 	glAttachShader(m_shaderId, fs);
@@ -77,46 +74,4 @@ void Shader::setUniformMat3f(const std::string& uniformName, const glm::mat3& ma
 }
 void Shader::setUniformMat4f(const std::string& uniformName, const glm::mat4& mat) {
 	glUniformMatrix4fv(getUniformLocation(uniformName), 1, GL_FALSE, &mat[0][0]);
-}
-
-/* Utilities to open files and compile shaders */
-
-std::string Shader::parseFile(const std::string& filepath) {
-	std::ifstream stream(filepath);
-	if (!stream.is_open()) {
-		spdlog::warn("Failed to open file |{}|", filepath);
-		m_bCreatedSuccessfully = false;
-		return "";
-	}
-
-	std::string str = "";
-	std::string tempLine = "";
-	while (getline(stream, tempLine)) {
-		str += tempLine + '\n';
-	}
-	stream.close();
-	return str;
-}
-
-unsigned int Shader::compileShader(unsigned int type, const std::string& source) {
-	unsigned int id = glCreateShader(type);
-	const char* src = source.c_str();
-	glShaderSource(id, 1, &src, nullptr);
-	glCompileShader(id);
-	//Debug
-	int result;
-	glGetShaderiv(id, GL_COMPILE_STATUS, &result);
-	if (result == GL_FALSE) {
-		m_bCreatedSuccessfully = false;
-		int length;
-		glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length);
-		char* message = (char*)alloca(length * sizeof(char));
-		glGetShaderInfoLog(id, length, &length, message);
-		spdlog::warn("Failed to compile {} {}", (type == GL_FRAGMENT_SHADER ? "fragment" : "vertex") , "shader");
-		spdlog::warn(message);
-		glDeleteShader(id);
-		return 0;
-	}
-
-	return id;
 }

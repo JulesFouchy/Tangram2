@@ -13,6 +13,7 @@
 #include "Components/GUI/SliderFloat.hpp"
 #include "Components/PreviewTexture.hpp"
 #include "Components/Name.hpp"
+#include "Components/Shader.hpp"
 
 #include "Helper/DisplayInfos.hpp"
 
@@ -65,6 +66,12 @@ entt::entity LayersManager::createLayerEntity() {
 	R.assign<Cmp::Texture>(e, I.renderSystem().previewWidth(), I.renderSystem().previewHeight());
 	R.assign<entt::tag<"MustRecomputeTexture"_hs>>(e);
 	R.assign<Cmp::Parameters>(e);
+	return e;
+}
+
+entt::entity LayersManager::instantiateShader(const std::string& fragmentFilepath, entt::registry& R) const {
+	entt::entity e = R.create();
+	R.assign<Cmp::Shader>(e);
 	return e;
 }
 

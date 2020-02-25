@@ -10,6 +10,7 @@
 #include "Components/GUI/SliderFloat.hpp"
 #include "Components/GUI/ColorPicker3.hpp"
 #include "Components/Name.hpp"
+#include "Components/Shader.hpp"
 
 #include "glm/gtx/matrix_transform_2d.hpp"
 
@@ -30,6 +31,9 @@
 
 static void deleteTexture(entt::entity e, entt::registry& R) {
 	R.get<Cmp::Texture>(e).Delete();
+}
+static void deleteShader(entt::entity e, entt::registry& R) {
+	R.get<Cmp::Shader>(e).Delete();
 }
 
 void Instance::onTransformMatrixChange(entt::entity e, entt::registry& R) {
@@ -55,6 +59,7 @@ void Instance::Construct() {
 	//registry().on_construct<Cmp::TransformMatrix>().connect<&Instance::onTransformMatrixChange>(*this);
 	registry().on_replace<Cmp::TransformMatrix>().connect<&Instance::onTransformMatrixChange>(*this);
 	registry().on_destroy<Cmp::Texture>().connect<&deleteTexture>();
+	registry().on_destroy<Cmp::Shader>().connect<&deleteShader>();
 }
 
 Instance::Instance()
@@ -279,7 +284,7 @@ void Instance::saveProject(const std::string& folderpath) {
 			.entities(registryArchive)
 			.destroyed(registryArchive)
 			.component<Cmp::AspectRatio, Cmp::Children, Cmp::Parent, Cmp::Texture, Cmp::TransformMatrix, Cmp::Vertices, Cmp::VisualDependencies,
-			Cmp::Name,
+			Cmp::Name, Cmp::Shader,
 			entt::tag<"Point2D"_hs>, entt::tag<"Layer"_hs>,
 			entt::tag<"Polygon"_hs>, entt::tag<"TestLayer"_hs>,
 			Cmp::Parameters, Cmp::SliderFloat, Cmp::ColorPicker3>(registryArchive);
@@ -305,7 +310,7 @@ void Instance::openProject(const std::string& folderpath) {
 			.entities(registryArchive)
 			.destroyed(registryArchive)
 			.component<Cmp::AspectRatio, Cmp::Children, Cmp::Parent, Cmp::Texture, Cmp::TransformMatrix, Cmp::Vertices, Cmp::VisualDependencies,
-			Cmp::Name,
+			Cmp::Name, Cmp::Shader,
 			entt::tag<"Point2D"_hs>, entt::tag<"Layer"_hs>,
 			entt::tag<"Polygon"_hs>, entt::tag<"TestLayer"_hs>,
 			Cmp::Parameters, Cmp::SliderFloat, Cmp::ColorPicker3>(registryArchive);

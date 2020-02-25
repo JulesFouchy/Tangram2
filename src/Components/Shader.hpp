@@ -26,21 +26,36 @@ struct Shader {
 		: vertexFilepath(vertexFilepath), fragmentFilepath(fragmentFilepath)
 	{ createShader(); }
 
-private:
-	//Serialization
-	friend class cereal::access;
-	template<class Archive>
-	void save(Archive& archive) const
-	{
-		archive(vertexFilepath, fragmentFilepath);
+	void bind() {
+		GLCall(glUseProgram(id));
 	}
 
-	template<class Archive>
-	void load(Archive& archive)
-	{
-		archive(vertexFilepath, fragmentFilepath);
-		createShader();
+	void setUniform1i(const std::string& uniformName, int v) {
+		glUniform1i(getUniformLocation(uniformName), v);
 	}
+	void setUniform1f(const std::string& uniformName, float v) {
+		glUniform1f(getUniformLocation(uniformName), v);
+	}
+	void setUniform2f(const std::string& uniformName, const glm::vec2& v) {
+		glUniform2f(getUniformLocation(uniformName), v.x, v.y);
+	}
+	void setUniform3f(const std::string& uniformName, const glm::vec3& v) {
+		glUniform3f(getUniformLocation(uniformName), v.x, v.y, v.z);
+	}
+	void setUniform4f(const std::string& uniformName, const glm::vec4& v) {
+		glUniform4f(getUniformLocation(uniformName), v.x, v.y, v.z, v.w);
+	}
+	void setUniformMat3f(const std::string& uniformName, const glm::mat3& mat) {
+		glUniformMatrix3fv(getUniformLocation(uniformName), 1, GL_FALSE, &mat[0][0]);
+	}
+	void setUniformMat4f(const std::string& uniformName, const glm::mat4& mat) {
+		glUniformMatrix4fv(getUniformLocation(uniformName), 1, GL_FALSE, &mat[0][0]);
+	}
+
+private:
+	std::unordered_map<std::string, int> m_UniformLocationCache;
+
+private:
 
 	void createShader() {
 		spdlog::info("[Creating Shader Component] " + vertexFilepath + " & " + fragmentFilepath);
@@ -56,6 +71,34 @@ private:
 		glDeleteShader(vs);
 		glDeleteShader(fs);
 		Log::separationLine();
+	}
+
+	int getUniformLocation(const std::string& uniformName) {
+		if (m_UniformLocationCache.find(uniformName) != m_UniformLocationCache.end()) {
+			return m_UniformLocationCache[uniformName];
+		}
+
+		int location = glGetUniformLocation(id, uniformName.c_str());
+		//if (location == -1) {
+		//	spdlog::warn("[Shader] uniform '{}' doesn't exist !", name);
+		//}
+		m_UniformLocationCache[uniformName] = location;
+		return location;
+	}
+
+	// Serialization
+	friend class cereal::access;
+	template<class Archive>
+	void save(Archive& archive) const
+	{
+		archive(vertexFilepath, fragmentFilepath);
+	}
+
+	template<class Archive>
+	void load(Archive& archive)
+	{
+		archive(vertexFilepath, fragmentFilepath);
+		createShader();
 	}
 };
 }

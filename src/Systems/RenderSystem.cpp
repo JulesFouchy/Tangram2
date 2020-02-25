@@ -184,8 +184,8 @@ void RenderSystem::endBlendTexture() {
 
 void RenderSystem::drawFragment(entt::entity e) {
 	Cmp::Shader& shader = I.registry().get<Cmp::Shader>(I.registry().get<Cmp::ShaderReference>(e).entityID);
-	s_shaderTest.bind();
-	s_shaderTest.setUniformMat3f("u_localTransformMat", I.getMatrixToTextureSpace(e));
+	shader.bind();
+	shader.setUniformMat3f("u_localTransformMat", I.getMatrixToTextureSpace(e));
 	drawFullscreen();
 }
 

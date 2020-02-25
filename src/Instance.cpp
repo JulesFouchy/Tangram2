@@ -95,7 +95,7 @@ Instance::Instance()
 		//registry().replace<Cmp::TransformMatrix>(m_testLayer, mat);
 		setParentOf(m_testLayer, m_testLayer2);
 	}
-	//layersManager().createTestLayer();
+	layersManager().createTestLayer();
 	//layersManager().createTestLayer();
 	//layersManager().createTestLayer();
 	//layersManager().createTestLayer();
@@ -139,7 +139,7 @@ void Instance::createDrawingBoard() {
 	m_drawingBoardId = registry().create();
 	glm::mat3 mat(1.0f);
 	mat = glm::scale(mat, glm::vec2(0.8f));
-	mat = glm::rotate(mat, 0.1f);
+	//mat = glm::rotate(mat, 0.1f);
 	registry().assign<Cmp::TransformMatrix>(drawingBoardId(), mat);
 	registry().assign<Cmp::AspectRatio>(drawingBoardId(), 16.0f / 9.0f);
 	registry().assign<Cmp::Children>(drawingBoardId());

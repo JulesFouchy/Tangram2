@@ -23,6 +23,8 @@ public:
 	entt::entity getEntityHoveredBy(const glm::vec2& posInNDC);
 	entt::entity getEntityHoveredByMouse();
 
+	void swapLayers(size_t i1, size_t i2);
+
 	inline entt::entity selectedLayer() { return m_selectedLayer; }
 
 private:

@@ -103,3 +103,9 @@ bool LayersManager::isEntityHoveredBy(entt::entity e, const glm::vec2& posInNDC)
 		return (abs(posInModelSpace.x) < 1.0f && abs(posInModelSpace.y) < 1.0f);
 	}
 }
+
+void LayersManager::swapLayers(size_t i1, size_t i2) {
+	entt::entity tmp = m_layersOrdered[i1];
+	m_layersOrdered[i1] = m_layersOrdered[i2];
+	m_layersOrdered[i2] = tmp;
+}

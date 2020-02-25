@@ -18,7 +18,7 @@ public:
 	~LayersManager() = default;
 
 	entt::entity createTestLayer();
-	entt::entity createFragmentLayer(const std::string& vertexFilepath, const std::string& fragmentFilepath);
+	entt::entity createFragmentLayer(const std::string& fragmentFilepath);
 	entt::entity createPolygonLayer(const std::vector<glm::vec2>& vertices);
 
 	entt::entity getEntityHoveredBy(const glm::vec2& posInNDC);
@@ -36,6 +36,7 @@ friend class InputState_Rest;
 friend class GUISystem;
 	const std::vector<entt::entity>& getLayersOrdered() { return m_layersOrdered; }
 	entt::entity instantiateShader(const std::string& vertexFilepath, const std::string& fragmentFilepath, entt::registry& R) const;
+	entt::entity _createShaderLayer(const std::string& vertexFilepath, const std::string& fragmentFilepath); // Beware : it doesn't give a tag to specify what kind of shader this is ; it must be done afterwards
 
 private:
 	unsigned int m_nbTestLayers = 0;

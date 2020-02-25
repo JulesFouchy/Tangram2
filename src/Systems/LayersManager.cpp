@@ -38,11 +38,16 @@ entt::entity LayersManager::createTestLayer() {
 	return e;
 }
 
-entt::entity LayersManager::createFragmentLayer(const std::string& vertexFilepath, const std::string& fragmentFilepath) {
+entt::entity LayersManager::createFragmentLayer(const std::string& fragmentFilepath) {
+	entt::entity e = _createShaderLayer("res/shaders/defaultDrawOnTexture.vert", fragmentFilepath);
+	I.registry().assign<entt::tag<"FragmentLayer"_hs>>(e);
+	return e;
+}
+
+entt::entity LayersManager::_createShaderLayer(const std::string& vertexFilepath, const std::string& fragmentFilepath) {
 	entt::registry& R = I.registry();
 	entt::entity e = createLayerEntity();
 
-	R.assign<entt::tag<"FragmentLayer"_hs>>(e);
 	std::string shaderName = MyString::RemoveFolderHierarchy(MyString::RemoveFileExtension(fragmentFilepath));
 	if (m_nbFragmentLayersByName.find(shaderName) == m_nbFragmentLayersByName.end())
 		m_nbFragmentLayersByName[shaderName] = 0;

@@ -83,9 +83,9 @@ Instance::Instance()
 	// Drawing board
 	createDrawingBoard();
 	//
-	layersManager().createFragmentLayer("res/shaders/defaultDrawOnTexture.vert", "res/shaders/myFirstFrag.frag");
-	layersManager().createFragmentLayer("res/shaders/defaultDrawOnTexture.vert", "res/shaders/second.frag");
-	layersManager().createFragmentLayer("res/shaders/defaultDrawOnTexture.vert", "res/shaders/myFirstFrag.frag");
+	layersManager().createFragmentLayer("res/shaders/myFirstFrag.frag");
+	layersManager().createFragmentLayer("res/shaders/second.frag");
+	layersManager().createFragmentLayer("res/shaders/myFirstFrag.frag");
 	//m_shapeFactory.createPolygon({ glm::vec2(-0.3, -0.5), glm::vec2(0, 0), glm::vec2(0.8, -0.5), glm::vec2(-0.8, -0.5), glm::vec2(0.8, 0.5) });
 	//
 	{

@@ -113,6 +113,7 @@ Instance::Instance()
 	//layersManager().createTestLayer();
 	//layersManager().createTestLayer();
 	m_poly = layersManager().createPolygonLayer({ glm::vec2(-0.3, -0.5), glm::vec2(0, 0), glm::vec2(0.8, -0.5), glm::vec2(-0.8, -0.5), glm::vec2(0.8, 0.5) });
+	layersManager().createFragmentLayer("res/shaders/default.vert", "res/shaders/myFirstFrag.frag");
 	//renderSystem().computeTexture_Polygon(m_poly, 32.0f);
 }
 

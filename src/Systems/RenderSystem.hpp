@@ -41,7 +41,8 @@ private:
 	void doBlendTexture(Cmp::Texture& source);
 	void endBlendTexture();
 
-	void drawShader(entt::entity e);
+	void drawFragment(entt::entity e);
+	void drawTest(entt::entity e);
 	void drawPolygon(entt::entity e);
 
 	void clear();
@@ -49,7 +50,8 @@ private:
 
 	void beginComputeTexture(entt::entity e);
 	void endComputeTexture();
-	void computeTexture_Shader(entt::entity e);
+	void computeTexture_Fragment(entt::entity e);
+	void computeTexture_Test(entt::entity e);
 	void computeTexture_Polygon(entt::entity e);
 
 friend class LayersManager;

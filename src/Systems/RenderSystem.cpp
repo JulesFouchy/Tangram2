@@ -9,6 +9,8 @@
 #include "Components/ParametersList.hpp"
 #include "Components/GUI/SliderFloat.hpp"
 #include "Components/Parent.hpp"
+#include "Components/Shader.hpp"
+#include "Components/ShaderReference.hpp"
 
 #include <glm/gtc/matrix_access.hpp>
 #include <glm/gtx/matrix_transform_2d.hpp>
@@ -67,9 +69,12 @@ void RenderSystem::exportImage(unsigned int width, unsigned int height, const st
 	clear();
 	for (entt::entity e : I.layersManager().m_layersOrdered) {
 		setRenderTarget_Texture(tmpTexture);
-		clear();
-		if (I.registry().has<entt::tag<"TestLayer"_hs>>(e)) {
-			drawShader(e);
+		clear();		
+		if (I.registry().has<entt::tag<"FragmentLayer"_hs>>(e)) {
+			drawFragment(e);
+		}
+		else if (I.registry().has<entt::tag<"TestLayer"_hs>>(e)) {
+			drawTest(e);
 		}
 		else if (I.registry().has<entt::tag<"Polygon"_hs>>(e)) {
 			drawPolygon(e);
@@ -94,12 +99,16 @@ void RenderSystem::exportImage(unsigned int width, unsigned int height, const st
 }
 
 void RenderSystem::checkTexturesToRecompute() {
+	I.registry().view<entt::tag<"FragmentLayer"_hs>, entt::tag<"MustRecomputeTexture"_hs>>().each([this](auto e, auto&, auto&) {
+		computeTexture_Fragment(e);
+		I.registry().remove<entt::tag<"MustRecomputeTexture"_hs>>(e);
+		});
 	I.registry().view<entt::tag<"Polygon"_hs>, entt::tag<"MustRecomputeTexture"_hs>>().each([this](auto e, auto&, auto&) {
 		computeTexture_Polygon(e);
 		I.registry().remove<entt::tag<"MustRecomputeTexture"_hs>>(e);
 	});
 	I.registry().view<entt::tag<"TestLayer"_hs>, entt::tag<"MustRecomputeTexture"_hs>>().each([this](auto e, auto&, auto&) {
-		computeTexture_Shader(e);
+		computeTexture_Test(e);
 		I.registry().remove<entt::tag<"MustRecomputeTexture"_hs>>(e);
 	});
 }
@@ -173,7 +182,14 @@ void RenderSystem::endBlendTexture() {
 	setRenderTarget_Screen();
 }
 
-void RenderSystem::drawShader(entt::entity e) {
+void RenderSystem::drawFragment(entt::entity e) {
+	Cmp::Shader& shader = I.registry().get<Cmp::Shader>(I.registry().get<Cmp::ShaderReference>(e).entityID);
+	s_shaderTest.bind();
+	s_shaderTest.setUniformMat3f("u_localTransformMat", I.getMatrixToTextureSpace(e));
+	drawFullscreen();
+}
+
+void RenderSystem::drawTest(entt::entity e) {
 	s_shaderTest.bind();
 	s_shaderTest.setUniformMat3f("u_localTransformMat", I.getMatrixToTextureSpace(e));
 	drawFullscreen();
@@ -211,9 +227,15 @@ void RenderSystem::endComputeTexture() {
 	setRenderTarget_Screen();
 }
 
-void RenderSystem::computeTexture_Shader(entt::entity e) {
+void RenderSystem::computeTexture_Fragment(entt::entity e) {
 	beginComputeTexture(e);
-	drawShader(e);
+	drawFragment(e);
+	endComputeTexture();
+}
+
+void RenderSystem::computeTexture_Test(entt::entity e) {
+	beginComputeTexture(e);
+	drawTest(e);
 	endComputeTexture();
 }
 

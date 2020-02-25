@@ -63,6 +63,17 @@ void Instance::Construct() {
 	registry().on_destroy<Cmp::Shader>().connect<&deleteShader>();
 }
 
+Instance::~Instance() {
+	{
+		auto view = m_registry.view<Cmp::Texture>();
+		m_registry.destroy(view.begin(), view.end()); // make sure that the "destructor" of textures is called
+	}
+	{
+		auto view = m_registry.view<Cmp::Shader>();
+		m_registry.destroy(view.begin(), view.end()); // make sure that the "destructor" of shaders is called
+	}
+}
+
 Instance::Instance()
 	: m_registry(),
 	  m_renderSystem(*this),
@@ -131,11 +142,6 @@ Instance::Instance(const std::string& projectFolderpath)
 {
 	Construct();
 	openProject(projectFolderpath);
-}
-
-Instance::~Instance() {
-	auto view = m_registry.view<Cmp::Texture>();
-	m_registry.destroy(view.begin(), view.end()); // make sure that the "destructor" of textures is called
 }
 
 void Instance::onLoopIteration(){

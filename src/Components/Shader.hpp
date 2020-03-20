@@ -59,17 +59,17 @@ private:
 
 	void createShader() {
 		spdlog::info("[Creating Shader Component] " + vertexFilepath + " & " + fragmentFilepath);
-		id = glCreateProgram();
+		GLCall(id = glCreateProgram());
 		unsigned int vs = ShaderHelper::compileShader(GL_VERTEX_SHADER, ShaderHelper::parseFile(vertexFilepath));
 		unsigned int fs = ShaderHelper::compileShader(GL_FRAGMENT_SHADER, ShaderHelper::parseFile(fragmentFilepath));
 
-		glAttachShader(id, vs);
-		glAttachShader(id, fs);
-		glLinkProgram(id);
-		glValidateProgram(id);
+		GLCall(glAttachShader(id, vs));
+		GLCall(glAttachShader(id, fs));
+		GLCall(glLinkProgram(id));
+		GLCall(glValidateProgram(id));
 
-		glDeleteShader(vs);
-		glDeleteShader(fs);
+		GLCall(glDeleteShader(vs));
+		GLCall(glDeleteShader(fs));
 		Log::separationLine();
 	}
 

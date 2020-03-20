@@ -6,12 +6,14 @@
 #include "Helper/File.hpp"
 #include "Helper/DisplayInfos.hpp"
 
+#include "Components/AspectRatio.hpp"
+
 
 Window_ExportImage::Window_ExportImage(Instance& instance)
 	: PopupWindow_WithConfirmationWarning("Exporting image"), I(instance),
 	  m_filepathPicker(FileFilter::Image)
 {
-	m_widthHeightRatioPicker.setRatio(DisplayInfos::Ratio());
+	m_widthHeightRatioPicker.setRatio(I.registry().get<Cmp::AspectRatio>(I.drawingBoardId()).val);
 	m_filepathPicker.setFilepath("");
 }
 void Window_ExportImage::Show() {

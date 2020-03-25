@@ -94,7 +94,7 @@ Instance::Instance()
 	// Drawing board
 	createDrawingBoard();
 	//
-	layersManager().createFragmentLayer("res/shaders/vasarely.frag");
+	//layersManager().createFragmentLayer("res/shaders/vasarely.frag");
 	//layersManager().createFragmentLayer("res/shaders/myFirstFrag.frag");
 	//layersManager().createFragmentLayer("res/shaders/second.frag");
 	//layersManager().createFragmentLayer("res/shaders/myFirstFrag.frag");

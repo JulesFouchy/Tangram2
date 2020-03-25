@@ -59,6 +59,9 @@ friend class Instance;
 	inline void setRenderTarget_Texture(Cmp::Texture& texture) { m_renderBuffer.setRenderTarget_Texture(texture); }
 	inline void setRenderTarget_Screen() { m_renderBuffer.setRenderTarget_Screen(); }
 
+friend class Settings;
+	static void SetGamma(float gamma);
+
 private:
 	RenderBuffer m_renderBuffer;
 

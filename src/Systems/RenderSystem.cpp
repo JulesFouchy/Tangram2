@@ -284,3 +284,8 @@ void RenderSystem::ShutDown() {
 	glDeleteBuffers(1, &m1to1QuadVBOid);
 	glDeleteVertexArrays(1, &m1to1QuadVAOid);
 }
+
+void RenderSystem::SetGamma(float gamma) {
+	s_shaderBlend.bind();
+	s_shaderBlend.setUniform1f("u_gamma", gamma);
+}

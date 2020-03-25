@@ -4,6 +4,8 @@ struct SDL_Window;
 union SDL_Event;
 
 #include "Instance.hpp"
+#include "Settings/Settings.hpp"
+
 #include <list>
 #include <string>
 
@@ -40,6 +42,8 @@ public:
 private:
 	std::list<Instance> m_instances;
 	std::list<Instance>::iterator m_activeInstanceIt;
+
+	Settings m_settings;
 
 	bool m_bShowImGuiDemoWindow;
 	bool m_bFullScreen;

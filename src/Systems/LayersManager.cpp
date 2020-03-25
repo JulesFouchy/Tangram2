@@ -19,6 +19,8 @@
 #include "Helper/DisplayInfos.hpp"
 #include "Helper/String.hpp"
 
+#include "Settings/Settings.hpp"
+
 #include "Debugging/Log.hpp"
 
 LayersManager::LayersManager(Instance& instance)
@@ -132,7 +134,7 @@ bool LayersManager::isEntityHoveredBy(entt::entity e, const glm::vec2& posInNDC)
 		I.renderSystem().setRenderTarget_Texture(*texture);
 		glReadPixels(int(posInNormalizedModelSpace.x * texture->width), int(posInNormalizedModelSpace.y * texture->height), 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, pixelColor); // TODO this fails if preview texture is not in RGBA UNSIGNED BYTE
 		I.renderSystem().setRenderTarget_Screen();
-		return pixelColor[3] > 240;
+		return pixelColor[3] > Settings::GetMIN_OPACITY_TO_GRAB_LAYER();
 	}
 	else {
 		glm::mat3 mat = I.getMatrixPlusAspectRatio(e);

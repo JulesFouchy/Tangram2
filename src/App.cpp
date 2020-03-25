@@ -199,6 +199,10 @@ void App::onLoopIteration() {
 			ImGui::Text("Hello !");
 			ImGui::EndMenu();
 		}
+		if (ImGui::BeginMenu("Settings")) {
+			m_settings.ImGuiParameters();
+			ImGui::EndMenu();
+		}
 		ImGui::EndMainMenuBar();
 		// Instances window
 		ImGui_InstancesWindow();

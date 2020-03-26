@@ -9,6 +9,8 @@
 
 #include "Systems/HistoryManager.hpp"
 
+#include "Settings/Settings.hpp"
+
 #include "Debugging/Log.hpp"
 
 #include <SDL2/SDL.h>
@@ -25,7 +27,7 @@ InputState_Translate::InputState_Translate(Instance& instance, entt::entity targ
 
 void InputState_Translate::onLeftClicUp() {
 	if (m_enterExitButton == MouseButton::Left) {
-		if (SDL_GetTicks() - timeInputStart > 100) {
+		if (SDL_GetTicks() - timeInputStart > Settings::GetSELECT_SAFETY__MIN_TIME_BEFORE_MOVING_LAYER_IN_MS()) {
 			spdlog::error("translate");
 			HistoryManager::RecordTransform(I.registry(), m_targetID, m_initialMat);
 		}

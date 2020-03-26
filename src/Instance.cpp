@@ -298,6 +298,7 @@ void Instance::saveProject(const std::string& folderpath) {
 			.destroyed(registryArchive)
 			.component<Cmp::AspectRatio, Cmp::Children, Cmp::Parent, Cmp::Texture, Cmp::TransformMatrix, Cmp::Vertices, Cmp::VisualDependencies,
 			Cmp::Name, Cmp::Shader, Cmp::ShaderReference,
+			Cmp::History,
 			entt::tag<"Point2D"_hs>, entt::tag<"Layer"_hs>,
 			entt::tag<"Polygon"_hs>, entt::tag<"TestLayer"_hs>, entt::tag<"FragmentLayer"_hs>,
 			Cmp::Parameters, Cmp::SliderFloat, Cmp::ColorPicker3>(registryArchive);
@@ -324,6 +325,7 @@ void Instance::openProject(const std::string& folderpath) {
 			.destroyed(registryArchive)
 			.component < Cmp::AspectRatio, Cmp::Children, Cmp::Parent, Cmp::Texture, Cmp::TransformMatrix, Cmp::Vertices, Cmp::VisualDependencies,
 			Cmp::Name, Cmp::Shader, Cmp::ShaderReference,
+			Cmp::History,
 			entt::tag<"Point2D"_hs>, entt::tag<"Layer"_hs>,
 			entt::tag<"Polygon"_hs>, entt::tag<"TestLayer"_hs>, entt::tag<"FragmentLayer"_hs>,
 			Cmp::Parameters, Cmp::SliderFloat, Cmp::ColorPicker3>(registryArchive);

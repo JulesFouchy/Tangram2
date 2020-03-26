@@ -25,6 +25,7 @@ InputState_Rest::InputState_Rest(Instance& instance)
 {}
 
 entt::entity InputState_Rest::getFirstLayerOf(entt::entity e) {
+	// (e.g. if you click on the handle of a polygon, this will return the associated polygon layer)
 	entt::registry& R = I.registry();
 	if (R.valid(e)) {
 		if (R.has<entt::tag<"Layer"_hs>>(e))
@@ -42,12 +43,12 @@ entt::entity InputState_Rest::getFirstLayerOf(entt::entity e) {
 }
 
 void InputState_Rest::onLeftClicDown() {
-	entt::entity hoveredEntity = I.layersManager().getEntityHoveredByMouse();
-	// Get clicked layer
-	I.layersManager().setSelectedLayer(getFirstLayerOf(hoveredEntity));
+	entt::entity clickedEntity = I.layersManager().getEntityHoveredByMouse();
+	entt::entity clickedLayer = getFirstLayerOf(clickedEntity);
+	I.layersManager().setSelectedLayer(clickedLayer);
 	// Translate 
-	if (I.registry().valid(hoveredEntity))
-		I.inputSystem().m_currentState = std::make_unique<InputState_Translate>(I, hoveredEntity, MouseButton::Left);
+	if (I.registry().valid(clickedEntity))
+		I.inputSystem().m_currentState = std::make_unique<InputState_Translate>(I, clickedEntity, MouseButton::Left);
 }
 
 void InputState_Rest::onWheelDown() {

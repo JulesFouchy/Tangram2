@@ -7,6 +7,8 @@
 #include "Components/TransformMatrix.hpp"
 #include <glm/gtx/matrix_transform_2d.hpp>
 
+#include "Systems/HistoryManager.hpp"
+
 #include "Debugging/Log.hpp"
 
 
@@ -19,13 +21,16 @@ InputState_Translate::InputState_Translate(Instance& instance, entt::entity targ
 {}
 
 void InputState_Translate::onLeftClicUp() {
-	if (m_enterExitButton == MouseButton::Left)
+	if (m_enterExitButton == MouseButton::Left) {
+		HistoryManager::RecordTransform(I.registry(), m_targetID, m_initialMat);
 		I.inputSystem().setState<InputState_Rest>();
+	}
 }
 
 void InputState_Translate::onWheelUp() {
-	if (m_enterExitButton == MouseButton::Wheel)
+	if (m_enterExitButton == MouseButton::Wheel) {
 		I.inputSystem().setState<InputState_Rest>();
+	}
 }
 
 void InputState_Translate::update() {

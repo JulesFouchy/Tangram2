@@ -14,6 +14,8 @@
 #include <glm/gtx/matrix_transform_2d.hpp>
 #include "Components/Parent.hpp"
 
+#include "Systems/HistoryManager.hpp"
+
 #include "GUI/FileBrowser.hpp"
 #include "Debugging/Log.hpp"
 
@@ -76,6 +78,12 @@ void InputState_Rest::onKeyDown(SDL_Scancode key) {
 		}
 		else if (key == SDL_SCANCODE_F) {
 			I.inputSystem().setGUIState<Window_CreateFragmentLayer>();
+		}
+		else if (key == SDL_SCANCODE_W) {
+			HistoryManager::MoveBackward(I.registry(), I.layersManager().selectedLayer());
+		}
+		else if (key == SDL_SCANCODE_Y) {
+			HistoryManager::MoveForward(I.registry(), I.layersManager().selectedLayer());
 		}
 	}
 	// no modifier key

@@ -15,6 +15,7 @@
 #include "Components/Name.hpp"
 #include "Components/Shader.hpp"
 #include "Components/ShaderReference.hpp"
+#include "Components/History.hpp"
 
 #include "Helper/DisplayInfos.hpp"
 #include "Helper/String.hpp"
@@ -50,14 +51,17 @@ entt::entity LayersManager::_createShaderLayer(const std::string& vertexFilepath
 	entt::registry& R = I.registry();
 	entt::entity e = createLayerEntity();
 
+	// Name
 	std::string shaderName = MyString::RemoveFolderHierarchy(MyString::RemoveFileExtension(fragmentFilepath));
 	if (m_nbFragmentLayersByName.find(shaderName) == m_nbFragmentLayersByName.end())
 		m_nbFragmentLayersByName[shaderName] = 0;
 	R.assign<Cmp::Name>(e, shaderName + std::to_string(m_nbFragmentLayersByName[shaderName]));
 	m_nbFragmentLayersByName[shaderName]++;
-
+	// Shader
 	entt::entity shader = instantiateShader(vertexFilepath, fragmentFilepath, R);
 	R.assign<Cmp::ShaderReference>(e, shader);
+	// History
+	R.assign<Cmp::History>(e);
 
 	m_layersOrdered.push_back(e);
 	return e;

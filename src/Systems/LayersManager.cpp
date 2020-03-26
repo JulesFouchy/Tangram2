@@ -60,8 +60,6 @@ entt::entity LayersManager::_createShaderLayer(const std::string& vertexFilepath
 	// Shader
 	entt::entity shader = instantiateShader(vertexFilepath, fragmentFilepath, R);
 	R.assign<Cmp::ShaderReference>(e, shader);
-	// History
-	R.assign<Cmp::History>(e);
 
 	m_layersOrdered.push_back(e);
 	return e;
@@ -89,14 +87,22 @@ entt::entity LayersManager::createLayerEntity() {
 	entt::registry& R = I.registry();
 	entt::entity e = R.create();
 
+	// Layer tag
 	R.assign<entt::tag<"Layer"_hs>>(e);
+	// Transform Matrix
 	R.assign<Cmp::TransformMatrix>(e);
+	// Parent / Children
 	R.assign<Cmp::Parent>(e, entt::null);
 	I.setParentOf(e, I.drawingBoardId());
 	R.assign<Cmp::Children>(e);
+	// Texture
 	R.assign<Cmp::Texture>(e, I.renderSystem().previewWidth(), I.renderSystem().previewHeight());
 	R.assign<entt::tag<"MustRecomputeTexture"_hs>>(e);
+	// Parameters
 	R.assign<Cmp::Parameters>(e);
+	// History
+	R.assign<Cmp::History>(e);
+
 	return e;
 }
 

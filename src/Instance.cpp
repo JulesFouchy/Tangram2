@@ -95,7 +95,7 @@ Instance::Instance()
 	createDrawingBoard();
 	//
 	//layersManager().createFragmentLayer("res/shaders/vasarely.frag");
-	//layersManager().createFragmentLayer("res/shaders/myFirstFrag.frag");
+	layersManager().createFragmentLayer("res/shaders/myFirstFrag.frag");
 	//layersManager().createFragmentLayer("res/shaders/second.frag");
 	//layersManager().createFragmentLayer("res/shaders/myFirstFrag.frag");
 	//m_shapeFactory.createPolygon({ glm::vec2(-0.3, -0.5), glm::vec2(0, 0), glm::vec2(0.8, -0.5), glm::vec2(-0.8, -0.5), glm::vec2(0.8, 0.5) });
@@ -127,7 +127,7 @@ Instance::Instance()
 	//layersManager().createTestLayer();
 	//layersManager().createTestLayer();
 	//layersManager().createTestLayer();
-	//m_poly = layersManager().createPolygonLayer({ glm::vec2(-0.3, -0.5), glm::vec2(0, 0), glm::vec2(0.8, -0.5), glm::vec2(-0.8, -0.5), glm::vec2(0.8, 0.5) });
+	layersManager().createPolygonLayer({ glm::vec2(-0.3, -0.5), glm::vec2(0, 0), glm::vec2(0.8, -0.5), glm::vec2(-0.8, -0.5), glm::vec2(0.8, 0.5) });
 	//renderSystem().computeTexture_Polygon(m_poly, 32.0f);
 }
 

@@ -59,6 +59,7 @@ void InputState_Rest::onWheelScroll(float dl) {
 	glm::mat3 mat = I.registry().get<Cmp::TransformMatrix>(I.drawingBoardId()).val();
 	glm::vec2 transformCenter = glm::inverse(mat) * glm::vec3(DisplayInfos::MousePositionInScreen(), 1.0f);
 	I.registry().replace<Cmp::TransformMatrix>(I.drawingBoardId(), MyMaths::Scale(mat, glm::vec2(pow(0.95f, -dl)), transformCenter));
+	HistoryManager::RecordTransform(I.registry(), I.drawingBoardId(), mat);
 }
 
 void InputState_Rest::onKeyDown(SDL_Scancode key) {
@@ -81,10 +82,18 @@ void InputState_Rest::onKeyDown(SDL_Scancode key) {
 			I.inputSystem().setGUIState<Window_CreateFragmentLayer>();
 		}
 		else if (key == SDL_SCANCODE_W) {
-			HistoryManager::MoveBackward(I.registry(), I.layersManager().selectedLayer());
+			entt::entity layer = I.layersManager().selectedLayer();
+			if (I.registry().valid(layer))
+				HistoryManager::MoveBackward(I.registry(), layer);
+			else
+				HistoryManager::MoveBackward(I.registry(), I.drawingBoardId());
 		}
 		else if (key == SDL_SCANCODE_Y) {
-			HistoryManager::MoveForward(I.registry(), I.layersManager().selectedLayer());
+			entt::entity layer = I.layersManager().selectedLayer();
+			if (I.registry().valid(layer))
+				HistoryManager::MoveForward(I.registry(), layer);
+			else
+				HistoryManager::MoveForward(I.registry(), I.drawingBoardId());
 		}
 	}
 	// no modifier key

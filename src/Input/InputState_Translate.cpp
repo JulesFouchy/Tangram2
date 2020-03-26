@@ -41,6 +41,7 @@ void InputState_Translate::onLeftClicUp() {
 
 void InputState_Translate::onWheelUp() {
 	if (m_enterExitButton == MouseButton::Wheel) {
+		HistoryManager::RecordTransform(I.registry(), m_targetID, m_initialMat);
 		I.inputSystem().setState<InputState_Rest>();
 	}
 }

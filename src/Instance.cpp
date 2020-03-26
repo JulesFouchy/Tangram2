@@ -12,6 +12,7 @@
 #include "Components/Name.hpp"
 #include "Components/Shader.hpp"
 #include "Components/ShaderReference.hpp"
+#include "Components/History.hpp"
 
 #include "glm/gtx/matrix_transform_2d.hpp"
 
@@ -161,6 +162,7 @@ void Instance::createDrawingBoard() {
 	registry().assign<Cmp::AspectRatio>(drawingBoardId(), 1.0f);
 	registry().assign<Cmp::Children>(drawingBoardId());
 	registry().assign<Cmp::Texture>(drawingBoardId(), 1000, 1000);
+	registry().assign<Cmp::History>(drawingBoardId());
 }
 
 void Instance::setParentOf(entt::entity child, entt::entity parent) {

@@ -11,18 +11,28 @@
 
 #include "Debugging/Log.hpp"
 
+#include <SDL2/SDL.h>
+
 
 InputState_Translate::InputState_Translate(Instance& instance, entt::entity targetID, MouseButton enterExitButton)
 	: IInputState(instance),
 	  m_targetID(targetID),
 	  m_mouseInitialPosInScreen(DisplayInfos::MousePositionInScreen()),
 	  m_initialMat(I.registry().get<Cmp::TransformMatrix>(targetID).val()),
-	  m_enterExitButton(enterExitButton)
+	  m_enterExitButton(enterExitButton),
+	  timeInputStart(SDL_GetTicks())
 {}
 
 void InputState_Translate::onLeftClicUp() {
 	if (m_enterExitButton == MouseButton::Left) {
-		HistoryManager::RecordTransform(I.registry(), m_targetID, m_initialMat);
+		if (SDL_GetTicks() - timeInputStart > 100) {
+			spdlog::error("translate");
+			HistoryManager::RecordTransform(I.registry(), m_targetID, m_initialMat);
+		}
+		else {
+			spdlog::warn("select");
+			I.registry().replace<Cmp::TransformMatrix>(m_targetID, m_initialMat);
+		}
 		I.inputSystem().setState<InputState_Rest>();
 	}
 }

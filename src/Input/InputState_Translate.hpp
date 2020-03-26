@@ -23,4 +23,5 @@ private:
 	glm::vec2 m_mouseInitialPosInScreen;
 	glm::mat3 m_initialMat;
 	MouseButton m_enterExitButton;
+	Uint32 timeInputStart;
 };

@@ -1,6 +1,19 @@
 #include "HistoryManager.hpp"
 
+#include "Components/Parent.hpp"
+
 #include "Components/TransformMatrix.hpp"
+
+Cmp::History* HistoryManager::GetHistory(entt::registry& R, entt::entity e) {
+	Cmp::History* h = R.try_get<Cmp::History>(e);
+	if (h)
+		return h;
+	// else
+	Cmp::Parent* parent = R.try_get<Cmp::Parent>(e);
+	if (parent)
+		return GetHistory(R, parent->id);
+	return nullptr;
+}
 
 void HistoryManager::MoveBackward(entt::registry& R, entt::entity e) {
 	Cmp::History* h = GetHistory(R, e);

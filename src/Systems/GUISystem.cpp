@@ -6,9 +6,6 @@
 #include <imgui/misc/cpp/imgui_stdlib.h>
 
 #include "Components/ParametersList.hpp"
-#include "Components/GUI/SliderFloat.hpp"
-#include "Components/GUI/SliderFloat2.hpp"
-#include "Components/GUI/ColorPicker3.hpp"
 #include "Components/AspectRatio.hpp"
 #include "Components/Name.hpp"
 

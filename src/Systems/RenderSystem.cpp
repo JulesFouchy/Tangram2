@@ -7,7 +7,6 @@
 #include "Components/Vertices.hpp"
 #include "Components/AspectRatio.hpp"
 #include "Components/ParametersList.hpp"
-#include "Components/GUI/SliderFloat.hpp"
 #include "Components/Parent.hpp"
 #include "Components/Shader.hpp"
 #include "Components/ShaderReference.hpp"

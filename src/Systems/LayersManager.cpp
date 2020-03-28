@@ -10,7 +10,6 @@
 #include "Components/Children.hpp"
 #include "Components/Vertices.hpp"
 #include "Components/ParametersList.hpp"
-#include "Components/GUI/SliderFloat.hpp"
 #include "Components/PreviewTexture.hpp"
 #include "Components/Name.hpp"
 #include "Components/ShaderReference.hpp"

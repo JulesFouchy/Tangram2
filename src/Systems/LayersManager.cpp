@@ -99,10 +99,9 @@ entt::entity LayersManager::createPolygonLayer(const std::vector<glm::vec2>& ver
 	R.assign<Cmp::Name>(e, "Polygon" + std::to_string(m_nbPolygonLayers));
 	m_nbPolygonLayers++;
 
-	Cmp::Parameters& params = R.get<Cmp::Parameters>(e);
-	entt::entity e2 = R.create();
-	R.assign<Cmp::SliderFloat>(e2, "Smooth Min", 0.036f, 0.0f, 0.1f);
-	params.list.push_back(e2);
+	//Cmp::Parameters& params = R.get<Cmp::Parameters>(e);
+	//R.assign<Cmp::SliderFloat>(e2, "Smooth Min", 0.036f, 0.0f, 0.1f);
+	//params.list.push_back(std::make_unique<FloatParameter>();
 
 	return e;
 }

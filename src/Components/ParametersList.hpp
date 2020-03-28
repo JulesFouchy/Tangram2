@@ -1,12 +1,14 @@
 #pragma once
 
-#include <entt/entt.hpp>
+#include "Parameters/Parameter.hpp"
+#include <memory>
+
 #include <cereal/access.hpp>
 #include <cereal/types/vector.hpp>
 
 namespace Cmp {
 struct Parameters {
-	std::vector<entt::entity> list;
+	std::vector<Parameter*> list;
 
 private:
 	//Serialization
@@ -14,7 +16,7 @@ private:
 	template <class Archive>
 	void serialize(Archive& archive)
 	{
-		archive(list);
+		//archive(list);
 	}
 };
 }

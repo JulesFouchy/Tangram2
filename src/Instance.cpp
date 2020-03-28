@@ -37,6 +37,10 @@ static void deleteTexture(entt::entity e, entt::registry& R) {
 static void deleteShader(entt::entity e, entt::registry& R) {
 	R.get<Cmp::Shader>(e).Delete();
 }
+static void deleteParameters(entt::entity e, entt::registry& R) {
+	for (Parameter* ptr : R.get<Cmp::Parameters>(e).list)
+		delete ptr;
+}
 
 void Instance::onTransformMatrixChange(entt::entity e, entt::registry& R) {
 	if (e != drawingBoardId()) {
@@ -62,6 +66,7 @@ void Instance::Construct() {
 	registry().on_replace<Cmp::TransformMatrix>().connect<&Instance::onTransformMatrixChange>(*this);
 	registry().on_destroy<Cmp::Texture>().connect<&deleteTexture>();
 	registry().on_destroy<Cmp::Shader>().connect<&deleteShader>();
+	registry().on_destroy<Cmp::Parameters>().connect<&deleteParameters>();
 }
 
 Instance::~Instance() {

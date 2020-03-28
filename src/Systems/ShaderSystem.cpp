@@ -6,15 +6,18 @@
 #include "Components/GUI/SliderFloat2.hpp"
 #include "Components/GUI/ColorPicker3.hpp"
 
+#include "Parameters/FloatParameter.hpp"
+
 entt::entity ShaderSystem::Create(entt::registry& R, const std::string& vertexFilepath, const std::string& fragmentFilepath) {
 	entt::entity e = R.create();
 	R.assign<Cmp::Shader>(e, vertexFilepath, fragmentFilepath);
 	return e;
 }
 
-void ShaderSystem::FillParametersList(entt::registry& R, entt::entity shaderEntity, std::vector<entt::entity>& parametersList) {
+void ShaderSystem::FillParametersList(entt::registry& R, entt::entity shaderEntity, std::vector<Parameter*>& parametersList) {
+	Cmp::Shader shaderCmp = GetShaderCmp(R, shaderEntity);
 	// Open fragment shader file
-	const std::string& filepath = GetShaderCmp(R, shaderEntity).fragmentFilepath;
+	const std::string& filepath = shaderCmp.fragmentFilepath;
 	std::ifstream stream(filepath);
 	if (!stream.is_open()) {
 		spdlog::warn("Failed to open file |{}|", filepath);
@@ -28,8 +31,8 @@ void ShaderSystem::FillParametersList(entt::registry& R, entt::entity shaderEnti
 		if (line.find("}") != std::string::npos)
 			break;
 		// Create parameter
-		entt::entity param = CreateParameterFromLine(R, line);
-		if (R.valid(param))
+		Parameter* param = CreateParameterFromLine(R, line, shaderCmp.id);
+		if (param)
 			parametersList.push_back(param);
 	}
 }
@@ -50,22 +53,21 @@ void ShaderSystem::GoToFirstLineOfStructParameters(std::ifstream& stream) {
 	}
 }
 
-entt::entity ShaderSystem::CreateParameterFromLine(entt::registry& R, const std::string& line) {
-	entt::entity e = R.create();
+Parameter* ShaderSystem::CreateParameterFromLine(entt::registry& R, const std::string& line, int glShaderID) {
 	size_t pos = 0;
 	std::string type = MyString::GetNextWord(line, &pos);
 	std::string name = MyString::GetNextWord(line, &pos);
+	int glUniformLocation = glGetUniformLocation(glShaderID, ("u." + name).c_str());
 	if (!type.compare("float"))
-		R.assign<Cmp::SliderFloat>(e, name, ReadValue<float>(line, "default"), ReadValue<float>(line, "min"), ReadValue<float>(line, "max"));
-	else if (!type.compare("vec2"))
-		R.assign<Cmp::SliderFloat2>(e, name, ReadValue<glm::vec2>(line, "default"), ReadValue<float>(line, "min"), ReadValue<float>(line, "max"));
-	else if (!type.compare("vec3"))
-		R.assign<Cmp::ColorPicker3>(e, name, glm::vec3(0.0f));
+		return new FloatParameter(glUniformLocation, name, ReadValue<float>(line, "default"), ReadValue<float>(line, "min"), ReadValue<float>(line, "max"));
+	//else if (!type.compare("vec2"))
+	//	R.assign<Cmp::SliderFloat2>(e, name, ReadValue<glm::vec2>(line, "default"), ReadValue<float>(line, "min"), ReadValue<float>(line, "max"));
+	//else if (!type.compare("vec3"))
+	//	R.assign<Cmp::ColorPicker3>(e, name, glm::vec3(0.0f));
 	else {
 		spdlog::error("[ShaderSystem::CreateParameterFromLine] Couldn't parse parameter from line : \"{}\"", line);
-		return entt::null;
+		return nullptr;
 	}
-	return e;
 }
 
 template <>

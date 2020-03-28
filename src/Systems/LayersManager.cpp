@@ -13,9 +13,10 @@
 #include "Components/GUI/SliderFloat.hpp"
 #include "Components/PreviewTexture.hpp"
 #include "Components/Name.hpp"
-#include "Components/Shader.hpp"
 #include "Components/ShaderReference.hpp"
 #include "Components/History.hpp"
+
+#include "Systems/ShaderSystem.hpp"
 
 #include "Helper/DisplayInfos.hpp"
 #include "Helper/String.hpp"
@@ -55,10 +56,10 @@ entt::entity LayersManager::_createShaderLayer(const std::string& vertexFilepath
 	std::string shaderName = MyString::RemoveFolderHierarchy(MyString::RemoveFileExtension(fragmentFilepath));
 	if (m_nbFragmentLayersByName.find(shaderName) == m_nbFragmentLayersByName.end())
 		m_nbFragmentLayersByName[shaderName] = 0;
-	R.assign<Cmp::Name>(e, shaderName + std::to_string(m_nbFragmentLayersByName[shaderName]));
+	R.assign<Cmp::Name>(e, shaderName + "_" + std::to_string(m_nbFragmentLayersByName[shaderName]));
 	m_nbFragmentLayersByName[shaderName]++;
 	// Shader
-	entt::entity shader = instantiateShader(vertexFilepath, fragmentFilepath, R);
+	entt::entity shader = ShaderSystem::Create(R, vertexFilepath, fragmentFilepath);
 	R.assign<Cmp::ShaderReference>(e, shader);
 
 	m_layersOrdered.push_back(e);
@@ -103,12 +104,6 @@ entt::entity LayersManager::createLayerEntity() {
 	// History
 	R.assign<Cmp::History>(e);
 
-	return e;
-}
-
-entt::entity LayersManager::instantiateShader(const std::string& vertexFilepath, const std::string& fragmentFilepath, entt::registry& R) const {
-	entt::entity e = R.create();
-	R.assign<Cmp::Shader>(e, vertexFilepath, fragmentFilepath);
 	return e;
 }
 

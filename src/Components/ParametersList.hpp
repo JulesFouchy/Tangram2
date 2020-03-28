@@ -5,10 +5,18 @@
 
 #include <cereal/access.hpp>
 #include <cereal/types/vector.hpp>
+#include <cereal/types/memory.hpp>
 
 namespace Cmp {
-struct Parameters {
-	std::vector<Parameter*> list;
+struct Parameters{
+
+	Parameters() = default;
+	Parameters(Parameters&&) noexcept = default;
+	Parameters(const Parameters&) = delete;
+	Parameters& operator=(const Parameters&) = delete;
+	Parameters& operator=(Parameters&&) noexcept = default;
+
+	std::vector<std::unique_ptr<Parameter>> list;
 
 private:
 	//Serialization
@@ -16,7 +24,7 @@ private:
 	template <class Archive>
 	void serialize(Archive& archive)
 	{
-		//archive(list);
+		archive(list);
 	}
 };
 }

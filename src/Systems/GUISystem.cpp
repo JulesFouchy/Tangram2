@@ -82,7 +82,7 @@ void GUISystem::render() {
 		if (I.registry().valid(selLayer)) {
 			ImGui::Begin("Parameters");
 			bool bMustRecomputeTexture = false;
-			for (Parameter* param : R.get<Cmp::Parameters>(selLayer).list) {
+			for (const auto& param : R.get<Cmp::Parameters>(selLayer).list) {
 				bMustRecomputeTexture |= param->ImGui();
 			}
 			if (bMustRecomputeTexture)

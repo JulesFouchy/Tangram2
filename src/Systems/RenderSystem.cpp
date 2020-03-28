@@ -185,7 +185,7 @@ void RenderSystem::endBlendTexture() {
 void RenderSystem::drawFragment(entt::entity e) {
 	Cmp::Shader& shader = I.registry().get<Cmp::Shader>(I.registry().get<Cmp::ShaderReference>(e).entityID);
 	shader.bind();
-	for (Parameter* param : I.registry().get<Cmp::Parameters>(e).list) {
+	for (const auto& param : I.registry().get<Cmp::Parameters>(e).list) {
 		param->sendToShader();
 	}
 	shader.setUniformMat3f("u_localTransformMat", I.getMatrixToTextureSpace(e));

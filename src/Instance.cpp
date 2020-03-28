@@ -37,10 +37,10 @@ static void deleteTexture(entt::entity e, entt::registry& R) {
 static void deleteShader(entt::entity e, entt::registry& R) {
 	R.get<Cmp::Shader>(e).Delete();
 }
-static void deleteParameters(entt::entity e, entt::registry& R) {
-	for (Parameter* ptr : R.get<Cmp::Parameters>(e).list)
-		delete ptr;
-}
+//static void deleteParameters(entt::entity e, entt::registry& R) {
+//	for (Parameter* ptr : R.get<Cmp::Parameters>(e).list)
+//		delete ptr;
+//}
 
 void Instance::onTransformMatrixChange(entt::entity e, entt::registry& R) {
 	if (e != drawingBoardId()) {
@@ -66,7 +66,7 @@ void Instance::Construct() {
 	registry().on_replace<Cmp::TransformMatrix>().connect<&Instance::onTransformMatrixChange>(*this);
 	registry().on_destroy<Cmp::Texture>().connect<&deleteTexture>();
 	registry().on_destroy<Cmp::Shader>().connect<&deleteShader>();
-	registry().on_destroy<Cmp::Parameters>().connect<&deleteParameters>();
+	//registry().on_destroy<Cmp::Parameters>().connect<&deleteParameters>();
 }
 
 Instance::~Instance() {
@@ -306,7 +306,8 @@ void Instance::saveProject(const std::string& folderpath) {
 			Cmp::History,
 			entt::tag<"Point2D"_hs>, entt::tag<"Layer"_hs>,
 			entt::tag<"Polygon"_hs>, entt::tag<"TestLayer"_hs>, entt::tag<"FragmentLayer"_hs>,
-			Cmp::Parameters, Cmp::SliderFloat, Cmp::ColorPicker3>(registryArchive);
+			//Cmp::Parameters,
+			Cmp::SliderFloat, Cmp::ColorPicker3>(registryArchive);
 	}
 	Log::separationLine();
 }
@@ -333,7 +334,8 @@ void Instance::openProject(const std::string& folderpath) {
 			Cmp::History,
 			entt::tag<"Point2D"_hs>, entt::tag<"Layer"_hs>,
 			entt::tag<"Polygon"_hs>, entt::tag<"TestLayer"_hs>, entt::tag<"FragmentLayer"_hs>,
-			Cmp::Parameters, Cmp::SliderFloat, Cmp::ColorPicker3>(registryArchive);
+			//Cmp::Parameters,
+			Cmp::SliderFloat, Cmp::ColorPicker3>(registryArchive);
 	}
 	auto& layersWithPrevTexture = registry().view<Cmp::Texture>();
 	for (entt::entity e : layersWithPrevTexture)

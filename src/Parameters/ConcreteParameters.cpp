@@ -44,3 +44,23 @@ bool Float4Parameter::ImGui() {
 void Float4Parameter::sendToShader() {
 	glUniform4f(m_glUniformLocation, m_val.x, m_val.y, m_val.z, m_val.w);
 }
+// Color3
+Color3Parameter::Color3Parameter(int glUniformLocation, const std::string& name, const glm::vec3& val, ImGuiColorEditFlags flags)
+	: Parameter(glUniformLocation, name), m_val(val), m_flags(flags)
+{}
+bool Color3Parameter::ImGui() {
+	return ImGui::ColorPicker3(m_name.c_str(), (float*)&m_val, m_flags);
+}
+void Color3Parameter::sendToShader() {
+	glUniform3f(m_glUniformLocation, m_val.x, m_val.y, m_val.z);
+}
+// Color4
+Color4Parameter::Color4Parameter(int glUniformLocation, const std::string& name, const glm::vec4& val, ImGuiColorEditFlags flags)
+	: Parameter(glUniformLocation, name), m_val(val), m_flags(flags)
+{}
+bool Color4Parameter::ImGui() {
+	return ImGui::ColorPicker4(m_name.c_str(), (float*)&m_val, m_flags);
+}
+void Color4Parameter::sendToShader() {
+	glUniform4f(m_glUniformLocation, m_val.x, m_val.y, m_val.z, m_val.w);
+}

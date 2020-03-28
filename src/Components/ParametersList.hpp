@@ -16,7 +16,7 @@ struct Parameters{
 	//Parameters& operator=(const Parameters&) = delete;
 	//Parameters& operator=(Parameters&&) noexcept = default;
 
-	std::vector<std::shared_ptr<Parameter>> list;
+	std::vector<std::shared_ptr<Parameter>> list; // We don't use unique_ptr because entt struggles with non-copyable objects (mainly the serialization part)
 
 private:
 	//Serialization

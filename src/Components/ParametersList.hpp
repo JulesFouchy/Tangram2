@@ -10,13 +10,13 @@
 namespace Cmp {
 struct Parameters{
 
-	Parameters() = default;
-	Parameters(Parameters&&) noexcept = default;
-	Parameters(const Parameters&) = delete;
-	Parameters& operator=(const Parameters&) = delete;
-	Parameters& operator=(Parameters&&) noexcept = default;
+	//Parameters() = default;
+	//Parameters(Parameters&&) noexcept = default;
+	//Parameters(const Parameters&) = delete;
+	//Parameters& operator=(const Parameters&) = delete;
+	//Parameters& operator=(Parameters&&) noexcept = default;
 
-	std::vector<std::unique_ptr<Parameter>> list;
+	std::vector<std::shared_ptr<Parameter>> list;
 
 private:
 	//Serialization

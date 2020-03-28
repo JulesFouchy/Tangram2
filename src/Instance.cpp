@@ -306,7 +306,7 @@ void Instance::saveProject(const std::string& folderpath) {
 			Cmp::History,
 			entt::tag<"Point2D"_hs>, entt::tag<"Layer"_hs>,
 			entt::tag<"Polygon"_hs>, entt::tag<"TestLayer"_hs>, entt::tag<"FragmentLayer"_hs>,
-			//Cmp::Parameters,
+			Cmp::Parameters,
 			Cmp::SliderFloat, Cmp::ColorPicker3>(registryArchive);
 	}
 	Log::separationLine();
@@ -334,7 +334,7 @@ void Instance::openProject(const std::string& folderpath) {
 			Cmp::History,
 			entt::tag<"Point2D"_hs>, entt::tag<"Layer"_hs>,
 			entt::tag<"Polygon"_hs>, entt::tag<"TestLayer"_hs>, entt::tag<"FragmentLayer"_hs>,
-			//Cmp::Parameters,
+			Cmp::Parameters,
 			Cmp::SliderFloat, Cmp::ColorPicker3>(registryArchive);
 	}
 	auto& layersWithPrevTexture = registry().view<Cmp::Texture>();

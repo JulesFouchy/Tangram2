@@ -4,6 +4,7 @@
 
 class Parameter {
 public:
+	Parameter() = default;
 	Parameter(int glUniformLocation, const std::string& name)
 		: m_glUniformLocation(glUniformLocation), m_name(name)
 	{}

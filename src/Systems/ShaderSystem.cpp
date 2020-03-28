@@ -14,7 +14,7 @@ entt::entity ShaderSystem::Create(entt::registry& R, const std::string& vertexFi
 	return e;
 }
 
-void ShaderSystem::FillParametersList(entt::registry& R, entt::entity shaderEntity, std::vector<std::unique_ptr<Parameter>>& parametersList) {
+void ShaderSystem::FillParametersList(entt::registry& R, entt::entity shaderEntity, std::vector<std::shared_ptr<Parameter>>& parametersList) {
 	Cmp::Shader shaderCmp = GetShaderCmp(R, shaderEntity);
 	// Open fragment shader file
 	const std::string& filepath = shaderCmp.fragmentFilepath;
@@ -31,7 +31,7 @@ void ShaderSystem::FillParametersList(entt::registry& R, entt::entity shaderEnti
 		if (line.find("}") != std::string::npos)
 			break;
 		// Create parameter
-		std::unique_ptr<Parameter> param = CreateParameterFromLine(R, line, shaderCmp.id);
+		std::shared_ptr<Parameter> param = CreateParameterFromLine(R, line, shaderCmp.id);
 		if (param)
 			parametersList.push_back(std::move(param));
 	}
@@ -53,13 +53,13 @@ void ShaderSystem::GoToFirstLineOfStructParameters(std::ifstream& stream) {
 	}
 }
 
-std::unique_ptr<Parameter> ShaderSystem::CreateParameterFromLine(entt::registry& R, const std::string& line, int glShaderID) {
+std::shared_ptr<Parameter> ShaderSystem::CreateParameterFromLine(entt::registry& R, const std::string& line, int glShaderID) {
 	size_t pos = 0;
 	std::string type = MyString::GetNextWord(line, &pos);
 	std::string name = MyString::GetNextWord(line, &pos);
 	int glUniformLocation = glGetUniformLocation(glShaderID, ("u." + name).c_str());
 	if (!type.compare("float"))
-		return std::make_unique<FloatParameter>(glUniformLocation, name, ReadValue<float>(line, "default"), ReadValue<float>(line, "min"), ReadValue<float>(line, "max"));
+		return std::make_shared<FloatParameter>(glUniformLocation, name, ReadValue<float>(line, "default"), ReadValue<float>(line, "min"), ReadValue<float>(line, "max"));
 	//else if (!type.compare("vec2"))
 	//	R.assign<Cmp::SliderFloat2>(e, name, ReadValue<glm::vec2>(line, "default"), ReadValue<float>(line, "min"), ReadValue<float>(line, "max"));
 	//else if (!type.compare("vec3"))

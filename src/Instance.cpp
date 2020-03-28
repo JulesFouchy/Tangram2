@@ -14,6 +14,8 @@
 #include "Components/ShaderReference.hpp"
 #include "Components/History.hpp"
 
+#include "Systems/ShaderSystem.hpp"
+
 #include "glm/gtx/matrix_transform_2d.hpp"
 
 #include "Helper/DisplayInfos.hpp"
@@ -337,8 +339,13 @@ void Instance::openProject(const std::string& folderpath) {
 			Cmp::Parameters,
 			Cmp::SliderFloat, Cmp::ColorPicker3>(registryArchive);
 	}
+	// Compute textures
 	auto& layersWithPrevTexture = registry().view<Cmp::Texture>();
 	for (entt::entity e : layersWithPrevTexture)
 		registry().assign<entt::tag<"MustRecomputeTexture"_hs>>(e);
+	// Find uniform locations
+	auto& layersWithShader = registry().view<Cmp::ShaderReference>();
+	for (entt::entity e : layersWithShader)
+		ShaderSystem::ComputeUniformLocations(registry(), e);
 	Log::separationLine();
 }

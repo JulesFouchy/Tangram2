@@ -3,6 +3,7 @@
 #include <string>
 
 class Parameter {
+	friend class ShaderSystem;
 public:
 	Parameter() = default;
 	Parameter(int glUniformLocation, const std::string& name)

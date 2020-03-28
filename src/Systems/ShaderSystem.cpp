@@ -2,6 +2,9 @@
 
 #include "Helper/String.hpp"
 
+#include "Components/ParametersList.hpp"
+#include "Components/ShaderReference.hpp"
+
 #include "Components/GUI/SliderFloat.hpp"
 #include "Components/GUI/SliderFloat2.hpp"
 #include "Components/GUI/ColorPicker3.hpp"
@@ -37,6 +40,15 @@ void ShaderSystem::FillParametersList(entt::registry& R, entt::entity shaderEnti
 	}
 }
 
+void ShaderSystem::ComputeUniformLocations(entt::registry& R, entt::entity layerWithAShader) {
+	Cmp::Parameters& params = R.get<Cmp::Parameters>(layerWithAShader);
+	Cmp::Shader& shader = R.get<Cmp::Shader>(R.get<Cmp::ShaderReference>(layerWithAShader).entityID);
+	glUseProgram(shader.id);
+	for (const auto& param : params.list) {
+		param->m_glUniformLocation = GetUniformLocation(shader.id, param->m_name);
+	}
+}
+
 void ShaderSystem::GoToFirstLineOfStructParameters(std::ifstream& stream) {
 	std::string line;
 	while (getline(stream, line)) {
@@ -57,7 +69,7 @@ std::shared_ptr<Parameter> ShaderSystem::CreateParameterFromLine(entt::registry&
 	size_t pos = 0;
 	std::string type = MyString::GetNextWord(line, &pos);
 	std::string name = MyString::GetNextWord(line, &pos);
-	int glUniformLocation = glGetUniformLocation(glShaderID, ("u." + name).c_str());
+	int glUniformLocation = GetUniformLocation(glShaderID, name);
 	if (!type.compare("float"))
 		return std::make_shared<FloatParameter>(glUniformLocation, name, ReadValue<float>(line, "default"), ReadValue<float>(line, "min"), ReadValue<float>(line, "max"));
 	//else if (!type.compare("vec2"))
@@ -68,6 +80,10 @@ std::shared_ptr<Parameter> ShaderSystem::CreateParameterFromLine(entt::registry&
 		spdlog::error("[ShaderSystem::CreateParameterFromLine] Couldn't parse parameter from line : \"{}\"", line);
 		return nullptr;
 	}
+}
+
+int ShaderSystem::GetUniformLocation(int glShaderID, const std::string& parameterName) {
+	return glGetUniformLocation(glShaderID, ("u." + parameterName).c_str());
 }
 
 template <>

@@ -93,30 +93,60 @@ int ShaderSystem::GetUniformLocation(int glShaderID, const std::string& paramete
 
 template <>
 float ShaderSystem::ConvertStringTo<float>(const std::string& str, size_t pos) {
-	return std::stof(MyString::GetNextWord(str, &pos));
+	try {
+		return std::stof(MyString::GetNextWord(str, &pos));
+	}
+	catch (...) {
+		spdlog::error("[ShaderSystem::ConvertStringTo<float>] Unable to read 1 number at \"{}\"", str);
+		return 0.0f;
+	}
 }
 template <>
 glm::vec2 ShaderSystem::ConvertStringTo<glm::vec2>(const std::string& str, size_t pos) {
-	float x = std::stof(MyString::GetNextWord(str, &pos));
-	float y = std::stof(MyString::GetNextWord(str, &pos));
-	return glm::vec2(x, y);
+	try {
+		float x = std::stof(MyString::GetNextWord(str, &pos));
+		float y = std::stof(MyString::GetNextWord(str, &pos));
+		return glm::vec2(x, y);
+	}
+	catch (...) {
+		spdlog::error("[ShaderSystem::ConvertStringTo<glm::vec2>] Unable to read 2 numbers at \"{}\"", str);
+		return glm::vec2(0.0f);
+	}
 }
 template <>
 glm::vec3 ShaderSystem::ConvertStringTo<glm::vec3>(const std::string& str, size_t pos) {
-	float x = std::stof(MyString::GetNextWord(str, &pos));
-	float y = std::stof(MyString::GetNextWord(str, &pos));
-	float z = std::stof(MyString::GetNextWord(str, &pos));
-	return glm::vec3(x, y, z);
+	try {
+		float x = std::stof(MyString::GetNextWord(str, &pos));
+		float y = std::stof(MyString::GetNextWord(str, &pos));
+		float z = std::stof(MyString::GetNextWord(str, &pos));
+		return glm::vec3(x, y, z);
+	}
+	catch (...) {
+		spdlog::error("[ShaderSystem::ConvertStringTo<glm::vec3>] Unable to read 3 numbers at \"{}\"", str);
+		return glm::vec3(0.0f);
+	}
 }
 template <>
 glm::vec4 ShaderSystem::ConvertStringTo<glm::vec4>(const std::string& str, size_t pos) {
-	float x = std::stof(MyString::GetNextWord(str, &pos));
-	float y = std::stof(MyString::GetNextWord(str, &pos));
-	float z = std::stof(MyString::GetNextWord(str, &pos));
-	float w = std::stof(MyString::GetNextWord(str, &pos));
-	return glm::vec4(x, y, z, w);
+	try {
+		float x = std::stof(MyString::GetNextWord(str, &pos));
+		float y = std::stof(MyString::GetNextWord(str, &pos));
+		float z = std::stof(MyString::GetNextWord(str, &pos));
+		float w = std::stof(MyString::GetNextWord(str, &pos));
+		return glm::vec4(x, y, z, w);
+	}
+	catch (...) {
+		spdlog::error("[ShaderSystem::ConvertStringTo<glm::vec4>] Unable to read 4 numbers at \"{}\"", str);
+		return glm::vec4(0.0f);
+	}
 }
 template <>
 int ShaderSystem::ConvertStringTo<int>(const std::string& str, size_t pos) {
-	return std::stoi(MyString::GetNextWord(str, &pos));
+	try {
+		return std::stoi(MyString::GetNextWord(str, &pos));
+	}
+	catch (...) {
+		spdlog::error("[ShaderSystem::ConvertStringTo<int>] Unable to read 1 number at \"{}\"", str);
+		return 0;
+	}
 }

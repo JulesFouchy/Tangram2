@@ -76,11 +76,14 @@ std::shared_ptr<Parameter> ShaderSystem::CreateParameterFromLine(entt::registry&
 		else
 			return std::make_shared<Color3Parameter>(glUniformLocation, name, ReadValue<glm::vec3>(line, "default"));
 	}
-	else if (!type.compare("vec4"))
+	else if (!type.compare("vec4")) {
 		if (MyString::FindCaseInsensitive(line, "NOT_A_COLOR") != std::string::npos)
 			return std::make_shared<Float4Parameter>(glUniformLocation, name, ReadValue<glm::vec4>(line, "default"), ReadValue<float>(line, "min"), ReadValue<float>(line, "max"));
 		else
 			return std::make_shared<Color4Parameter>(glUniformLocation, name, ReadValue<glm::vec4>(line, "default"));
+	}
+	else if (!type.compare("bool"))
+		return std::make_shared<BoolParameter>(glUniformLocation, name, MyString::FindCaseInsensitive(line, "true") != std::string::npos);
 	else {
 		spdlog::error("[ShaderSystem::CreateParameterFromLine] Couldn't parse parameter from line : \"{}\"", line);
 		return nullptr;

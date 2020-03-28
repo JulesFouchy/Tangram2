@@ -64,3 +64,13 @@ bool Color4Parameter::ImGui() {
 void Color4Parameter::sendToShader() {
 	glUniform4f(m_glUniformLocation, m_val.x, m_val.y, m_val.z, m_val.w);
 }
+// Bool
+BoolParameter::BoolParameter(int glUniformLocation, const std::string& name, bool val)
+	: Parameter(glUniformLocation, name), m_val(val)
+{}
+bool BoolParameter::ImGui() {
+	return ImGui::Checkbox(m_name.c_str(), &m_val);
+}
+void BoolParameter::sendToShader() {
+	glUniform1i(m_glUniformLocation, m_val);
+}

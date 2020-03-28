@@ -138,6 +138,24 @@ private:
 	}
 };
 
+class BoolParameter : public Parameter {
+public:
+	BoolParameter() = default;
+	BoolParameter(int glUniformLocation, const std::string& name, bool val);
+	~BoolParameter() = default;
+	bool ImGui() override;
+	void sendToShader() override;
+private:
+	bool m_val;
+private:
+	//Serialization
+	friend class cereal::access;
+	template <class Archive>
+	void serialize(Archive& archive) {
+		archive(m_name, m_val);
+	}
+};
+
 CEREAL_REGISTER_TYPE(FloatParameter)
 CEREAL_REGISTER_POLYMORPHIC_RELATION(Parameter, FloatParameter)
 
@@ -155,3 +173,6 @@ CEREAL_REGISTER_POLYMORPHIC_RELATION(Parameter, Color3Parameter)
 
 CEREAL_REGISTER_TYPE(Color4Parameter)
 CEREAL_REGISTER_POLYMORPHIC_RELATION(Parameter, Color4Parameter)
+
+CEREAL_REGISTER_TYPE(BoolParameter)
+CEREAL_REGISTER_POLYMORPHIC_RELATION(Parameter, BoolParameter)

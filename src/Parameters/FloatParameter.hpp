@@ -23,7 +23,7 @@ private:
 	template <class Archive>
 	void serialize(Archive& archive)
 	{
-		archive(m_val, m_minVal, m_maxVal, m_format, m_power);
+		archive(m_name, m_val, m_minVal, m_maxVal, m_format, m_power);
 	}
 
 private:

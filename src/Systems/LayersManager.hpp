@@ -30,12 +30,13 @@ public:
 
 private:
 	entt::entity createLayerEntity();
+	entt::entity _createLayerBasedOnAShader(const std::string& vertexFilepath, const std::string& fragmentFilepath); // Beware : it doesn't give a tag to specify what kind of shader this is ; it must be done afterwards
+	
 	bool isEntityHoveredBy(entt::entity e, const glm::vec2& posInNDC);
 friend class InputState_Rest;
 	inline void setSelectedLayer(entt::entity e) { m_selectedLayer = e; }
 friend class GUISystem;
 	const std::vector<entt::entity>& getLayersOrdered() { return m_layersOrdered; }
-	entt::entity _createShaderLayer(const std::string& vertexFilepath, const std::string& fragmentFilepath); // Beware : it doesn't give a tag to specify what kind of shader this is ; it must be done afterwards
 
 private:
 	unsigned int m_nbTestLayers = 0;

@@ -30,65 +30,10 @@ LayersManager::LayersManager(Instance& instance)
 	  m_selectedLayer(entt::null)
 {}
 
-entt::entity LayersManager::createTestLayer() {
-	entt::registry& R = I.registry();
-	entt::entity e = createLayerEntity();
-
-	R.assign<entt::tag<"TestLayer"_hs>>(e);
-	R.assign<Cmp::Name>(e, "Test" + std::to_string(m_nbTestLayers));
-	m_nbTestLayers++;
-
-	m_layersOrdered.push_back(e);
-	return e;
-}
-
-entt::entity LayersManager::createFragmentLayer(const std::string& fragmentFilepath) {
-	entt::entity e = _createShaderLayer("res/shaders/defaultDrawOnTexture.vert", fragmentFilepath);
-	I.registry().assign<entt::tag<"FragmentLayer"_hs>>(e);
-	return e;
-}
-
-entt::entity LayersManager::_createShaderLayer(const std::string& vertexFilepath, const std::string& fragmentFilepath) {
-	entt::registry& R = I.registry();
-	entt::entity e = createLayerEntity();
-
-	// Name
-	std::string shaderName = MyString::RemoveFolderHierarchy(MyString::RemoveFileExtension(fragmentFilepath));
-	if (m_nbFragmentLayersByName.find(shaderName) == m_nbFragmentLayersByName.end())
-		m_nbFragmentLayersByName[shaderName] = 0;
-	R.assign<Cmp::Name>(e, shaderName + "_" + std::to_string(m_nbFragmentLayersByName[shaderName]));
-	m_nbFragmentLayersByName[shaderName]++;
-	// Shader
-	entt::entity shader = ShaderSystem::Create(R, vertexFilepath, fragmentFilepath);
-	R.assign<Cmp::ShaderReference>(e, shader);
-	// Shader parameters
-	ShaderSystem::FillParametersList(R, shader, R.get<Cmp::Parameters>(e).list);
-
-	m_layersOrdered.push_back(e);
-	return e;
-}
-
-entt::entity LayersManager::createPolygonLayer(const std::vector<glm::vec2>& vertices) {
-	entt::registry& R = I.registry();
-	entt::entity e = createLayerEntity();
-
-	R.assign<entt::tag<"Polygon"_hs>>(e);
-	R.assign<Cmp::Vertices>(e, vertices, e, I.shapeFactory());
-	R.assign<Cmp::Name>(e, "Polygon" + std::to_string(m_nbPolygonLayers));
-	m_nbPolygonLayers++;
-
-	Cmp::Parameters& params = R.get<Cmp::Parameters>(e);
-	entt::entity e2 = R.create();
-	R.assign<Cmp::SliderFloat>(e2, "Smooth Min", 0.036f, 0.0f, 0.1f);
-	params.list.push_back(e2);
-
-	m_layersOrdered.push_back(e);
-	return e;
-}
-
 entt::entity LayersManager::createLayerEntity() {
 	entt::registry& R = I.registry();
 	entt::entity e = R.create();
+	m_layersOrdered.push_back(e);
 
 	// Layer tag
 	R.assign<entt::tag<"Layer"_hs>>(e);
@@ -105,6 +50,59 @@ entt::entity LayersManager::createLayerEntity() {
 	R.assign<Cmp::Parameters>(e);
 	// History
 	R.assign<Cmp::History>(e);
+
+	return e;
+}
+
+entt::entity LayersManager::_createLayerBasedOnAShader(const std::string& vertexFilepath, const std::string& fragmentFilepath) {
+	entt::registry& R = I.registry();
+	entt::entity e = createLayerEntity();
+
+	// Name
+	std::string shaderName = MyString::RemoveFolderHierarchy(MyString::RemoveFileExtension(fragmentFilepath));
+	if (m_nbFragmentLayersByName.find(shaderName) == m_nbFragmentLayersByName.end())
+		m_nbFragmentLayersByName[shaderName] = 0;
+	R.assign<Cmp::Name>(e, shaderName + "_" + std::to_string(m_nbFragmentLayersByName[shaderName]));
+	m_nbFragmentLayersByName[shaderName]++;
+	// Shader
+	entt::entity shader = ShaderSystem::Create(R, vertexFilepath, fragmentFilepath);
+	R.assign<Cmp::ShaderReference>(e, shader);
+	// Shader parameters
+	ShaderSystem::FillParametersList(R, shader, R.get<Cmp::Parameters>(e).list);
+
+	return e;
+}
+
+entt::entity LayersManager::createTestLayer() {
+	entt::registry& R = I.registry();
+	entt::entity e = createLayerEntity();
+
+	R.assign<entt::tag<"TestLayer"_hs>>(e);
+	R.assign<Cmp::Name>(e, "Test" + std::to_string(m_nbTestLayers));
+	m_nbTestLayers++;
+
+	return e;
+}
+
+entt::entity LayersManager::createFragmentLayer(const std::string& fragmentFilepath) {
+	entt::entity e = _createLayerBasedOnAShader("res/shaders/defaultDrawOnTexture.vert", fragmentFilepath);
+	I.registry().assign<entt::tag<"FragmentLayer"_hs>>(e);
+	return e;
+}
+
+entt::entity LayersManager::createPolygonLayer(const std::vector<glm::vec2>& vertices) {
+	entt::registry& R = I.registry();
+	entt::entity e = createLayerEntity();
+
+	R.assign<entt::tag<"Polygon"_hs>>(e);
+	R.assign<Cmp::Vertices>(e, vertices, e, I.shapeFactory());
+	R.assign<Cmp::Name>(e, "Polygon" + std::to_string(m_nbPolygonLayers));
+	m_nbPolygonLayers++;
+
+	Cmp::Parameters& params = R.get<Cmp::Parameters>(e);
+	entt::entity e2 = R.create();
+	R.assign<Cmp::SliderFloat>(e2, "Smooth Min", 0.036f, 0.0f, 0.1f);
+	params.list.push_back(e2);
 
 	return e;
 }

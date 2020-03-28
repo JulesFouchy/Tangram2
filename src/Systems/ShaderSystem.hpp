@@ -5,19 +5,25 @@
 
 #include "Components/Shader.hpp"
 
+#include "Parameters/Parameter.hpp"
+
+#include <memory>
+
 class ShaderSystem {
 public:
 	ShaderSystem() = delete;
 
 	static entt::entity Create(entt::registry& R, const std::string& vertexFilepath, const std::string& fragmentFilepath);
-	static void FillParametersList(entt::registry& R, entt::entity shaderEntity, std::vector<entt::entity>& parametersList);
+	static void FillParametersList(entt::registry& R, entt::entity shaderEntity, std::vector<std::shared_ptr<Parameter>>& parametersList);
+	static void ComputeUniformLocations(entt::registry& R, entt::entity layerWithAShader);
 
 private:
 	static inline Cmp::Shader& GetShaderCmp(entt::registry& R, entt::entity shader) { return R.get<Cmp::Shader>(shader); }
 
+	static int GetUniformLocation(int glShaderID, const std::string& parameterName);
 	// Parsing
 	static void GoToFirstLineOfStructParameters(std::ifstream& stream);
-	static entt::entity CreateParameterFromLine(entt::registry& R, const std::string& line);
+	static std::shared_ptr<Parameter> CreateParameterFromLine(entt::registry& R, const std::string& line, int glShaderID);
 	template <typename T>
 	static T ReadValue(const std::string& line, const std::string& variableName) {
 		size_t pos = MyString::FindCaseInsensitive(line, variableName);

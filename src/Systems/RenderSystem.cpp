@@ -185,6 +185,9 @@ void RenderSystem::endBlendTexture() {
 void RenderSystem::drawFragment(entt::entity e) {
 	Cmp::Shader& shader = I.registry().get<Cmp::Shader>(I.registry().get<Cmp::ShaderReference>(e).entityID);
 	shader.bind();
+	for (const auto& param : I.registry().get<Cmp::Parameters>(e).list) {
+		param->sendToShader();
+	}
 	shader.setUniformMat3f("u_localTransformMat", I.getMatrixToTextureSpace(e));
 	drawFullscreen();
 }
@@ -197,7 +200,7 @@ void RenderSystem::drawTest(entt::entity e) {
 
 void RenderSystem::drawPolygon(entt::entity e) {
 	s_shaderPolygon.bind();
-	s_shaderPolygon.setUniform1f("u_SmoothMin", 1.0f / I.registry().get<Cmp::SliderFloat>(I.registry().get<Cmp::Parameters>(e).list[0]).val);
+	//s_shaderPolygon.setUniform1f("u_SmoothMin", 1.0f / I.registry().get<Cmp::SliderFloat>(I.registry().get<Cmp::Parameters>(e).list[0]).val);
 	s_shaderPolygon.setUniformMat3f("u_localTransformMat", I.getMatrixToTextureSpace(e));
 	int k = 0;
 	Cmp::Vertices& vertices = I.registry().get<Cmp::Vertices>(e);

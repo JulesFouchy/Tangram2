@@ -82,23 +82,8 @@ void GUISystem::render() {
 		if (I.registry().valid(selLayer)) {
 			ImGui::Begin("Parameters");
 			bool bMustRecomputeTexture = false;
-			for (entt::entity guiElement : R.get<Cmp::Parameters>(selLayer).list) {
-				// Slider float
-				Cmp::SliderFloat* sf = R.try_get<Cmp::SliderFloat>(guiElement);
-				if (sf)
-					bMustRecomputeTexture = ImGui::SliderFloat(sf->name.c_str(), &sf->val, sf->minVal, sf->maxVal, sf->format.c_str(), sf->power);
-				else {
-					// Slider float 2
-					Cmp::SliderFloat2* sf2 = R.try_get<Cmp::SliderFloat2>(guiElement);
-					if (sf2)
-						ImGui::SliderFloat2(sf2->name.c_str(), (float*)&sf2->val, sf2->minVal, sf2->maxVal);
-					else {
-						// ColorPicker3
-						Cmp::ColorPicker3* cp3 = R.try_get<Cmp::ColorPicker3>(guiElement);
-						if (cp3)
-							ImGui::ColorPicker3(cp3->name.c_str(), (float*)&cp3->val, cp3->flags);
-					}
-				}
+			for (const auto& param : R.get<Cmp::Parameters>(selLayer).list) {
+				bMustRecomputeTexture |= param->ImGui();
 			}
 			if (bMustRecomputeTexture)
 				R.assign<entt::tag<"MustRecomputeTexture"_hs>>(selLayer);

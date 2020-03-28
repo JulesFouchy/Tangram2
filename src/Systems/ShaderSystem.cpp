@@ -2,9 +2,10 @@
 
 #include "Helper/String.hpp"
 
-#include "Components/GUI/SliderFloat.hpp"
-#include "Components/GUI/SliderFloat2.hpp"
-#include "Components/GUI/ColorPicker3.hpp"
+#include "Components/ParametersList.hpp"
+#include "Components/ShaderReference.hpp"
+
+#include "Parameters/ConcreteParameters.hpp"
 
 entt::entity ShaderSystem::Create(entt::registry& R, const std::string& vertexFilepath, const std::string& fragmentFilepath) {
 	entt::entity e = R.create();
@@ -12,9 +13,10 @@ entt::entity ShaderSystem::Create(entt::registry& R, const std::string& vertexFi
 	return e;
 }
 
-void ShaderSystem::FillParametersList(entt::registry& R, entt::entity shaderEntity, std::vector<entt::entity>& parametersList) {
+void ShaderSystem::FillParametersList(entt::registry& R, entt::entity shaderEntity, std::vector<std::shared_ptr<Parameter>>& parametersList) {
+	Cmp::Shader shaderCmp = GetShaderCmp(R, shaderEntity);
 	// Open fragment shader file
-	const std::string& filepath = GetShaderCmp(R, shaderEntity).fragmentFilepath;
+	const std::string& filepath = shaderCmp.fragmentFilepath;
 	std::ifstream stream(filepath);
 	if (!stream.is_open()) {
 		spdlog::warn("Failed to open file |{}|", filepath);
@@ -28,9 +30,18 @@ void ShaderSystem::FillParametersList(entt::registry& R, entt::entity shaderEnti
 		if (line.find("}") != std::string::npos)
 			break;
 		// Create parameter
-		entt::entity param = CreateParameterFromLine(R, line);
-		if (R.valid(param))
-			parametersList.push_back(param);
+		std::shared_ptr<Parameter> param = CreateParameterFromLine(R, line, shaderCmp.id);
+		if (param)
+			parametersList.push_back(std::move(param));
+	}
+}
+
+void ShaderSystem::ComputeUniformLocations(entt::registry& R, entt::entity layerWithAShader) {
+	Cmp::Parameters& params = R.get<Cmp::Parameters>(layerWithAShader);
+	Cmp::Shader& shader = R.get<Cmp::Shader>(R.get<Cmp::ShaderReference>(layerWithAShader).entityID);
+	glUseProgram(shader.id);
+	for (const auto& param : params.list) {
+		param->m_glUniformLocation = GetUniformLocation(shader.id, param->m_name);
 	}
 }
 
@@ -50,22 +61,34 @@ void ShaderSystem::GoToFirstLineOfStructParameters(std::ifstream& stream) {
 	}
 }
 
-entt::entity ShaderSystem::CreateParameterFromLine(entt::registry& R, const std::string& line) {
-	entt::entity e = R.create();
+std::shared_ptr<Parameter> ShaderSystem::CreateParameterFromLine(entt::registry& R, const std::string& line, int glShaderID) {
 	size_t pos = 0;
 	std::string type = MyString::GetNextWord(line, &pos);
 	std::string name = MyString::GetNextWord(line, &pos);
+	int glUniformLocation = GetUniformLocation(glShaderID, name);
 	if (!type.compare("float"))
-		R.assign<Cmp::SliderFloat>(e, name, ReadValue<float>(line, "default"), ReadValue<float>(line, "min"), ReadValue<float>(line, "max"));
+		return std::make_shared<FloatParameter>(glUniformLocation, name, ReadValue<float>(line, "default"), ReadValue<float>(line, "min"), ReadValue<float>(line, "max"));
 	else if (!type.compare("vec2"))
-		R.assign<Cmp::SliderFloat2>(e, name, ReadValue<glm::vec2>(line, "default"), ReadValue<float>(line, "min"), ReadValue<float>(line, "max"));
-	else if (!type.compare("vec3"))
-		R.assign<Cmp::ColorPicker3>(e, name, glm::vec3(0.0f));
+		return std::make_shared<Float2Parameter>(glUniformLocation, name, ReadValue<glm::vec2>(line, "default"), ReadValue<float>(line, "min"), ReadValue<float>(line, "max"));
+	else if (!type.compare("vec3")) {
+		if (MyString::FindCaseInsensitive(line, "NOT_A_COLOR") != std::string::npos)
+			return std::make_shared<Float3Parameter>(glUniformLocation, name, ReadValue<glm::vec3>(line, "default"), ReadValue<float>(line, "min"), ReadValue<float>(line, "max"));
+		else
+			return std::make_shared<Color3Parameter>(glUniformLocation, name, ReadValue<glm::vec3>(line, "default"));
+	}
+	else if (!type.compare("vec4"))
+		if (MyString::FindCaseInsensitive(line, "NOT_A_COLOR") != std::string::npos)
+			return std::make_shared<Float4Parameter>(glUniformLocation, name, ReadValue<glm::vec4>(line, "default"), ReadValue<float>(line, "min"), ReadValue<float>(line, "max"));
+		else
+			return std::make_shared<Color4Parameter>(glUniformLocation, name, ReadValue<glm::vec4>(line, "default"));
 	else {
 		spdlog::error("[ShaderSystem::CreateParameterFromLine] Couldn't parse parameter from line : \"{}\"", line);
-		return entt::null;
+		return nullptr;
 	}
-	return e;
+}
+
+int ShaderSystem::GetUniformLocation(int glShaderID, const std::string& parameterName) {
+	return glGetUniformLocation(glShaderID, ("u." + parameterName).c_str());
 }
 
 template <>

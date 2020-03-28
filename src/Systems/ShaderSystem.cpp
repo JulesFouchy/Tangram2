@@ -3,6 +3,7 @@
 #include "Helper/String.hpp"
 
 #include "Components/GUI/SliderFloat.hpp"
+#include "Components/GUI/SliderFloat2.hpp"
 #include "Components/GUI/ColorPicker3.hpp"
 
 entt::entity ShaderSystem::Create(entt::registry& R, const std::string& vertexFilepath, const std::string& fragmentFilepath) {
@@ -55,12 +56,44 @@ entt::entity ShaderSystem::CreateParameterFromLine(entt::registry& R, const std:
 	std::string type = MyString::GetNextWord(line, &pos);
 	std::string name = MyString::GetNextWord(line, &pos);
 	if (!type.compare("float"))
-		R.assign<Cmp::SliderFloat>(e, name, 0.036f, 0.0f, 0.1f);
+		R.assign<Cmp::SliderFloat>(e, name, ReadValue<float>(line, "default"), ReadValue<float>(line, "min"), ReadValue<float>(line, "max"));
+	else if (!type.compare("vec2"))
+		R.assign<Cmp::SliderFloat2>(e, name, ReadValue<glm::vec2>(line, "default"), ReadValue<float>(line, "min"), ReadValue<float>(line, "max"));
 	else if (!type.compare("vec3"))
 		R.assign<Cmp::ColorPicker3>(e, name, glm::vec3(0.0f));
 	else {
-		spdlog::error("Couldn't parse parameter from line : \"{}\"", line);
+		spdlog::error("[ShaderSystem::CreateParameterFromLine] Couldn't parse parameter from line : \"{}\"", line);
 		return entt::null;
 	}
 	return e;
+}
+
+template <>
+float ShaderSystem::ConvertStringTo<float>(const std::string& str, size_t pos) {
+	return std::stof(MyString::GetNextWord(str, &pos));
+}
+template <>
+glm::vec2 ShaderSystem::ConvertStringTo<glm::vec2>(const std::string& str, size_t pos) {
+	float x = std::stof(MyString::GetNextWord(str, &pos));
+	float y = std::stof(MyString::GetNextWord(str, &pos));
+	return glm::vec2(x, y);
+}
+template <>
+glm::vec3 ShaderSystem::ConvertStringTo<glm::vec3>(const std::string& str, size_t pos) {
+	float x = std::stof(MyString::GetNextWord(str, &pos));
+	float y = std::stof(MyString::GetNextWord(str, &pos));
+	float z = std::stof(MyString::GetNextWord(str, &pos));
+	return glm::vec3(x, y, z);
+}
+template <>
+glm::vec4 ShaderSystem::ConvertStringTo<glm::vec4>(const std::string& str, size_t pos) {
+	float x = std::stof(MyString::GetNextWord(str, &pos));
+	float y = std::stof(MyString::GetNextWord(str, &pos));
+	float z = std::stof(MyString::GetNextWord(str, &pos));
+	float w = std::stof(MyString::GetNextWord(str, &pos));
+	return glm::vec4(x, y, z, w);
+}
+template <>
+int ShaderSystem::ConvertStringTo<int>(const std::string& str, size_t pos) {
+	return std::stoi(MyString::GetNextWord(str, &pos));
 }

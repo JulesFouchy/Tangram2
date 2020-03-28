@@ -11,4 +11,5 @@ namespace MyString {
 	std::string RemoveFolderHierarchy(const std::string& myString);
 	std::string GetFolderHierarchy(const std::string& myString);
 	std::string RemoveFileExtension(const std::string& myString);
+	size_t FindCaseInsensitive(std::string myString, std::string toSearch, size_t pos = 0);
 }

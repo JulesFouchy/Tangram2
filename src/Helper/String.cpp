@@ -1,5 +1,7 @@
 #include "String.hpp"
 
+#include <algorithm>
+
 size_t MyString::BeginningOfNextWord(const std::string& myString, size_t beginPos, const std::string& charsToIgnore) {
 	return myString.find_first_not_of(charsToIgnore, beginPos);
 }
@@ -47,4 +49,10 @@ std::string MyString::GetFolderHierarchy(const std::string& myString) {
 std::string MyString::RemoveFileExtension(const std::string& myString) {
 	auto pos = myString.find_last_of(".");
 	return myString.substr(0, pos);
+}
+
+size_t MyString::FindCaseInsensitive(std::string myString, std::string toSearch, size_t pos) {
+	std::transform(myString.begin(), myString.end(), myString.begin(), ::tolower);
+	std::transform(toSearch.begin(), toSearch.end(), toSearch.begin(), ::tolower);
+	return myString.find(toSearch, pos);
 }

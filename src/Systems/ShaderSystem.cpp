@@ -5,11 +5,7 @@
 #include "Components/ParametersList.hpp"
 #include "Components/ShaderReference.hpp"
 
-#include "Components/GUI/SliderFloat.hpp"
-#include "Components/GUI/SliderFloat2.hpp"
-#include "Components/GUI/ColorPicker3.hpp"
-
-#include "Parameters/FloatParameter.hpp"
+#include "Parameters/ConcreteParameters.hpp"
 
 entt::entity ShaderSystem::Create(entt::registry& R, const std::string& vertexFilepath, const std::string& fragmentFilepath) {
 	entt::entity e = R.create();
@@ -72,10 +68,12 @@ std::shared_ptr<Parameter> ShaderSystem::CreateParameterFromLine(entt::registry&
 	int glUniformLocation = GetUniformLocation(glShaderID, name);
 	if (!type.compare("float"))
 		return std::make_shared<FloatParameter>(glUniformLocation, name, ReadValue<float>(line, "default"), ReadValue<float>(line, "min"), ReadValue<float>(line, "max"));
-	//else if (!type.compare("vec2"))
-	//	R.assign<Cmp::SliderFloat2>(e, name, ReadValue<glm::vec2>(line, "default"), ReadValue<float>(line, "min"), ReadValue<float>(line, "max"));
-	//else if (!type.compare("vec3"))
-	//	R.assign<Cmp::ColorPicker3>(e, name, glm::vec3(0.0f));
+	else if (!type.compare("vec2"))
+		return std::make_shared<Float2Parameter>(glUniformLocation, name, ReadValue<glm::vec2>(line, "default"), ReadValue<float>(line, "min"), ReadValue<float>(line, "max"));
+	else if (!type.compare("vec3"))
+		return std::make_shared<Float3Parameter>(glUniformLocation, name, ReadValue<glm::vec3>(line, "default"), ReadValue<float>(line, "min"), ReadValue<float>(line, "max"));
+	else if (!type.compare("vec4"))
+		return std::make_shared<Float4Parameter>(glUniformLocation, name, ReadValue<glm::vec4>(line, "default"), ReadValue<float>(line, "min"), ReadValue<float>(line, "max"));
 	else {
 		spdlog::error("[ShaderSystem::CreateParameterFromLine] Couldn't parse parameter from line : \"{}\"", line);
 		return nullptr;

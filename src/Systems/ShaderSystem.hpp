@@ -1,6 +1,7 @@
 #pragma once
 
 #include <entt/entt.hpp>
+#include <fstream>
 
 #include "Components/Shader.hpp"
 
@@ -13,4 +14,8 @@ public:
 
 private:
 	static inline Cmp::Shader& GetShaderCmp(entt::registry& R, entt::entity shader) { return R.get<Cmp::Shader>(shader); }
+
+	// Parsing
+	static void GoToFirstLineOfStructParameters(std::ifstream& stream);
+	static entt::entity CreateParameterFromLine(entt::registry& R, const std::string& line);
 };

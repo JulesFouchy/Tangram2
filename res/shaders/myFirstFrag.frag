@@ -10,5 +10,5 @@ uniform Parameters u;
 
 void main(){
     float d = length(vTexCoords - vec2(0.5));
-    gl_FragColor = vec4(u.red, vTexCoords, 1.0);
+    gl_FragColor = vec4(vTexCoords, u.red, 1.0);
 }

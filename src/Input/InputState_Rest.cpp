@@ -14,6 +14,9 @@
 #include <glm/gtx/matrix_transform_2d.hpp>
 #include "Components/Parent.hpp"
 
+#include "Components/ShaderReference.hpp"
+#include "Systems/ShaderSystem.hpp"
+
 #include "Systems/HistoryManager.hpp"
 
 #include "GUI/FileBrowser.hpp"
@@ -100,6 +103,9 @@ void InputState_Rest::onKeyDown(SDL_Scancode key) {
 	else {
 		if (key == SDL_SCANCODE_TAB) {
 			GUISystem::ToggleOnOff();
+		}
+		else if (key == SDL_SCANCODE_F5) {
+			ShaderSystem::TryReloadShader(I.registry(), I.layersManager().selectedLayer());
 		}
 	}
 }

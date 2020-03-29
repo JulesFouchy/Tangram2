@@ -14,7 +14,8 @@ public:
 	ShaderSystem() = delete;
 
 	static entt::entity Create(entt::registry& R, const std::string& vertexFilepath, const std::string& fragmentFilepath);
-	static void FillParametersList(entt::registry& R, entt::entity shaderEntity, std::vector<std::shared_ptr<Parameter>>& parametersList);
+	static void UpdateParametersList(entt::registry& R, entt::entity shaderEntity, std::vector<std::shared_ptr<Parameter>>& parametersList);
+	static void TryReloadShader(entt::registry& R, entt::entity layer);
 	static void ComputeUniformLocations(entt::registry& R, entt::entity layerWithAShader);
 
 private:

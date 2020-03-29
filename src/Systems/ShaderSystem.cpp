@@ -13,7 +13,7 @@ entt::entity ShaderSystem::Create(entt::registry& R, const std::string& vertexFi
 	return e;
 }
 
-void ShaderSystem::FillParametersList(entt::registry& R, entt::entity shaderEntity, std::vector<std::shared_ptr<Parameter>>& parametersList) {
+void ShaderSystem::UpdateParametersList(entt::registry& R, entt::entity shaderEntity, std::vector<std::shared_ptr<Parameter>>& parametersList) {
 	Cmp::Shader shaderCmp = GetShaderCmp(R, shaderEntity);
 	// Open fragment shader file
 	const std::string& filepath = shaderCmp.fragmentFilepath;
@@ -33,6 +33,16 @@ void ShaderSystem::FillParametersList(entt::registry& R, entt::entity shaderEnti
 		std::shared_ptr<Parameter> param = CreateParameterFromLine(R, line, shaderCmp.id);
 		if (param)
 			parametersList.push_back(std::move(param));
+	}
+}
+
+void ShaderSystem::TryReloadShader(entt::registry& R, entt::entity layer) {
+	Cmp::ShaderReference* shaderRef = R.try_get<Cmp::ShaderReference>(layer);
+	if (shaderRef) {
+		Cmp::Parameters& params = R.get<Cmp::Parameters>(layer);
+		Cmp::Shader& shader = R.get<Cmp::Shader>(shaderRef->entityID);
+		R.replace<Cmp::Shader>(shaderRef->entityID, shader.vertexFilepath, shader.fragmentFilepath);
+		UpdateParametersList(R, shaderRef->entityID, params.list);
 	}
 }
 

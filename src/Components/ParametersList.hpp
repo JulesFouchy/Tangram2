@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Parameters/Parameter.hpp"
+#include "Components/History.hpp"
+
 #include <memory>
 
 #include <cereal/access.hpp>
@@ -17,6 +19,7 @@ struct Parameters{
 	//Parameters& operator=(Parameters&&) noexcept = default;
 
 	std::vector<std::shared_ptr<Parameter>> list; // We don't use unique_ptr because entt struggles with non-copyable objects (mainly the serialization part)
+	Cmp::History history;
 
 private:
 	//Serialization

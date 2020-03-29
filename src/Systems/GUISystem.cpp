@@ -78,12 +78,15 @@ void GUISystem::render() {
 		entt::entity selLayer = I.layersManager().selectedLayer();
 		if (I.registry().valid(selLayer)) {
 			ImGui::Begin("Parameters");
-			bool bMustRecomputeTexture = false;
-			for (const auto& param : R.get<Cmp::Parameters>(selLayer).list) {
-				bMustRecomputeTexture |= param->ImGui();
+			bool bImGuiUsed = false;
+			Cmp::Parameters& parameters = R.get<Cmp::Parameters>(selLayer);
+			for (const auto& param : parameters.list) {
+				bImGuiUsed |= param->ImGui(R, parameters.history, selLayer);
 			}
-			if (bMustRecomputeTexture)
-				R.assign<entt::tag<"MustRecomputeTexture"_hs>>(selLayer);
+			if (bImGuiUsed) {
+				R.assign_or_replace<entt::tag<"MustRecomputeTexture"_hs>>(selLayer);
+				R.assign_or_replace<entt::tag<"ActiveHistoryIsParameter"_hs>>(selLayer);
+			}
 			ImGui::End();
 		}
 	}

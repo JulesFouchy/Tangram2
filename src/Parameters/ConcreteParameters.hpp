@@ -17,17 +17,20 @@ public:
 	FloatParameter() = default;
 	FloatParameter(int glUniformLocation, const std::string& name, float val, float minVal = 0.0f, float maxVal = 1.0f, const std::string& format = "%.3f", float power = 1.0f);
 	~FloatParameter() = default;
-	bool ImGui() override;
+	bool ImGui(entt::registry& R, Cmp::History& history, entt::entity layer) override;
 	void sendToShader() override;
 	void* getValuePtr() override;
 	size_t getHash() override;
 private:
+	bool ImGuiItem();
+private:
 	float m_val;
+	float m_valBeforeEdit;
 	float m_minVal;
 	float m_maxVal;
 	std::string m_format;
 	float m_power;
-private:	
+private:
 	//Serialization
 	friend class cereal::access;
 	template <class Archive>
@@ -41,7 +44,7 @@ public:
 	Float2Parameter() = default;
 	Float2Parameter(int glUniformLocation, const std::string& name, const glm::vec2& val, float minVal = 0.0f, float maxVal = 1.0f, const std::string& format = "%.3f", float power = 1.0f);
 	~Float2Parameter() = default;
-	bool ImGui() override;
+	bool ImGui(entt::registry& R, Cmp::History& history, entt::entity layer) override;
 	void sendToShader() override;
 	void* getValuePtr() override;
 	size_t getHash() override;
@@ -65,7 +68,7 @@ public:
 	Float3Parameter() = default;
 	Float3Parameter(int glUniformLocation, const std::string& name, const glm::vec3& val, float minVal = 0.0f, float maxVal = 1.0f, const std::string& format = "%.3f", float power = 1.0f);
 	~Float3Parameter() = default;
-	bool ImGui() override;
+	bool ImGui(entt::registry& R, Cmp::History& history, entt::entity layer) override;
 	void sendToShader() override;
 	void* getValuePtr() override;
 	size_t getHash() override;
@@ -89,7 +92,7 @@ public:
 	Float4Parameter() = default;
 	Float4Parameter(int glUniformLocation, const std::string& name, const glm::vec4& val, float minVal = 0.0f, float maxVal = 1.0f, const std::string& format = "%.3f", float power = 1.0f);
 	~Float4Parameter() = default;
-	bool ImGui() override;
+	bool ImGui(entt::registry& R, Cmp::History& history, entt::entity layer) override;
 	void sendToShader() override;
 	void* getValuePtr() override;
 	size_t getHash() override;
@@ -113,7 +116,7 @@ public:
 	Color3Parameter() = default;
 	Color3Parameter(int glUniformLocation, const std::string& name, const glm::vec3& val, ImGuiColorEditFlags flags = 0);
 	~Color3Parameter() = default;
-	bool ImGui() override;
+	bool ImGui(entt::registry& R, Cmp::History& history, entt::entity layer) override;
 	void sendToShader() override;
 	void* getValuePtr() override;
 	size_t getHash() override;
@@ -134,7 +137,7 @@ public:
 	Color4Parameter() = default;
 	Color4Parameter(int glUniformLocation, const std::string& name, const glm::vec4& val, ImGuiColorEditFlags flags = 0);
 	~Color4Parameter() = default;
-	bool ImGui() override;
+	bool ImGui(entt::registry& R, Cmp::History& history, entt::entity layer) override;
 	void sendToShader() override;
 	void* getValuePtr() override;
 	size_t getHash() override;
@@ -155,7 +158,7 @@ public:
 	BoolParameter() = default;
 	BoolParameter(int glUniformLocation, const std::string& name, bool val);
 	~BoolParameter() = default;
-	bool ImGui() override;
+	bool ImGui(entt::registry& R, Cmp::History& history, entt::entity layer) override;
 	void sendToShader() override;
 	void* getValuePtr() override;
 	size_t getHash() override;
@@ -175,7 +178,7 @@ public:
 	IntParameter() = default;
 	IntParameter(int glUniformLocation, const std::string& name, int val, int minVal, int maxVal);
 	~IntParameter() = default;
-	bool ImGui() override;
+	bool ImGui(entt::registry& R, Cmp::History& history, entt::entity layer) override;
 	void sendToShader() override;
 	void* getValuePtr() override;
 	size_t getHash() override;
@@ -197,7 +200,7 @@ public:
 	Int2Parameter() = default;
 	Int2Parameter(int glUniformLocation, const std::string& name, const glm::ivec2& val, int minVal, int maxVal);
 	~Int2Parameter() = default;
-	bool ImGui() override;
+	bool ImGui(entt::registry& R, Cmp::History& history, entt::entity layer) override;
 	void sendToShader() override;
 	void* getValuePtr() override;
 	size_t getHash() override;
@@ -219,7 +222,7 @@ public:
 	Int3Parameter() = default;
 	Int3Parameter(int glUniformLocation, const std::string& name, const glm::ivec3& val, int minVal, int maxVal);
 	~Int3Parameter() = default;
-	bool ImGui() override;
+	bool ImGui(entt::registry& R, Cmp::History& history, entt::entity layer) override;
 	void sendToShader() override;
 	void* getValuePtr() override;
 	size_t getHash() override;
@@ -241,7 +244,7 @@ public:
 	Int4Parameter() = default;
 	Int4Parameter(int glUniformLocation, const std::string& name, const glm::ivec4& val, int minVal, int maxVal);
 	~Int4Parameter() = default;
-	bool ImGui() override;
+	bool ImGui(entt::registry& R, Cmp::History& history, entt::entity layer) override;
 	void sendToShader() override;
 	void* getValuePtr() override;
 	size_t getHash() override;

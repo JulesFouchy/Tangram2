@@ -2,6 +2,8 @@
 
 #include <string>
 
+#include "Components/History.hpp"
+
 class Parameter {
 	friend class ShaderSystem;
 public:
@@ -9,7 +11,7 @@ public:
 	Parameter(int glUniformLocation, const std::string& name)
 		: m_glUniformLocation(glUniformLocation), m_name(name)
 	{}
-	virtual bool ImGui() = 0;
+	virtual bool ImGui(entt::registry& R, Cmp::History& history, entt::entity layer) = 0;
 	virtual void sendToShader() = 0;
 	virtual void* getValuePtr() = 0;
 	virtual size_t getHash() = 0;

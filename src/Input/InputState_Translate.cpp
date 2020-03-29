@@ -28,11 +28,16 @@ InputState_Translate::InputState_Translate(Instance& instance, entt::entity targ
 void InputState_Translate::onLeftClicUp() {
 	if (m_enterExitButton == MouseButton::Left) {
 		if (SDL_GetTicks() - timeInputStart > Settings::GetSELECT_SAFETY__MIN_TIME_BEFORE_MOVING_LAYER_IN_MS()) {
+			// Save transform in history
 			HistoryManager::RecordTransform(I.registry(), m_targetID, m_initialMat);
 		}
 		else {
+			// Undo modifications
 			I.registry().replace<Cmp::TransformMatrix>(m_targetID, m_initialMat);
 		}
+		// Activ history is now Transform
+		I.registry().reset<entt::tag<"ActiveHistoryIsParameter"_hs>>(m_targetID);
+		// Change State
 		I.inputSystem().setState<InputState_Rest>();
 	}
 }

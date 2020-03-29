@@ -74,3 +74,43 @@ bool BoolParameter::ImGui() {
 void BoolParameter::sendToShader() {
 	glUniform1i(m_glUniformLocation, m_val);
 }
+// Int
+IntParameter::IntParameter(int glUniformLocation, const std::string& name, int val, int minVal, int maxVal)
+	: Parameter(glUniformLocation, name), m_val(val), m_minVal(minVal), m_maxVal(maxVal)
+{}
+bool IntParameter::ImGui() {
+	return ImGui::SliderInt(m_name.c_str(), &m_val, m_minVal, m_maxVal);
+}
+void IntParameter::sendToShader() {
+	glUniform1i(m_glUniformLocation, m_val);
+}
+// Int2
+Int2Parameter::Int2Parameter(int glUniformLocation, const std::string& name, const glm::ivec2& val, int minVal, int maxVal)
+	: Parameter(glUniformLocation, name), m_val(val), m_minVal(minVal), m_maxVal(maxVal)
+{}
+bool Int2Parameter::ImGui() {
+	return ImGui::SliderInt2(m_name.c_str(), (int*)&m_val, m_minVal, m_maxVal);
+}
+void Int2Parameter::sendToShader() {
+	glUniform2i(m_glUniformLocation, m_val.x, m_val.y);
+}
+// Int3
+Int3Parameter::Int3Parameter(int glUniformLocation, const std::string& name, const glm::ivec3& val, int minVal, int maxVal)
+	: Parameter(glUniformLocation, name), m_val(val), m_minVal(minVal), m_maxVal(maxVal)
+{}
+bool Int3Parameter::ImGui() {
+	return ImGui::SliderInt3(m_name.c_str(), (int*)&m_val, m_minVal, m_maxVal);
+}
+void Int3Parameter::sendToShader() {
+	glUniform3i(m_glUniformLocation, m_val.x, m_val.y, m_val.z);
+}
+// Int4
+Int4Parameter::Int4Parameter(int glUniformLocation, const std::string& name, const glm::ivec4& val, int minVal, int maxVal)
+	: Parameter(glUniformLocation, name), m_val(val), m_minVal(minVal), m_maxVal(maxVal)
+{}
+bool Int4Parameter::ImGui() {
+	return ImGui::SliderInt4(m_name.c_str(), (int*)&m_val, m_minVal, m_maxVal);
+}
+void Int4Parameter::sendToShader() {
+	glUniform4i(m_glUniformLocation, m_val.x, m_val.y, m_val.z, m_val.w);
+}

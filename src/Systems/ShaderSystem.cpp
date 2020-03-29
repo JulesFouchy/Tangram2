@@ -84,8 +84,16 @@ std::shared_ptr<Parameter> ShaderSystem::CreateParameterFromLine(entt::registry&
 	}
 	else if (!type.compare("bool"))
 		return std::make_shared<BoolParameter>(glUniformLocation, name, MyString::FindCaseInsensitive(line, "true") != std::string::npos);
+	else if (!type.compare("int"))
+		return std::make_shared<IntParameter>(glUniformLocation, name, ReadValue<int>(line, "default"), ReadValue<int>(line, "min"), ReadValue<int>(line, "max"));
+	else if (!type.compare("ivec2"))
+		return std::make_shared<Int2Parameter>(glUniformLocation, name, ReadValue<glm::ivec2>(line, "default"), ReadValue<int>(line, "min"), ReadValue<int>(line, "max"));
+	else if (!type.compare("ivec3"))
+		return std::make_shared<Int3Parameter>(glUniformLocation, name, ReadValue<glm::ivec3>(line, "default"), ReadValue<int>(line, "min"), ReadValue<int>(line, "max"));
+	else if (!type.compare("ivec4"))
+		return std::make_shared<Int4Parameter>(glUniformLocation, name, ReadValue<glm::ivec4>(line, "default"), ReadValue<int>(line, "min"), ReadValue<int>(line, "max"));
 	else {
-		spdlog::error("[ShaderSystem::CreateParameterFromLine] Couldn't parse parameter from line : \"{}\"", line);
+		spdlog::error("[ShaderSystem::CreateParameterFromLine] Unknown type : \"{}\"", type);
 		return nullptr;
 	}
 }
@@ -151,5 +159,44 @@ int ShaderSystem::ConvertStringTo<int>(const std::string& str, size_t pos) {
 	catch (...) {
 		spdlog::error("[ShaderSystem::ConvertStringTo<int>] Unable to read 1 number at \"{}\"", str);
 		return 0;
+	}
+}
+template <>
+glm::ivec2 ShaderSystem::ConvertStringTo<glm::ivec2>(const std::string& str, size_t pos) {
+	try {
+		int x = std::stoi(MyString::GetNextWord(str, &pos));
+		int y = std::stoi(MyString::GetNextWord(str, &pos));
+		return glm::ivec2(x, y);
+	}
+	catch (...) {
+		spdlog::error("[ShaderSystem::ConvertStringTo<glm::ivec2>] Unable to read 2 numbers at \"{}\"", str);
+		return glm::ivec2(0);
+	}
+}
+template <>
+glm::ivec3 ShaderSystem::ConvertStringTo<glm::ivec3>(const std::string& str, size_t pos) {
+	try {
+		int x = std::stoi(MyString::GetNextWord(str, &pos));
+		int y = std::stoi(MyString::GetNextWord(str, &pos));
+		int z = std::stoi(MyString::GetNextWord(str, &pos));
+		return glm::ivec3(x, y, z);
+	}
+	catch (...) {
+		spdlog::error("[ShaderSystem::ConvertStringTo<glm::ivec3>] Unable to read 3 numbers at \"{}\"", str);
+		return glm::ivec3(0);
+	}
+}
+template <>
+glm::ivec4 ShaderSystem::ConvertStringTo<glm::ivec4>(const std::string& str, size_t pos) {
+	try {
+		int x = std::stoi(MyString::GetNextWord(str, &pos));
+		int y = std::stoi(MyString::GetNextWord(str, &pos));
+		int z = std::stoi(MyString::GetNextWord(str, &pos));
+		int w = std::stoi(MyString::GetNextWord(str, &pos));
+		return glm::ivec4(x, y, z, w);
+	}
+	catch (...) {
+		spdlog::error("[ShaderSystem::ConvertStringTo<glm::ivec4>] Unable to read 4 numbers at \"{}\"", str);
+		return glm::ivec4(0);
 	}
 }

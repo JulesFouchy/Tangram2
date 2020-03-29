@@ -49,7 +49,10 @@ public:
 	void* getValuePtr() override;
 	size_t getHash() override;
 private:
+	bool ImGuiItem();
+private:
 	glm::vec2 m_val;
+	glm::vec2 m_valBeforeEdit;
 	float m_minVal;
 	float m_maxVal;
 	std::string m_format;
@@ -73,7 +76,10 @@ public:
 	void* getValuePtr() override;
 	size_t getHash() override;
 private:
+	bool ImGuiItem();
+private:
 	glm::vec3 m_val;
+	glm::vec3 m_valBeforeEdit;
 	float m_minVal;
 	float m_maxVal;
 	std::string m_format;
@@ -97,7 +103,10 @@ public:
 	void* getValuePtr() override;
 	size_t getHash() override;
 private:
+	bool ImGuiItem();
+private:
 	glm::vec4 m_val;
+	glm::vec4 m_valBeforeEdit;
 	float m_minVal;
 	float m_maxVal;
 	std::string m_format;
@@ -121,7 +130,10 @@ public:
 	void* getValuePtr() override;
 	size_t getHash() override;
 private:
+	bool ImGuiItem();
+private:
 	glm::vec3 m_val;
+	glm::vec3 m_valBeforeEdit;
 	ImGuiColorEditFlags m_flags;
 private:
 	//Serialization
@@ -142,7 +154,10 @@ public:
 	void* getValuePtr() override;
 	size_t getHash() override;
 private:
+	bool ImGuiItem();
+private:
 	glm::vec4 m_val;
+	glm::vec4 m_valBeforeEdit;
 	ImGuiColorEditFlags m_flags;
 private:
 	//Serialization
@@ -163,7 +178,10 @@ public:
 	void* getValuePtr() override;
 	size_t getHash() override;
 private:
+	bool ImGuiItem();
+private:
 	bool m_val;
+	bool m_valBeforeEdit;
 private:
 	//Serialization
 	friend class cereal::access;
@@ -183,7 +201,10 @@ public:
 	void* getValuePtr() override;
 	size_t getHash() override;
 private:
+	bool ImGuiItem();
+private:
 	int m_val;
+	int m_valBeforeEdit;
 	int m_minVal;
 	int m_maxVal;
 private:
@@ -205,7 +226,10 @@ public:
 	void* getValuePtr() override;
 	size_t getHash() override;
 private:
+	bool ImGuiItem();
+private:
 	glm::ivec2 m_val;
+	glm::ivec2 m_valBeforeEdit;
 	int m_minVal;
 	int m_maxVal;
 private:
@@ -227,7 +251,10 @@ public:
 	void* getValuePtr() override;
 	size_t getHash() override;
 private:
+	bool ImGuiItem();
+private:
 	glm::ivec3 m_val;
+	glm::ivec3 m_valBeforeEdit;
 	int m_minVal;
 	int m_maxVal;
 private:
@@ -249,7 +276,10 @@ public:
 	void* getValuePtr() override;
 	size_t getHash() override;
 private:
+	bool ImGuiItem();
+private:
 	glm::ivec4 m_val;
+	glm::ivec4 m_valBeforeEdit;
 	int m_minVal;
 	int m_maxVal;
 private:

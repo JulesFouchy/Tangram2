@@ -50,10 +50,33 @@ size_t FloatParameter::getHash() {
 }
 // Float2
 Float2Parameter::Float2Parameter(int glUniformLocation, const std::string& name, const glm::vec2& val, float minVal, float maxVal, const std::string& format, float power)
-	: Parameter(glUniformLocation, name), m_val(val), m_minVal(minVal), m_maxVal(maxVal), m_format(format), m_power(power)
+	: Parameter(glUniformLocation, name), m_val(val), m_valBeforeEdit(val), m_minVal(minVal), m_maxVal(maxVal), m_format(format), m_power(power)
 {}
-bool Float2Parameter::ImGui(entt::registry& R, Cmp::History& history, entt::entity layer) {
+bool Float2Parameter::ImGuiItem() {
 	return ImGui::SliderFloat2(m_name.c_str(), (float*)&m_val, m_minVal, m_maxVal, m_format.c_str(), m_power);
+}
+bool Float2Parameter::ImGui(entt::registry& R, Cmp::History& history, entt::entity layer) {
+	bool b = ImGuiItem();
+	if (ImGui::IsItemDeactivatedAfterEdit()) {
+		history.beginUndoGroup();
+		auto val = m_val;
+		auto prevVal = m_valBeforeEdit;
+		history.addAction(Action(
+			[&R, layer, this, val]() {
+				this->m_val = val;
+				this->m_valBeforeEdit = val;
+				TNG::MustRecomputeTexture(R, layer);
+			},
+			[&R, layer, this, prevVal]() {
+				this->m_val = prevVal;
+				this->m_valBeforeEdit = prevVal;
+				TNG::MustRecomputeTexture(R, layer);
+			}
+			));
+		history.endUndoGroup();
+		m_valBeforeEdit = m_val; // ready for next edit
+	}
+	return b;
 }
 void Float2Parameter::sendToShader() {
 	glUniform2f(m_glUniformLocation, m_val.x, m_val.y);
@@ -66,10 +89,33 @@ size_t Float2Parameter::getHash() {
 }
 // Float3
 Float3Parameter::Float3Parameter(int glUniformLocation, const std::string& name, const glm::vec3& val, float minVal, float maxVal, const std::string& format, float power)
-	: Parameter(glUniformLocation, name), m_val(val), m_minVal(minVal), m_maxVal(maxVal), m_format(format), m_power(power)
+	: Parameter(glUniformLocation, name), m_val(val), m_valBeforeEdit(val), m_minVal(minVal), m_maxVal(maxVal), m_format(format), m_power(power)
 {}
-bool Float3Parameter::ImGui(entt::registry& R, Cmp::History& history, entt::entity layer) {
+bool Float3Parameter::ImGuiItem() {
 	return ImGui::SliderFloat3(m_name.c_str(), (float*)&m_val, m_minVal, m_maxVal, m_format.c_str(), m_power);
+}
+bool Float3Parameter::ImGui(entt::registry& R, Cmp::History& history, entt::entity layer) {
+	bool b = ImGuiItem();
+	if (ImGui::IsItemDeactivatedAfterEdit()) {
+		history.beginUndoGroup();
+		auto val = m_val;
+		auto prevVal = m_valBeforeEdit;
+		history.addAction(Action(
+			[&R, layer, this, val]() {
+				this->m_val = val;
+				this->m_valBeforeEdit = val;
+				TNG::MustRecomputeTexture(R, layer);
+			},
+			[&R, layer, this, prevVal]() {
+				this->m_val = prevVal;
+				this->m_valBeforeEdit = prevVal;
+				TNG::MustRecomputeTexture(R, layer);
+			}
+			));
+		history.endUndoGroup();
+		m_valBeforeEdit = m_val; // ready for next edit
+	}
+	return b;
 }
 void Float3Parameter::sendToShader() {
 	glUniform3f(m_glUniformLocation, m_val.x, m_val.y, m_val.z);
@@ -82,10 +128,33 @@ size_t Float3Parameter::getHash() {
 }
 // Float4
 Float4Parameter::Float4Parameter(int glUniformLocation, const std::string& name, const glm::vec4& val, float minVal, float maxVal, const std::string& format, float power)
-	: Parameter(glUniformLocation, name), m_val(val), m_minVal(minVal), m_maxVal(maxVal), m_format(format), m_power(power)
+	: Parameter(glUniformLocation, name), m_val(val), m_valBeforeEdit(val), m_minVal(minVal), m_maxVal(maxVal), m_format(format), m_power(power)
 {}
-bool Float4Parameter::ImGui(entt::registry& R, Cmp::History& history, entt::entity layer) {
+bool Float4Parameter::ImGuiItem() {
 	return ImGui::SliderFloat4(m_name.c_str(), (float*)&m_val, m_minVal, m_maxVal, m_format.c_str(), m_power);
+}
+bool Float4Parameter::ImGui(entt::registry& R, Cmp::History& history, entt::entity layer) {
+	bool b = ImGuiItem();
+	if (ImGui::IsItemDeactivatedAfterEdit()) {
+		history.beginUndoGroup();
+		auto val = m_val;
+		auto prevVal = m_valBeforeEdit;
+		history.addAction(Action(
+			[&R, layer, this, val]() {
+				this->m_val = val;
+				this->m_valBeforeEdit = val;
+				TNG::MustRecomputeTexture(R, layer);
+			},
+			[&R, layer, this, prevVal]() {
+				this->m_val = prevVal;
+				this->m_valBeforeEdit = prevVal;
+				TNG::MustRecomputeTexture(R, layer);
+			}
+			));
+		history.endUndoGroup();
+		m_valBeforeEdit = m_val; // ready for next edit
+	}
+	return b;
 }
 void Float4Parameter::sendToShader() {
 	glUniform4f(m_glUniformLocation, m_val.x, m_val.y, m_val.z, m_val.w);
@@ -98,10 +167,33 @@ size_t Float4Parameter::getHash() {
 }
 // Color3
 Color3Parameter::Color3Parameter(int glUniformLocation, const std::string& name, const glm::vec3& val, ImGuiColorEditFlags flags)
-	: Parameter(glUniformLocation, name), m_val(val), m_flags(flags)
+	: Parameter(glUniformLocation, name), m_val(val), m_valBeforeEdit(val), m_flags(flags)
 {}
-bool Color3Parameter::ImGui(entt::registry& R, Cmp::History& history, entt::entity layer) {
+bool Color3Parameter::ImGuiItem() {
 	return ImGui::ColorPicker3(m_name.c_str(), (float*)&m_val, m_flags);
+}
+bool Color3Parameter::ImGui(entt::registry& R, Cmp::History& history, entt::entity layer) {
+	bool b = ImGuiItem();
+	if (ImGui::IsItemDeactivatedAfterEdit()) {
+		history.beginUndoGroup();
+		auto val = m_val;
+		auto prevVal = m_valBeforeEdit;
+		history.addAction(Action(
+			[&R, layer, this, val]() {
+				this->m_val = val;
+				this->m_valBeforeEdit = val;
+				TNG::MustRecomputeTexture(R, layer);
+			},
+			[&R, layer, this, prevVal]() {
+				this->m_val = prevVal;
+				this->m_valBeforeEdit = prevVal;
+				TNG::MustRecomputeTexture(R, layer);
+			}
+			));
+		history.endUndoGroup();
+		m_valBeforeEdit = m_val; // ready for next edit
+	}
+	return b;
 }
 void Color3Parameter::sendToShader() {
 	glUniform3f(m_glUniformLocation, m_val.x, m_val.y, m_val.z);
@@ -114,10 +206,33 @@ size_t Color3Parameter::getHash() {
 }
 // Color4
 Color4Parameter::Color4Parameter(int glUniformLocation, const std::string& name, const glm::vec4& val, ImGuiColorEditFlags flags)
-	: Parameter(glUniformLocation, name), m_val(val), m_flags(flags)
+	: Parameter(glUniformLocation, name), m_val(val), m_valBeforeEdit(val), m_flags(flags)
 {}
-bool Color4Parameter::ImGui(entt::registry& R, Cmp::History& history, entt::entity layer) {
+bool Color4Parameter::ImGuiItem() {
 	return ImGui::ColorPicker4(m_name.c_str(), (float*)&m_val, m_flags);
+}
+bool Color4Parameter::ImGui(entt::registry& R, Cmp::History& history, entt::entity layer) {
+	bool b = ImGuiItem();
+	if (ImGui::IsItemDeactivatedAfterEdit()) {
+		history.beginUndoGroup();
+		auto val = m_val;
+		auto prevVal = m_valBeforeEdit;
+		history.addAction(Action(
+			[&R, layer, this, val]() {
+				this->m_val = val;
+				this->m_valBeforeEdit = val;
+				TNG::MustRecomputeTexture(R, layer);
+			},
+			[&R, layer, this, prevVal]() {
+				this->m_val = prevVal;
+				this->m_valBeforeEdit = prevVal;
+				TNG::MustRecomputeTexture(R, layer);
+			}
+			));
+		history.endUndoGroup();
+		m_valBeforeEdit = m_val; // ready for next edit
+	}
+	return b;
 }
 void Color4Parameter::sendToShader() {
 	glUniform4f(m_glUniformLocation, m_val.x, m_val.y, m_val.z, m_val.w);
@@ -130,10 +245,33 @@ size_t Color4Parameter::getHash() {
 }
 // Bool
 BoolParameter::BoolParameter(int glUniformLocation, const std::string& name, bool val)
-	: Parameter(glUniformLocation, name), m_val(val)
+	: Parameter(glUniformLocation, name), m_val(val), m_valBeforeEdit(val)
 {}
-bool BoolParameter::ImGui(entt::registry& R, Cmp::History& history, entt::entity layer) {
+bool BoolParameter::ImGuiItem() {
 	return ImGui::Checkbox(m_name.c_str(), &m_val);
+}
+bool BoolParameter::ImGui(entt::registry& R, Cmp::History& history, entt::entity layer) {
+	bool b = ImGuiItem();
+	if (ImGui::IsItemDeactivatedAfterEdit()) {
+		history.beginUndoGroup();
+		auto val = m_val;
+		auto prevVal = m_valBeforeEdit;
+		history.addAction(Action(
+			[&R, layer, this, val]() {
+				this->m_val = val;
+				this->m_valBeforeEdit = val;
+				TNG::MustRecomputeTexture(R, layer);
+			},
+			[&R, layer, this, prevVal]() {
+				this->m_val = prevVal;
+				this->m_valBeforeEdit = prevVal;
+				TNG::MustRecomputeTexture(R, layer);
+			}
+			));
+		history.endUndoGroup();
+		m_valBeforeEdit = m_val; // ready for next edit
+	}
+	return b;
 }
 void BoolParameter::sendToShader() {
 	glUniform1i(m_glUniformLocation, m_val);
@@ -146,10 +284,33 @@ size_t BoolParameter::getHash() {
 }
 // Int
 IntParameter::IntParameter(int glUniformLocation, const std::string& name, int val, int minVal, int maxVal)
-	: Parameter(glUniformLocation, name), m_val(val), m_minVal(minVal), m_maxVal(maxVal)
+	: Parameter(glUniformLocation, name), m_val(val), m_valBeforeEdit(val), m_minVal(minVal), m_maxVal(maxVal)
 {}
-bool IntParameter::ImGui(entt::registry& R, Cmp::History& history, entt::entity layer) {
+bool IntParameter::ImGuiItem() {
 	return ImGui::SliderInt(m_name.c_str(), &m_val, m_minVal, m_maxVal);
+}
+bool IntParameter::ImGui(entt::registry& R, Cmp::History& history, entt::entity layer) {
+	bool b = ImGuiItem();
+	if (ImGui::IsItemDeactivatedAfterEdit()) {
+		history.beginUndoGroup();
+		auto val = m_val;
+		auto prevVal = m_valBeforeEdit;
+		history.addAction(Action(
+			[&R, layer, this, val]() {
+				this->m_val = val;
+				this->m_valBeforeEdit = val;
+				TNG::MustRecomputeTexture(R, layer);
+			},
+			[&R, layer, this, prevVal]() {
+				this->m_val = prevVal;
+				this->m_valBeforeEdit = prevVal;
+				TNG::MustRecomputeTexture(R, layer);
+			}
+			));
+		history.endUndoGroup();
+		m_valBeforeEdit = m_val; // ready for next edit
+	}
+	return b;
 }
 void IntParameter::sendToShader() {
 	glUniform1i(m_glUniformLocation, m_val);
@@ -162,10 +323,33 @@ size_t IntParameter::getHash() {
 }
 // Int2
 Int2Parameter::Int2Parameter(int glUniformLocation, const std::string& name, const glm::ivec2& val, int minVal, int maxVal)
-	: Parameter(glUniformLocation, name), m_val(val), m_minVal(minVal), m_maxVal(maxVal)
+	: Parameter(glUniformLocation, name), m_val(val), m_valBeforeEdit(val), m_minVal(minVal), m_maxVal(maxVal)
 {}
-bool Int2Parameter::ImGui(entt::registry& R, Cmp::History& history, entt::entity layer) {
+bool Int2Parameter::ImGuiItem() {
 	return ImGui::SliderInt2(m_name.c_str(), (int*)&m_val, m_minVal, m_maxVal);
+}
+bool Int2Parameter::ImGui(entt::registry& R, Cmp::History& history, entt::entity layer) {
+	bool b = ImGuiItem();
+	if (ImGui::IsItemDeactivatedAfterEdit()) {
+		history.beginUndoGroup();
+		auto val = m_val;
+		auto prevVal = m_valBeforeEdit;
+		history.addAction(Action(
+			[&R, layer, this, val]() {
+				this->m_val = val;
+				this->m_valBeforeEdit = val;
+				TNG::MustRecomputeTexture(R, layer);
+			},
+			[&R, layer, this, prevVal]() {
+				this->m_val = prevVal;
+				this->m_valBeforeEdit = prevVal;
+				TNG::MustRecomputeTexture(R, layer);
+			}
+			));
+		history.endUndoGroup();
+		m_valBeforeEdit = m_val; // ready for next edit
+	}
+	return b;
 }
 void Int2Parameter::sendToShader() {
 	glUniform2i(m_glUniformLocation, m_val.x, m_val.y);
@@ -178,10 +362,33 @@ size_t Int2Parameter::getHash() {
 }
 // Int3
 Int3Parameter::Int3Parameter(int glUniformLocation, const std::string& name, const glm::ivec3& val, int minVal, int maxVal)
-	: Parameter(glUniformLocation, name), m_val(val), m_minVal(minVal), m_maxVal(maxVal)
+	: Parameter(glUniformLocation, name), m_val(val), m_valBeforeEdit(val), m_minVal(minVal), m_maxVal(maxVal)
 {}
-bool Int3Parameter::ImGui(entt::registry& R, Cmp::History& history, entt::entity layer) {
+bool Int3Parameter::ImGuiItem() {
 	return ImGui::SliderInt3(m_name.c_str(), (int*)&m_val, m_minVal, m_maxVal);
+}
+bool Int3Parameter::ImGui(entt::registry& R, Cmp::History& history, entt::entity layer) {
+	bool b = ImGuiItem();
+	if (ImGui::IsItemDeactivatedAfterEdit()) {
+		history.beginUndoGroup();
+		auto val = m_val;
+		auto prevVal = m_valBeforeEdit;
+		history.addAction(Action(
+			[&R, layer, this, val]() {
+				this->m_val = val;
+				this->m_valBeforeEdit = val;
+				TNG::MustRecomputeTexture(R, layer);
+			},
+			[&R, layer, this, prevVal]() {
+				this->m_val = prevVal;
+				this->m_valBeforeEdit = prevVal;
+				TNG::MustRecomputeTexture(R, layer);
+			}
+			));
+		history.endUndoGroup();
+		m_valBeforeEdit = m_val; // ready for next edit
+	}
+	return b;
 }
 void Int3Parameter::sendToShader() {
 	glUniform3i(m_glUniformLocation, m_val.x, m_val.y, m_val.z);
@@ -194,10 +401,33 @@ size_t Int3Parameter::getHash() {
 }
 // Int4
 Int4Parameter::Int4Parameter(int glUniformLocation, const std::string& name, const glm::ivec4& val, int minVal, int maxVal)
-	: Parameter(glUniformLocation, name), m_val(val), m_minVal(minVal), m_maxVal(maxVal)
+	: Parameter(glUniformLocation, name), m_val(val), m_valBeforeEdit(val), m_minVal(minVal), m_maxVal(maxVal)
 {}
-bool Int4Parameter::ImGui(entt::registry& R, Cmp::History& history, entt::entity layer) {
+bool Int4Parameter::ImGuiItem() {
 	return ImGui::SliderInt4(m_name.c_str(), (int*)&m_val, m_minVal, m_maxVal);
+}
+bool Int4Parameter::ImGui(entt::registry& R, Cmp::History& history, entt::entity layer) {
+	bool b = ImGuiItem();
+	if (ImGui::IsItemDeactivatedAfterEdit()) {
+		history.beginUndoGroup();
+		auto val = m_val;
+		auto prevVal = m_valBeforeEdit;
+		history.addAction(Action(
+			[&R, layer, this, val]() {
+				this->m_val = val;
+				this->m_valBeforeEdit = val;
+				TNG::MustRecomputeTexture(R, layer);
+			},
+			[&R, layer, this, prevVal]() {
+				this->m_val = prevVal;
+				this->m_valBeforeEdit = prevVal;
+				TNG::MustRecomputeTexture(R, layer);
+			}
+			));
+		history.endUndoGroup();
+		m_valBeforeEdit = m_val; // ready for next edit
+	}
+	return b;
 }
 void Int4Parameter::sendToShader() {
 	glUniform4i(m_glUniformLocation, m_val.x, m_val.y, m_val.z, m_val.w);

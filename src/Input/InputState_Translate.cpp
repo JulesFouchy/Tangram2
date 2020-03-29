@@ -28,11 +28,9 @@ InputState_Translate::InputState_Translate(Instance& instance, entt::entity targ
 void InputState_Translate::onLeftClicUp() {
 	if (m_enterExitButton == MouseButton::Left) {
 		if (SDL_GetTicks() - timeInputStart > Settings::GetSELECT_SAFETY__MIN_TIME_BEFORE_MOVING_LAYER_IN_MS()) {
-			spdlog::error("translate");
 			HistoryManager::RecordTransform(I.registry(), m_targetID, m_initialMat);
 		}
 		else {
-			spdlog::warn("select");
 			I.registry().replace<Cmp::TransformMatrix>(m_targetID, m_initialMat);
 		}
 		I.inputSystem().setState<InputState_Rest>();

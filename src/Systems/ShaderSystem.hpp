@@ -27,7 +27,7 @@ private:
 	static std::shared_ptr<Parameter> CreateParameterFromLine(entt::registry& R, const std::string& line, int glShaderID, const std::vector<std::shared_ptr<Parameter>>& prevList);
 	template <typename T>
 	static T ReadValue(const std::string& line, const std::string& variableName) {
-		size_t pos = MyString::FindCaseInsensitive(line, variableName);
+		size_t pos = MyString::FindCaseInsensitive(line, variableName, line.find("//")); // we start the search at the comment (//) to prevent confusion with the name of the variable
 		if (pos != std::string::npos) {
 			pos += variableName.length();
 			return ConvertStringTo<T>(line, pos);

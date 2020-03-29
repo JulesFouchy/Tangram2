@@ -7,6 +7,8 @@
 
 #include "Parameters/ConcreteParameters.hpp"
 
+#include "Core/MustRecomputeTexture.hpp"
+
 entt::entity ShaderSystem::Create(entt::registry& R, const std::string& vertexFilepath, const std::string& fragmentFilepath) {
 	entt::entity e = R.create();
 	R.assign<Cmp::Shader>(e, vertexFilepath, fragmentFilepath);
@@ -47,6 +49,7 @@ void ShaderSystem::TryReloadShader(entt::registry& R, entt::entity layer) {
 		Cmp::Shader& shader = R.get<Cmp::Shader>(shaderRef->entityID);
 		R.replace<Cmp::Shader>(shaderRef->entityID, shader.vertexFilepath, shader.fragmentFilepath);
 		UpdateParametersList(R, shaderRef->entityID, params.list);
+		TNG::MustRecomputeTexture(R, layer);
 	}
 }
 

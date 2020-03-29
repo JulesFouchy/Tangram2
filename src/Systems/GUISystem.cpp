@@ -9,6 +9,8 @@
 #include "Components/AspectRatio.hpp"
 #include "Components/Name.hpp"
 
+#include "Core/MustRecomputeTexture.hpp"
+
 bool GUISystem::s_bShowGUI = true;
 
 GUISystem::GUISystem(Instance& instance)
@@ -84,7 +86,7 @@ void GUISystem::render() {
 				bImGuiUsed |= param->ImGui(R, parameters.history, selLayer);
 			}
 			if (bImGuiUsed) {
-				R.assign_or_replace<entt::tag<"MustRecomputeTexture"_hs>>(selLayer);
+				TNG::MustRecomputeTexture(R, selLayer);
 				R.assign_or_replace<entt::tag<"ActiveHistoryIsParameter"_hs>>(selLayer);
 			}
 			ImGui::End();

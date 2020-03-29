@@ -1,5 +1,7 @@
 #include "ConcreteParameters.hpp"
 
+#include "Core/MustRecomputeTexture.hpp"
+
 #include <imgui/imgui.h>
 
 #include <glad/glad.h>
@@ -24,12 +26,12 @@ bool FloatParameter::ImGui(entt::registry& R, Cmp::History& history, entt::entit
 			[&R, layer, this, val]() {
 				this->m_val = val;
 				this->m_valBeforeEdit = val;
-				R.assign_or_replace<entt::tag<"MustRecomputeTexture"_hs>>(layer);
+				TNG::MustRecomputeTexture(R, layer);
 			},
 			[&R, layer, this, prevVal]() {
 				this->m_val = prevVal;
 				this->m_valBeforeEdit = prevVal;
-				R.assign_or_replace<entt::tag<"MustRecomputeTexture"_hs>>(layer);
+				TNG::MustRecomputeTexture(R, layer);
 			}
 			));
 		history.endUndoGroup();

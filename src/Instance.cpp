@@ -12,6 +12,8 @@
 #include "Components/ShaderReference.hpp"
 #include "Components/History.hpp"
 
+#include "Core/MustRecomputeTexture.hpp"
+
 #include "Systems/ShaderSystem.hpp"
 
 #include "glm/gtx/matrix_transform_2d.hpp"
@@ -52,7 +54,7 @@ void Instance::onTransformMatrixChange(entt::entity e, entt::registry& R) {
 }
 
 void Instance::onMustRecomputeTexture(entt::entity e) {
-	registry().assign_or_replace<entt::tag<"MustRecomputeTexture"_hs>>(e);
+	TNG::MustRecomputeTexture(registry(), e);
 	Cmp::VisualDependencies* dependencies = registry().try_get<Cmp::VisualDependencies>(e);
 	if (dependencies) {
 		for (entt::entity dependant : dependencies->list)

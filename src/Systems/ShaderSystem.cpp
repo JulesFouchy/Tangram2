@@ -23,6 +23,9 @@ void ShaderSystem::UpdateParametersList(entt::registry& R, entt::entity shaderEn
 	}
 	// Find "struct Parameters"
 	GoToFirstLineOfStructParameters(stream);
+	// Clear list
+	std::vector<std::shared_ptr<Parameter>> prevList = parametersList;
+	parametersList.lear();
 	// Loop through struct Parameters' lines
 	std::string line;
 	while (getline(stream, line)) {

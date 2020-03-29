@@ -14,6 +14,8 @@
 #include <glm/gtx/matrix_transform_2d.hpp>
 #include "Components/Parent.hpp"
 
+#include "Core/ChangeActiveHistory.hpp"
+
 #include "Components/ShaderReference.hpp"
 #include "Systems/ShaderSystem.hpp"
 
@@ -50,8 +52,10 @@ void InputState_Rest::onLeftClicDown() {
 	entt::entity clickedLayer = getFirstLayerOf(clickedEntity);
 	I.layersManager().setSelectedLayer(clickedLayer);
 	// Translate 
-	if (I.registry().valid(clickedEntity))
+	if (I.registry().valid(clickedEntity)) {
+		TNG::SetActiveHistoryToTransform(I.registry(), clickedLayer);
 		I.inputSystem().m_currentState = std::make_unique<InputState_Translate>(I, clickedEntity, MouseButton::Left);
+	}
 }
 
 void InputState_Rest::onWheelDown() {

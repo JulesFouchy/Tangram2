@@ -35,8 +35,6 @@ void InputState_Translate::onLeftClicUp() {
 			// Undo modifications
 			I.registry().replace<Cmp::TransformMatrix>(m_targetID, m_initialMat);
 		}
-		// Activ history is now Transform
-		I.registry().reset<entt::tag<"ActiveHistoryIsParameter"_hs>>(m_targetID);
 		// Change State
 		I.inputSystem().setState<InputState_Rest>();
 	}

@@ -10,6 +10,7 @@
 #include "Components/Name.hpp"
 
 #include "Core/MustRecomputeTexture.hpp"
+#include "Core/ChangeActiveHistory.hpp"
 
 bool GUISystem::s_bShowGUI = true;
 
@@ -80,15 +81,15 @@ void GUISystem::render() {
 		entt::entity selLayer = I.layersManager().selectedLayer();
 		if (I.registry().valid(selLayer)) {
 			ImGui::Begin("Parameters");
+			if (ImGui::GetIO().WantCaptureMouse && ImGui::IsWindowFocused())
+				TNG::SetActiveHistoryToParameters(R, selLayer);
 			bool bImGuiUsed = false;
 			Cmp::Parameters& parameters = R.get<Cmp::Parameters>(selLayer);
 			for (const auto& param : parameters.list) {
 				bImGuiUsed |= param->ImGui(R, parameters.history, selLayer);
 			}
-			if (bImGuiUsed) {
+			if (bImGuiUsed)
 				TNG::MustRecomputeTexture(R, selLayer);
-				R.assign_or_replace<entt::tag<"ActiveHistoryIsParameter"_hs>>(selLayer);
-			}
 			ImGui::End();
 		}
 	}

@@ -4,8 +4,6 @@
 
 #include <glad/glad.h>
 
-#include <functional>
-
 // Float1
 FloatParameter::FloatParameter(int glUniformLocation, const std::string& name, float val, float minVal, float maxVal, const std::string& format, float power)
 	: Parameter(glUniformLocation, name), m_val(val), m_minVal(minVal), m_maxVal(maxVal), m_format(format), m_power(power)
@@ -17,7 +15,7 @@ void FloatParameter::sendToShader() {
 	glUniform1f(m_glUniformLocation, m_val);
 }
 size_t FloatParameter::getHash() {
-	return std::hash<std::string>{}(m_name)+0;
+	return GetHash(m_name, "float");
 }
 // Float2
 Float2Parameter::Float2Parameter(int glUniformLocation, const std::string& name, const glm::vec2& val, float minVal, float maxVal, const std::string& format, float power)
@@ -30,7 +28,7 @@ void Float2Parameter::sendToShader() {
 	glUniform2f(m_glUniformLocation, m_val.x, m_val.y);
 }
 size_t Float2Parameter::getHash() {
-	return std::hash<std::string>{}(m_name)+1;
+	return GetHash(m_name, "vec2");
 }
 // Float3
 Float3Parameter::Float3Parameter(int glUniformLocation, const std::string& name, const glm::vec3& val, float minVal, float maxVal, const std::string& format, float power)
@@ -43,7 +41,7 @@ void Float3Parameter::sendToShader() {
 	glUniform3f(m_glUniformLocation, m_val.x, m_val.y, m_val.z);
 }
 size_t Float3Parameter::getHash() {
-	return std::hash<std::string>{}(m_name)+2;
+	return GetHash(m_name, "vec3");
 }
 // Float4
 Float4Parameter::Float4Parameter(int glUniformLocation, const std::string& name, const glm::vec4& val, float minVal, float maxVal, const std::string& format, float power)
@@ -56,7 +54,7 @@ void Float4Parameter::sendToShader() {
 	glUniform4f(m_glUniformLocation, m_val.x, m_val.y, m_val.z, m_val.w);
 }
 size_t Float4Parameter::getHash() {
-	return std::hash<std::string>{}(m_name)+3;
+	return GetHash(m_name, "vec4");
 }
 // Color3
 Color3Parameter::Color3Parameter(int glUniformLocation, const std::string& name, const glm::vec3& val, ImGuiColorEditFlags flags)
@@ -69,7 +67,7 @@ void Color3Parameter::sendToShader() {
 	glUniform3f(m_glUniformLocation, m_val.x, m_val.y, m_val.z);
 }
 size_t Color3Parameter::getHash() {
-	return std::hash<std::string>{}(m_name)+4;
+	return GetHash(m_name, "vec3");
 }
 // Color4
 Color4Parameter::Color4Parameter(int glUniformLocation, const std::string& name, const glm::vec4& val, ImGuiColorEditFlags flags)
@@ -82,7 +80,7 @@ void Color4Parameter::sendToShader() {
 	glUniform4f(m_glUniformLocation, m_val.x, m_val.y, m_val.z, m_val.w);
 }
 size_t Color4Parameter::getHash() {
-	return std::hash<std::string>{}(m_name)+5;
+	return GetHash(m_name, "vec4");
 }
 // Bool
 BoolParameter::BoolParameter(int glUniformLocation, const std::string& name, bool val)
@@ -95,7 +93,7 @@ void BoolParameter::sendToShader() {
 	glUniform1i(m_glUniformLocation, m_val);
 }
 size_t BoolParameter::getHash() {
-	return std::hash<std::string>{}(m_name)+6;
+	return GetHash(m_name, "bool");
 }
 // Int
 IntParameter::IntParameter(int glUniformLocation, const std::string& name, int val, int minVal, int maxVal)
@@ -108,7 +106,7 @@ void IntParameter::sendToShader() {
 	glUniform1i(m_glUniformLocation, m_val);
 }
 size_t IntParameter::getHash() {
-	return std::hash<std::string>{}(m_name)+7;
+	return GetHash(m_name, "int");
 }
 // Int2
 Int2Parameter::Int2Parameter(int glUniformLocation, const std::string& name, const glm::ivec2& val, int minVal, int maxVal)
@@ -121,7 +119,7 @@ void Int2Parameter::sendToShader() {
 	glUniform2i(m_glUniformLocation, m_val.x, m_val.y);
 }
 size_t Int2Parameter::getHash() {
-	return std::hash<std::string>{}(m_name)+8;
+	return GetHash(m_name, "ivec2");
 }
 // Int3
 Int3Parameter::Int3Parameter(int glUniformLocation, const std::string& name, const glm::ivec3& val, int minVal, int maxVal)
@@ -134,7 +132,7 @@ void Int3Parameter::sendToShader() {
 	glUniform3i(m_glUniformLocation, m_val.x, m_val.y, m_val.z);
 }
 size_t Int3Parameter::getHash() {
-	return std::hash<std::string>{}(m_name)+9;
+	return GetHash(m_name, "ivec3");
 }
 // Int4
 Int4Parameter::Int4Parameter(int glUniformLocation, const std::string& name, const glm::ivec4& val, int minVal, int maxVal)
@@ -147,5 +145,5 @@ void Int4Parameter::sendToShader() {
 	glUniform4i(m_glUniformLocation, m_val.x, m_val.y, m_val.z, m_val.w);
 }
 size_t Int4Parameter::getHash() {
-	return std::hash<std::string>{}(m_name)+10;
+	return GetHash(m_name, "ivec4");
 }

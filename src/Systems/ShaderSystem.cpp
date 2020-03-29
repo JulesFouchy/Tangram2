@@ -25,7 +25,7 @@ void ShaderSystem::UpdateParametersList(entt::registry& R, entt::entity shaderEn
 	GoToFirstLineOfStructParameters(stream);
 	// Clear list
 	std::vector<std::shared_ptr<Parameter>> prevList = parametersList;
-	parametersList.lear();
+	parametersList.clear();
 	// Loop through struct Parameters' lines
 	std::string line;
 	while (getline(stream, line)) {
@@ -33,9 +33,10 @@ void ShaderSystem::UpdateParametersList(entt::registry& R, entt::entity shaderEn
 		if (line.find("}") != std::string::npos)
 			break;
 		// Create parameter
-		std::shared_ptr<Parameter> param = CreateParameterFromLine(R, line, shaderCmp.id);
-		if (param)
+		std::shared_ptr<Parameter> param = CreateParameterFromLine(R, line, shaderCmp.id, prevList);
+		if (param) {
 			parametersList.push_back(std::move(param));
+		}
 	}
 }
 
@@ -74,11 +75,22 @@ void ShaderSystem::GoToFirstLineOfStructParameters(std::ifstream& stream) {
 	}
 }
 
-std::shared_ptr<Parameter> ShaderSystem::CreateParameterFromLine(entt::registry& R, const std::string& line, int glShaderID) {
+std::shared_ptr<Parameter> ShaderSystem::CreateParameterFromLine(entt::registry& R, const std::string& line, int glShaderID, const std::vector<std::shared_ptr<Parameter>>& prevList) {
 	size_t pos = 0;
+	// Read type and name
 	std::string type = MyString::GetNextWord(line, &pos);
 	std::string name = MyString::GetNextWord(line, &pos);
+	// Get uniform location
 	int glUniformLocation = GetUniformLocation(glShaderID, name);
+	// Check if the parameter already existed
+	size_t hashOfParam = Parameter::GetHash(name, type);
+	auto it = std::find_if(prevList.begin(), prevList.end(), [hashOfParam](const std::shared_ptr<Parameter>& p) {
+		return p->getHash() == hashOfParam;
+	});
+	if (it != prevList.end()) {
+		spdlog::info(name);
+	}
+	//
 	if (!type.compare("float"))
 		return std::make_shared<FloatParameter>(glUniformLocation, name, ReadValue<float>(line, "default"), ReadValue<float>(line, "min"), ReadValue<float>(line, "max"));
 	else if (!type.compare("vec2"))

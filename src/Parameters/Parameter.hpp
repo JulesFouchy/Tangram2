@@ -12,6 +12,7 @@ public:
 	virtual bool ImGui() = 0;
 	virtual void sendToShader() = 0;
 	virtual size_t getHash() = 0;
+	static size_t GetHash(const std::string& name, const std::string& type);
 
 protected:
 	std::string m_name;

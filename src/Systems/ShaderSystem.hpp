@@ -24,7 +24,7 @@ private:
 	static int GetUniformLocation(int glShaderID, const std::string& parameterName);
 	// Parsing
 	static void GoToFirstLineOfStructParameters(std::ifstream& stream);
-	static std::shared_ptr<Parameter> CreateParameterFromLine(entt::registry& R, const std::string& line, int glShaderID);
+	static std::shared_ptr<Parameter> CreateParameterFromLine(entt::registry& R, const std::string& line, int glShaderID, const std::vector<std::shared_ptr<Parameter>>& prevList);
 	template <typename T>
 	static T ReadValue(const std::string& line, const std::string& variableName) {
 		size_t pos = MyString::FindCaseInsensitive(line, variableName);

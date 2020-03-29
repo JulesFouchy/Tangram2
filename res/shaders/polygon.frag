@@ -3,7 +3,11 @@
 uniform vec2 u_vertices[12];
 const int N = 5;
 
-uniform float u_SmoothMin;
+struct Parameters {
+    float SmoothMin; // default 0.036 min 0 max 0.1
+};
+
+uniform Parameters u;
 
 in vec2 vTexCoords;
 
@@ -56,7 +60,7 @@ float strokeDistanceField(vec2 nuv){
         vec2 p1 = u_vertices[i];
         vec2 p2 = u_vertices[(i+1)%N];
         float d = distToSegment(nuv, p1, p2);
-        dist = smin(dist, d, u_SmoothMin);
+        dist = smin(dist, d, u.SmoothMin);
         //dist = min(dist, d);
     }
     return dist - 0.005;

@@ -91,12 +91,12 @@ entt::entity LayersManager::createFragmentLayer(const std::string& fragmentFilep
 
 entt::entity LayersManager::createPolygonLayer(const std::vector<glm::vec2>& vertices) {
 	entt::registry& R = I.registry();
-	entt::entity e = createLayerEntity();
+	entt::entity e = _createLayerBasedOnAShader("res/shaders/defaultDrawOnTexture.vert", "res/shaders/polygon.frag");
 
 	R.assign<entt::tag<"Polygon"_hs>>(e);
 	R.assign<Cmp::Vertices>(e, vertices, e, I.shapeFactory());
-	R.assign<Cmp::Name>(e, "Polygon" + std::to_string(m_nbPolygonLayers));
-	m_nbPolygonLayers++;
+
+
 
 	//Cmp::Parameters& params = R.get<Cmp::Parameters>(e);
 	//R.assign<Cmp::SliderFloat>(e2, "Smooth Min", 0.036f, 0.0f, 0.1f);

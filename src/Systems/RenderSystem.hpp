@@ -68,7 +68,6 @@ private:
 	static Shader s_shaderTest;
 	static Shader s_shaderDrawingBoard;
 	static Shader s_shaderPoint;
-	static Shader s_shaderPolygon;
 	static Shader s_shaderTexture;
 	static Shader s_shaderBlend;
 	static unsigned int m1to1QuadVBOid;

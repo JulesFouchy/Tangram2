@@ -27,7 +27,6 @@ unsigned int RenderSystem::m1to1QuadVAOid;
 Shader RenderSystem::s_shaderTest         ("res/shaders/defaultDrawOnTexture.vert", "res/shaders/test.frag", false);
 Shader RenderSystem::s_shaderDrawingBoard ("res/shaders/default.vert", "res/shaders/drawingBoard.frag", false);
 Shader RenderSystem::s_shaderPoint        ("res/shaders/default.vert", "res/shaders/point.frag", false);
-Shader RenderSystem::s_shaderPolygon      ("res/shaders/defaultDrawOnTexture.vert", "res/shaders/polygon.frag", false);
 Shader RenderSystem::s_shaderTexture      ("res/shaders/default.vert", "res/shaders/texture.frag", false);
 Shader RenderSystem::s_shaderBlend        ("res/shaders/blendDefault.vert", "res/shaders/blendDefault.frag", false);
 
@@ -198,16 +197,16 @@ void RenderSystem::drawTest(entt::entity e) {
 }
 
 void RenderSystem::drawPolygon(entt::entity e) {
-	s_shaderPolygon.bind();
+	//s_shaderPolygon.bind();
 	//s_shaderPolygon.setUniform1f("u_SmoothMin", 1.0f / I.registry().get<Cmp::SliderFloat>(I.registry().get<Cmp::Parameters>(e).list[0]).val);
-	s_shaderPolygon.setUniformMat3f("u_localTransformMat", I.getMatrixToTextureSpace(e));
-	int k = 0;
-	Cmp::Vertices& vertices = I.registry().get<Cmp::Vertices>(e);
-	for (entt::entity vertex : vertices.list) {
-		s_shaderPolygon.setUniform2f("u_vertices[" + std::to_string(k) + "]", glm::vec2(glm::column(I.getLocalTransform(vertex), 2)));
-		k++;
-	}
-	drawFullscreen();
+	//s_shaderPolygon.setUniformMat3f("u_localTransformMat", I.getMatrixToTextureSpace(e));
+	//int k = 0;
+	//Cmp::Vertices& vertices = I.registry().get<Cmp::Vertices>(e);
+	//for (entt::entity vertex : vertices.list) {
+	//	s_shaderPolygon.setUniform2f("u_vertices[" + std::to_string(k) + "]", glm::vec2(glm::column(I.getLocalTransform(vertex), 2)));
+	//	k++;
+	//}
+	//drawFullscreen();
 }
 
 void RenderSystem::drawFullscreen() {
@@ -251,7 +250,6 @@ void RenderSystem::Initialize() {
 	s_shaderTest.compile();
 	s_shaderDrawingBoard.compile();
 	s_shaderPoint.compile();
-	s_shaderPolygon.compile();
 	s_shaderTexture.compile();
 	s_shaderBlend.compile();
 	GLCall(glGenVertexArrays(1, &m1to1QuadVAOid));

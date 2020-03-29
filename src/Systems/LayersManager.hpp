@@ -40,7 +40,6 @@ friend class GUISystem;
 
 private:
 	unsigned int m_nbTestLayers = 0;
-	unsigned int m_nbPolygonLayers = 0;
 	std::unordered_map<std::string, unsigned int> m_nbFragmentLayersByName;
 
 private:

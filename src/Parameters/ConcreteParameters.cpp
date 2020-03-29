@@ -14,6 +14,9 @@ bool FloatParameter::ImGui() {
 void FloatParameter::sendToShader() {
 	glUniform1f(m_glUniformLocation, m_val);
 }
+void* FloatParameter::getValuePtr() {
+	return &m_val;
+}
 size_t FloatParameter::getHash() {
 	return GetHash(m_name, "float");
 }
@@ -26,6 +29,9 @@ bool Float2Parameter::ImGui() {
 }
 void Float2Parameter::sendToShader() {
 	glUniform2f(m_glUniformLocation, m_val.x, m_val.y);
+}
+void* Float2Parameter::getValuePtr() {
+	return &m_val;
 }
 size_t Float2Parameter::getHash() {
 	return GetHash(m_name, "vec2");
@@ -40,6 +46,9 @@ bool Float3Parameter::ImGui() {
 void Float3Parameter::sendToShader() {
 	glUniform3f(m_glUniformLocation, m_val.x, m_val.y, m_val.z);
 }
+void* Float3Parameter::getValuePtr() {
+	return &m_val;
+}
 size_t Float3Parameter::getHash() {
 	return GetHash(m_name, "vec3");
 }
@@ -52,6 +61,9 @@ bool Float4Parameter::ImGui() {
 }
 void Float4Parameter::sendToShader() {
 	glUniform4f(m_glUniformLocation, m_val.x, m_val.y, m_val.z, m_val.w);
+}
+void* Float4Parameter::getValuePtr() {
+	return &m_val;
 }
 size_t Float4Parameter::getHash() {
 	return GetHash(m_name, "vec4");
@@ -66,6 +78,9 @@ bool Color3Parameter::ImGui() {
 void Color3Parameter::sendToShader() {
 	glUniform3f(m_glUniformLocation, m_val.x, m_val.y, m_val.z);
 }
+void* Color3Parameter::getValuePtr() {
+	return &m_val;
+}
 size_t Color3Parameter::getHash() {
 	return GetHash(m_name, "vec3");
 }
@@ -78,6 +93,9 @@ bool Color4Parameter::ImGui() {
 }
 void Color4Parameter::sendToShader() {
 	glUniform4f(m_glUniformLocation, m_val.x, m_val.y, m_val.z, m_val.w);
+}
+void* Color4Parameter::getValuePtr() {
+	return &m_val;
 }
 size_t Color4Parameter::getHash() {
 	return GetHash(m_name, "vec4");
@@ -92,6 +110,9 @@ bool BoolParameter::ImGui() {
 void BoolParameter::sendToShader() {
 	glUniform1i(m_glUniformLocation, m_val);
 }
+void* BoolParameter::getValuePtr() {
+	return &m_val;
+}
 size_t BoolParameter::getHash() {
 	return GetHash(m_name, "bool");
 }
@@ -104,6 +125,9 @@ bool IntParameter::ImGui() {
 }
 void IntParameter::sendToShader() {
 	glUniform1i(m_glUniformLocation, m_val);
+}
+void* IntParameter::getValuePtr() {
+	return &m_val;
 }
 size_t IntParameter::getHash() {
 	return GetHash(m_name, "int");
@@ -118,6 +142,9 @@ bool Int2Parameter::ImGui() {
 void Int2Parameter::sendToShader() {
 	glUniform2i(m_glUniformLocation, m_val.x, m_val.y);
 }
+void* Int2Parameter::getValuePtr() {
+	return &m_val;
+}
 size_t Int2Parameter::getHash() {
 	return GetHash(m_name, "ivec2");
 }
@@ -131,6 +158,9 @@ bool Int3Parameter::ImGui() {
 void Int3Parameter::sendToShader() {
 	glUniform3i(m_glUniformLocation, m_val.x, m_val.y, m_val.z);
 }
+void* Int3Parameter::getValuePtr() {
+	return &m_val;
+}
 size_t Int3Parameter::getHash() {
 	return GetHash(m_name, "ivec3");
 }
@@ -143,6 +173,9 @@ bool Int4Parameter::ImGui() {
 }
 void Int4Parameter::sendToShader() {
 	glUniform4i(m_glUniformLocation, m_val.x, m_val.y, m_val.z, m_val.w);
+}
+void* Int4Parameter::getValuePtr() {
+	return &m_val;
 }
 size_t Int4Parameter::getHash() {
 	return GetHash(m_name, "ivec4");

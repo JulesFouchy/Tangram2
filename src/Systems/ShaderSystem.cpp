@@ -82,41 +82,42 @@ std::shared_ptr<Parameter> ShaderSystem::CreateParameterFromLine(entt::registry&
 	std::string name = MyString::GetNextWord(line, &pos);
 	// Get uniform location
 	int glUniformLocation = GetUniformLocation(glShaderID, name);
-	// Check if the parameter already existed
+	// Check if the parameter already existed and grab the value
 	size_t hashOfParam = Parameter::GetHash(name, type);
 	auto it = std::find_if(prevList.begin(), prevList.end(), [hashOfParam](const std::shared_ptr<Parameter>& p) {
 		return p->getHash() == hashOfParam;
 	});
+	void* val = nullptr;
 	if (it != prevList.end()) {
-		spdlog::info(name);
+		val = (**it).getValuePtr();
 	}
 	//
 	if (!type.compare("float"))
-		return std::make_shared<FloatParameter>(glUniformLocation, name, ReadValue<float>(line, "default"), ReadValue<float>(line, "min"), ReadValue<float>(line, "max"));
+		return std::make_shared<FloatParameter>(glUniformLocation, name, val ? *(float*)val : ReadValue<float>(line, "default"), ReadValue<float>(line, "min"), ReadValue<float>(line, "max"));
 	else if (!type.compare("vec2"))
-		return std::make_shared<Float2Parameter>(glUniformLocation, name, ReadValue<glm::vec2>(line, "default"), ReadValue<float>(line, "min"), ReadValue<float>(line, "max"));
+		return std::make_shared<Float2Parameter>(glUniformLocation, name, val ? *(glm::vec2*)val : ReadValue<glm::vec2>(line, "default"), ReadValue<float>(line, "min"), ReadValue<float>(line, "max"));
 	else if (!type.compare("vec3")) {
 		if (MyString::FindCaseInsensitive(line, "NOT_A_COLOR") != std::string::npos)
-			return std::make_shared<Float3Parameter>(glUniformLocation, name, ReadValue<glm::vec3>(line, "default"), ReadValue<float>(line, "min"), ReadValue<float>(line, "max"));
+			return std::make_shared<Float3Parameter>(glUniformLocation, name, val ? *(glm::vec3*)val : ReadValue<glm::vec3>(line, "default"), ReadValue<float>(line, "min"), ReadValue<float>(line, "max"));
 		else
-			return std::make_shared<Color3Parameter>(glUniformLocation, name, ReadValue<glm::vec3>(line, "default"));
+			return std::make_shared<Color3Parameter>(glUniformLocation, name, val ? *(glm::vec3*)val : ReadValue<glm::vec3>(line, "default"));
 	}
 	else if (!type.compare("vec4")) {
 		if (MyString::FindCaseInsensitive(line, "NOT_A_COLOR") != std::string::npos)
-			return std::make_shared<Float4Parameter>(glUniformLocation, name, ReadValue<glm::vec4>(line, "default"), ReadValue<float>(line, "min"), ReadValue<float>(line, "max"));
+			return std::make_shared<Float4Parameter>(glUniformLocation, name, val ? *(glm::vec4*)val : ReadValue<glm::vec4>(line, "default"), ReadValue<float>(line, "min"), ReadValue<float>(line, "max"));
 		else
-			return std::make_shared<Color4Parameter>(glUniformLocation, name, ReadValue<glm::vec4>(line, "default"));
+			return std::make_shared<Color4Parameter>(glUniformLocation, name, val ? *(glm::vec4*)val : ReadValue<glm::vec4>(line, "default"));
 	}
 	else if (!type.compare("bool"))
-		return std::make_shared<BoolParameter>(glUniformLocation, name, MyString::FindCaseInsensitive(line, "true") != std::string::npos);
+		return std::make_shared<BoolParameter>(glUniformLocation, name, val ? *(bool*)val : MyString::FindCaseInsensitive(line, "true") != std::string::npos);
 	else if (!type.compare("int"))
-		return std::make_shared<IntParameter>(glUniformLocation, name, ReadValue<int>(line, "default"), ReadValue<int>(line, "min"), ReadValue<int>(line, "max"));
+		return std::make_shared<IntParameter>(glUniformLocation, name, val ? *(int*)val : ReadValue<int>(line, "default"), ReadValue<int>(line, "min"), ReadValue<int>(line, "max"));
 	else if (!type.compare("ivec2"))
-		return std::make_shared<Int2Parameter>(glUniformLocation, name, ReadValue<glm::ivec2>(line, "default"), ReadValue<int>(line, "min"), ReadValue<int>(line, "max"));
+		return std::make_shared<Int2Parameter>(glUniformLocation, name, val ? *(glm::ivec2*)val : ReadValue<glm::ivec2>(line, "default"), ReadValue<int>(line, "min"), ReadValue<int>(line, "max"));
 	else if (!type.compare("ivec3"))
-		return std::make_shared<Int3Parameter>(glUniformLocation, name, ReadValue<glm::ivec3>(line, "default"), ReadValue<int>(line, "min"), ReadValue<int>(line, "max"));
+		return std::make_shared<Int3Parameter>(glUniformLocation, name, val ? *(glm::ivec3*)val : ReadValue<glm::ivec3>(line, "default"), ReadValue<int>(line, "min"), ReadValue<int>(line, "max"));
 	else if (!type.compare("ivec4"))
-		return std::make_shared<Int4Parameter>(glUniformLocation, name, ReadValue<glm::ivec4>(line, "default"), ReadValue<int>(line, "min"), ReadValue<int>(line, "max"));
+		return std::make_shared<Int4Parameter>(glUniformLocation, name, val ? *(glm::ivec4*)val : ReadValue<glm::ivec4>(line, "default"), ReadValue<int>(line, "min"), ReadValue<int>(line, "max"));
 	else {
 		spdlog::error("[ShaderSystem::CreateParameterFromLine] Unknown type : \"{}\"", type);
 		return nullptr;

@@ -19,6 +19,7 @@ public:
 	~FloatParameter() = default;
 	bool ImGui() override;
 	void sendToShader() override;
+	void* getValuePtr() override;
 	size_t getHash() override;
 private:
 	float m_val;
@@ -42,6 +43,7 @@ public:
 	~Float2Parameter() = default;
 	bool ImGui() override;
 	void sendToShader() override;
+	void* getValuePtr() override;
 	size_t getHash() override;
 private:
 	glm::vec2 m_val;
@@ -65,6 +67,7 @@ public:
 	~Float3Parameter() = default;
 	bool ImGui() override;
 	void sendToShader() override;
+	void* getValuePtr() override;
 	size_t getHash() override;
 private:
 	glm::vec3 m_val;
@@ -88,6 +91,7 @@ public:
 	~Float4Parameter() = default;
 	bool ImGui() override;
 	void sendToShader() override;
+	void* getValuePtr() override;
 	size_t getHash() override;
 private:
 	glm::vec4 m_val;
@@ -111,6 +115,7 @@ public:
 	~Color3Parameter() = default;
 	bool ImGui() override;
 	void sendToShader() override;
+	void* getValuePtr() override;
 	size_t getHash() override;
 private:
 	glm::vec3 m_val;
@@ -131,6 +136,7 @@ public:
 	~Color4Parameter() = default;
 	bool ImGui() override;
 	void sendToShader() override;
+	void* getValuePtr() override;
 	size_t getHash() override;
 private:
 	glm::vec4 m_val;
@@ -151,6 +157,7 @@ public:
 	~BoolParameter() = default;
 	bool ImGui() override;
 	void sendToShader() override;
+	void* getValuePtr() override;
 	size_t getHash() override;
 private:
 	bool m_val;
@@ -170,6 +177,7 @@ public:
 	~IntParameter() = default;
 	bool ImGui() override;
 	void sendToShader() override;
+	void* getValuePtr() override;
 	size_t getHash() override;
 private:
 	int m_val;
@@ -191,6 +199,7 @@ public:
 	~Int2Parameter() = default;
 	bool ImGui() override;
 	void sendToShader() override;
+	void* getValuePtr() override;
 	size_t getHash() override;
 private:
 	glm::ivec2 m_val;
@@ -212,6 +221,7 @@ public:
 	~Int3Parameter() = default;
 	bool ImGui() override;
 	void sendToShader() override;
+	void* getValuePtr() override;
 	size_t getHash() override;
 private:
 	glm::ivec3 m_val;
@@ -233,6 +243,7 @@ public:
 	~Int4Parameter() = default;
 	bool ImGui() override;
 	void sendToShader() override;
+	void* getValuePtr() override;
 	size_t getHash() override;
 private:
 	glm::ivec4 m_val;

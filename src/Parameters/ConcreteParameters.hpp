@@ -171,7 +171,7 @@ private:
 class Point2DParameter : public Parameter {
 public:
 	Point2DParameter() = default;
-	Point2DParameter(entt::registry& R, int glUniformLocation, const std::string & name, const glm::vec2& val);
+	Point2DParameter(entt::registry& R, entt::entity parentLayer, int glUniformLocation, const std::string & name, const glm::vec2& val);
 	~Point2DParameter();
 	bool ImGui(entt::registry& R, Cmp::History & history, entt::entity layer) override;
 	void sendToShader() override;
@@ -180,14 +180,15 @@ public:
 private:
 	glm::vec2 getVal();
 private:
-	entt::entity m_pointEntity;
+	entt::entity m_entityPoint;
 	glm::vec2 m_valBeforeEdit;
+	entt::registry& m_R; // needed to delete the point entity upon destrutor call
 private:
 	//Serialization
 	friend class cereal::access;
 	template <class Archive>
 	void serialize(Archive & archive) {
-		archive(m_name, m_pointEntity);
+		archive(m_name, m_entityPoint);
 	}
 };
 

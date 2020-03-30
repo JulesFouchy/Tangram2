@@ -87,7 +87,6 @@ Instance::Instance()
 	  m_renderSystem(*this),
 	  m_inputSystem(*this),
 	  m_layersManager(*this),
-	  m_shapeFactory(*this),
 	  m_guiSystem(*this),
 	  m_projectLocation(MyFile::RootDir+"/MyTangramProjects"),
 	  m_bUserChoseProjectName(false)
@@ -145,7 +144,6 @@ Instance::Instance(const std::string& projectFolderpath)
 	  m_renderSystem(*this),
 	  m_inputSystem(*this),
 	  m_layersManager(*this),
-	  m_shapeFactory(*this),
 	  m_guiSystem(*this),
 	  m_bUserChoseProjectName(true)
 {
@@ -170,11 +168,6 @@ void Instance::createDrawingBoard() {
 	registry().assign<Cmp::Children>(drawingBoardId());
 	registry().assign<Cmp::Texture>(drawingBoardId(), 1000, 1000);
 	registry().assign<Cmp::History>(drawingBoardId());
-}
-
-void Instance::setParentOf(entt::entity child, entt::entity parent) {
-	registry().get<Cmp::Parent>(child).id = parent;
-	registry().get<Cmp::Children>(parent).list.push_back(child);
 }
 
 glm::mat3 Instance::getLocalTransform(entt::entity e) {

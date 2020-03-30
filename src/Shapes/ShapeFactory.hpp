@@ -2,16 +2,10 @@
 
 #include <entt/entt.hpp>
 #include <glm/glm.hpp>
-#include <vector>
-
-class Instance;
 
 class ShapeFactory {
 public:
-	ShapeFactory(Instance& instance);
-	~ShapeFactory() = default;
+	ShapeFactory() = delete;
 
-	entt::entity createPoint2D(glm::vec2 posInScreenSpace, entt::entity parent) const;
-private:
-	Instance& I;
+	static entt::entity CreatePoint2D(entt::registry& R, entt::entity parent, glm::vec2 posInDrawingBoardSpace);
 };

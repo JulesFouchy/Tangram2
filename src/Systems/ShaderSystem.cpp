@@ -15,7 +15,7 @@ entt::entity ShaderSystem::Create(entt::registry& R, const std::string& vertexFi
 	return e;
 }
 
-void ShaderSystem::UpdateParametersList(entt::registry& R, entt::entity shaderEntity, std::vector<std::shared_ptr<Parameter>>& parametersList) {
+void ShaderSystem::UpdateParametersList(entt::registry& R, entt::entity parentLayer, entt::entity shaderEntity, std::vector<std::shared_ptr<Parameter>>& parametersList) {
 	Cmp::Shader shaderCmp = GetShaderCmp(R, shaderEntity);
 	// Open fragment shader file
 	const std::string& filepath = shaderCmp.fragmentFilepath;
@@ -35,7 +35,7 @@ void ShaderSystem::UpdateParametersList(entt::registry& R, entt::entity shaderEn
 		if (line.find("}") != std::string::npos)
 			break;
 		// Create parameter
-		std::shared_ptr<Parameter> param = CreateParameterFromLine(R, line, shaderCmp.id, prevList);
+		std::shared_ptr<Parameter> param = CreateParameterFromLine(R, parentLayer, line, shaderCmp.id, prevList);
 		if (param) {
 			parametersList.push_back(std::move(param));
 		}
@@ -46,9 +46,10 @@ void ShaderSystem::TryReloadShader(entt::registry& R, entt::entity layer) {
 	Cmp::ShaderReference* shaderRef = R.try_get<Cmp::ShaderReference>(layer);
 	if (shaderRef) {
 		Cmp::Parameters& params = R.get<Cmp::Parameters>(layer);
+		params.history.clear();
 		Cmp::Shader& shader = R.get<Cmp::Shader>(shaderRef->entityID);
 		R.replace<Cmp::Shader>(shaderRef->entityID, shader.vertexFilepath, shader.fragmentFilepath);
-		UpdateParametersList(R, shaderRef->entityID, params.list);
+		UpdateParametersList(R, layer, shaderRef->entityID, params.list);
 		TNG::MustRecomputeTexture(R, layer);
 	}
 }
@@ -78,7 +79,7 @@ void ShaderSystem::GoToFirstLineOfStructParameters(std::ifstream& stream) {
 	}
 }
 
-std::shared_ptr<Parameter> ShaderSystem::CreateParameterFromLine(entt::registry& R, const std::string& line, int glShaderID, const std::vector<std::shared_ptr<Parameter>>& prevList) {
+std::shared_ptr<Parameter> ShaderSystem::CreateParameterFromLine(entt::registry& R, entt::entity parentLayer, const std::string& line, int glShaderID, const std::vector<std::shared_ptr<Parameter>>& prevList) {
 	size_t pos = 0;
 	// Read type and name
 	std::string type = MyString::GetNextWord(line, &pos);
@@ -97,8 +98,12 @@ std::shared_ptr<Parameter> ShaderSystem::CreateParameterFromLine(entt::registry&
 	//
 	if (!type.compare("float"))
 		return std::make_shared<FloatParameter>(glUniformLocation, name, val ? *(float*)val : ReadValue<float>(line, "default"), ReadValue<float>(line, "min"), ReadValue<float>(line, "max"));
-	else if (!type.compare("vec2"))
-		return std::make_shared<Float2Parameter>(glUniformLocation, name, val ? *(glm::vec2*)val : ReadValue<glm::vec2>(line, "default"), ReadValue<float>(line, "min"), ReadValue<float>(line, "max"));
+	else if (!type.compare("vec2")) {
+		if (MyString::FindCaseInsensitive(line, "NOT_A_POINT2D") != std::string::npos)
+			return std::make_shared<Float2Parameter>(glUniformLocation, name, val ? *(glm::vec2*)val : ReadValue<glm::vec2>(line, "default"), ReadValue<float>(line, "min"), ReadValue<float>(line, "max"));
+		else
+			return std::make_shared<Point2DParameter>(R, parentLayer, glUniformLocation, name, val ? *(glm::vec2*)val : ReadValue<glm::vec2>(line, "default"));
+	}
 	else if (!type.compare("vec3")) {
 		if (MyString::FindCaseInsensitive(line, "NOT_A_COLOR") != std::string::npos)
 			return std::make_shared<Float3Parameter>(glUniformLocation, name, val ? *(glm::vec3*)val : ReadValue<glm::vec3>(line, "default"), ReadValue<float>(line, "min"), ReadValue<float>(line, "max"));

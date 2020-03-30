@@ -15,6 +15,8 @@
 #include "Components/ShaderReference.hpp"
 #include "Components/History.hpp"
 
+#include "Core/CreateParentRelationship.hpp"
+
 #include "Systems/ShaderSystem.hpp"
 
 #include "Helper/DisplayInfos.hpp"
@@ -40,7 +42,7 @@ entt::entity LayersManager::createLayerEntity() {
 	R.assign<Cmp::TransformMatrix>(e);
 	// Parent / Children
 	R.assign<Cmp::Parent>(e, entt::null);
-	I.setParentOf(e, I.drawingBoardId());
+	TNG::CreateParentRelationship(R, e, I.drawingBoardId());
 	R.assign<Cmp::Children>(e);
 	// Texture
 	R.assign<Cmp::Texture>(e, I.renderSystem().previewWidth(), I.renderSystem().previewHeight());
@@ -67,7 +69,7 @@ entt::entity LayersManager::_createLayerBasedOnAShader(const std::string& vertex
 	entt::entity shader = ShaderSystem::Create(R, vertexFilepath, fragmentFilepath);
 	R.assign<Cmp::ShaderReference>(e, shader);
 	// Shader parameters
-	ShaderSystem::UpdateParametersList(R, shader, R.get<Cmp::Parameters>(e).list);
+	ShaderSystem::UpdateParametersList(R, e, shader, R.get<Cmp::Parameters>(e).list);
 
 	return e;
 }
@@ -94,7 +96,7 @@ entt::entity LayersManager::createPolygonLayer(const std::vector<glm::vec2>& ver
 	entt::entity e = _createLayerBasedOnAShader("res/shaders/defaultDrawOnTexture.vert", "res/shaders/polygon.frag");
 
 	R.assign<entt::tag<"Polygon"_hs>>(e);
-	R.assign<Cmp::Vertices>(e, vertices, e, I.shapeFactory());
+	R.assign<Cmp::Vertices>(e, R, e, vertices);
 
 
 

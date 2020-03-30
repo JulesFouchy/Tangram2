@@ -17,6 +17,7 @@ public:
 	~Action() = default;
 	inline void Do() { m_howToDo(); }
 	inline void Undo() { m_howToUndo(); }
+
 private:
 	std::function<void(void)> m_howToDo;
 	std::function<void(void)> m_howToUndo;
@@ -79,6 +80,14 @@ public:
 			}
 			m_indexOfCumulfNbOfActions++;
 		}
+	}
+
+	void clear() {
+		m_actions.clear();
+		m_cumulNbOfActionsToGetToThisUndoGroup.clear();
+		m_tmpActionBuffer.clear();
+		m_index = -1;
+		m_indexOfCumulfNbOfActions = -1;
 	}
 
 // Internal

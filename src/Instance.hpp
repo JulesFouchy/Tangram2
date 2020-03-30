@@ -18,8 +18,6 @@ public:
 	void Construct();
 	~Instance();
 
-	void setParentOf(entt::entity child, entt::entity parent);
-
 	glm::mat3 getLocalTransform(entt::entity e);
 	glm::mat3 getMatrixPlusAspectRatio(entt::entity e);
 	glm::mat3 getMatrix(entt::entity e);
@@ -35,7 +33,6 @@ public:
 	inline RenderSystem& renderSystem() { return m_renderSystem; }
 	inline InputSystem& inputSystem() { return m_inputSystem; }
 	inline LayersManager& layersManager() { return m_layersManager; }
-	inline ShapeFactory& shapeFactory() { return m_shapeFactory; }
 	inline GUISystem& guiSystem() { return m_guiSystem; }
 	inline entt::entity& drawingBoardId() { return m_drawingBoardId; }
 
@@ -58,7 +55,6 @@ private:
 	RenderSystem m_renderSystem;
 	InputSystem m_inputSystem;
 	LayersManager m_layersManager;
-	ShapeFactory m_shapeFactory;
 	GUISystem m_guiSystem;
 	entt::entity m_drawingBoardId;
 

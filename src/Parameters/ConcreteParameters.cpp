@@ -243,6 +243,34 @@ void* Color4Parameter::getValuePtr() {
 size_t Color4Parameter::getHash() {
 	return GetHash(m_name, "vec4");
 }
+// Point2D
+#include "Shapes/ShapeFactory.hpp"
+#include "Core/GetPosition.hpp"
+Point2DParameter::Point2DParameter(entt::registry& R, entt::entity parentLayer, int glUniformLocation, const std::string& name, const glm::vec2& val)
+	: Parameter(glUniformLocation, name), m_valBeforeEdit(val), m_R(R)
+{
+	m_entityPoint = ShapeFactory::CreatePoint2D(R, parentLayer, val);
+	R.assign<entt::tag<"SaveMeInTheHistoryOfMyParentsParameters"_hs>>(m_entityPoint);
+}
+Point2DParameter::~Point2DParameter() {
+	m_R.destroy(m_entityPoint);
+}
+glm::vec2 Point2DParameter::getVal() {
+	return TNG::GetPosition(m_R, m_entityPoint);
+}
+bool Point2DParameter::ImGui(entt::registry& R, Cmp::History& history, entt::entity layer) {
+	return true;
+}
+void Point2DParameter::sendToShader() {
+	glm::vec2 val = getVal();
+	glUniform2f(m_glUniformLocation, val.x, val.y);
+}
+void* Point2DParameter::getValuePtr() {
+	return nullptr;
+}
+size_t Point2DParameter::getHash() {
+	return GetHash(m_name, "point2D");
+}
 // Bool
 BoolParameter::BoolParameter(int glUniformLocation, const std::string& name, bool val)
 	: Parameter(glUniformLocation, name), m_val(val), m_valBeforeEdit(val)

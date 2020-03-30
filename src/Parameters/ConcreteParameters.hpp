@@ -168,6 +168,30 @@ private:
 	}
 };
 
+class Point2DParameter : public Parameter {
+public:
+	Point2DParameter() = default;
+	Point2DParameter(entt::registry& R, entt::entity parentLayer, int glUniformLocation, const std::string & name, const glm::vec2& val);
+	~Point2DParameter();
+	bool ImGui(entt::registry& R, Cmp::History & history, entt::entity layer) override;
+	void sendToShader() override;
+	void* getValuePtr() override;
+	size_t getHash() override;
+private:
+	glm::vec2 getVal();
+private:
+	entt::entity m_entityPoint;
+	glm::vec2 m_valBeforeEdit;
+	entt::registry& m_R; // needed to delete the point entity upon destrutor call
+private:
+	//Serialization
+	friend class cereal::access;
+	template <class Archive>
+	void serialize(Archive & archive) {
+		archive(m_name, m_entityPoint);
+	}
+};
+
 class BoolParameter : public Parameter {
 public:
 	BoolParameter() = default;

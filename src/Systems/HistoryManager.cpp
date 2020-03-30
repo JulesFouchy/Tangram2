@@ -5,27 +5,27 @@
 
 #include "Components/TransformMatrix.hpp"
 
-Cmp::History* HistoryManager::GetHistory(entt::registry& R, entt::entity e) {
+Cmp::History* HistoryManager::GetActiveHistory(entt::registry& R, entt::entity e) {
 	if (R.has<entt::tag<"ActiveHistoryIsParameter"_hs>>(e))
-		return &R.get<Cmp::Parameters>(e).history;
-	Cmp::History* h = R.try_get<Cmp::History>(e);
-	if (h)
-		return h;
-	// else check if the parent has an history
-	Cmp::Parent* parent = R.try_get<Cmp::Parent>(e);
-	if (parent)
-		return GetHistory(R, parent->id);
-	return nullptr;
+		return &GetParametersHistory(R, e);
+	return GetTransformHistory(R, e);
+}
+
+Cmp::History* HistoryManager::GetTransformHistory(entt::registry& R, entt::entity e) {
+	return R.try_get<Cmp::History>(e);
+}
+Cmp::History& HistoryManager::GetParametersHistory(entt::registry& R, entt::entity layer) {
+	return R.get<Cmp::Parameters>(layer).history;
 }
 
 void HistoryManager::MoveBackward(entt::registry& R, entt::entity e) {
-	Cmp::History* h = GetHistory(R, e);
+	Cmp::History* h = GetActiveHistory(R, e);
 	if (h)
 		h->moveBackward();
 }
 
 void HistoryManager::MoveForward(entt::registry& R, entt::entity e) {
-	Cmp::History* h = GetHistory(R, e);
+	Cmp::History* h = GetActiveHistory(R, e);
 	if (h)
 		h->moveForward();
 }
@@ -35,7 +35,7 @@ void HistoryManager::RecordTransform(entt::registry& R, entt::entity e, glm::mat
 }
 
 void HistoryManager::RecordTransform(entt::registry& R, entt::entity e, glm::mat3 prev, glm::mat3 curr) {
-	Cmp::History* h = GetHistory(R, e);
+	Cmp::History* h = GetTransformHistory(R, e);
 	if (h) {
 		h->beginUndoGroup();
 		h->addAction(Action(

@@ -15,5 +15,7 @@ public:
 	static void RecordTransform(entt::registry& R, entt::entity e, glm::mat3 prev, glm::mat3 curr);
 
 private:
-	static Cmp::History* GetHistory(entt::registry& R, entt::entity e);
+	static Cmp::History* GetActiveHistory(entt::registry& R, entt::entity e);
+	static Cmp::History* GetTransformHistory(entt::registry& R, entt::entity e);
+	static Cmp::History& GetParametersHistory(entt::registry& R, entt::entity layer);
 };

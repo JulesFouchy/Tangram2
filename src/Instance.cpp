@@ -48,8 +48,10 @@ void Instance::onTransformMatrixChange(entt::entity e, entt::registry& R) {
 	if (e != drawingBoardId()) {
 		onMustRecomputeTexture(e);
 		Cmp::Children& children = R.get<Cmp::Children>(e);
-		for (entt::entity child : children.list)
-			onTransformMatrixChange(child, R);
+		for (entt::entity child : children.list) {
+			if (R.valid(child))
+				onTransformMatrixChange(child, R);
+		}
 	}
 }
 

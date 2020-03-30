@@ -250,6 +250,7 @@ Point2DParameter::Point2DParameter(entt::registry& R, entt::entity parentLayer, 
 	: Parameter(glUniformLocation, name), m_valBeforeEdit(val), m_R(R)
 {
 	m_entityPoint = ShapeFactory::CreatePoint2D(R, parentLayer, val);
+	R.assign<entt::tag<"SaveMeInTheHistoryOfMyParentsParameters"_hs>>(m_entityPoint);
 }
 Point2DParameter::~Point2DParameter() {
 	m_R.destroy(m_entityPoint);

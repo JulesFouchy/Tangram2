@@ -46,6 +46,7 @@ void ShaderSystem::TryReloadShader(entt::registry& R, entt::entity layer) {
 	Cmp::ShaderReference* shaderRef = R.try_get<Cmp::ShaderReference>(layer);
 	if (shaderRef) {
 		Cmp::Parameters& params = R.get<Cmp::Parameters>(layer);
+		params.history.clear();
 		Cmp::Shader& shader = R.get<Cmp::Shader>(shaderRef->entityID);
 		R.replace<Cmp::Shader>(shaderRef->entityID, shader.vertexFilepath, shader.fragmentFilepath);
 		UpdateParametersList(R, layer, shaderRef->entityID, params.list);

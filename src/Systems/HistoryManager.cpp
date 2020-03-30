@@ -36,6 +36,8 @@ void HistoryManager::RecordTransform(entt::registry& R, entt::entity e, glm::mat
 
 void HistoryManager::RecordTransform(entt::registry& R, entt::entity e, glm::mat3 prev, glm::mat3 curr) {
 	Cmp::History* h = GetTransformHistory(R, e);
+	if (!h && R.has<entt::tag<"SaveMeInTheHistoryOfMyParentsParameters"_hs>>(e))
+		h = &GetParametersHistory(R, R.get<Cmp::Parent>(e).id);
 	if (h) {
 		h->beginUndoGroup();
 		h->addAction(Action(

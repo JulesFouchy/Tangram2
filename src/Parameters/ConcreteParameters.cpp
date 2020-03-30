@@ -243,6 +243,50 @@ void* Color4Parameter::getValuePtr() {
 size_t Color4Parameter::getHash() {
 	return GetHash(m_name, "vec4");
 }
+// Point2D
+Point2DParameter::Point2DParameter(entt::registry& R, int glUniformLocation, const std::string& name, const glm::vec2& val)
+	: Parameter(glUniformLocation, name), m_valBeforeEdit(val)
+{
+	m_pointEntity = ShapeFactory::CreatePoint2D(R, val);
+}
+Point2DParameter::~Point2DParameter() {
+
+}
+glm::vec2 Point2DParameter::getVal() {
+
+}
+bool Point2DParameter::ImGui(entt::registry& R, Cmp::History& history, entt::entity layer) {
+	bool b = ImGuiItem();
+	if (ImGui::IsItemDeactivatedAfterEdit()) {
+		history.beginUndoGroup();
+		auto val = m_val;
+		auto prevVal = m_valBeforeEdit;
+		history.addAction(Action(
+			[&R, layer, this, val]() {
+				this->m_val = val;
+				this->m_valBeforeEdit = val;
+				TNG::MustRecomputeTexture(R, layer);
+			},
+			[&R, layer, this, prevVal]() {
+				this->m_val = prevVal;
+				this->m_valBeforeEdit = prevVal;
+				TNG::MustRecomputeTexture(R, layer);
+			}
+			));
+		history.endUndoGroup();
+		m_valBeforeEdit = m_val; // ready for next edit
+	}
+	return b;
+}
+void Point2DParameter::sendToShader() {
+	glUniform4f(m_glUniformLocation, m_val.x, m_val.y, m_val.z, m_val.w);
+}
+void* Point2DParameter::getValuePtr() {
+	return &m_val;
+}
+size_t Point2DParameter::getHash() {
+	return GetHash(m_name, "vec4");
+}
 // Bool
 BoolParameter::BoolParameter(int glUniformLocation, const std::string& name, bool val)
 	: Parameter(glUniformLocation, name), m_val(val), m_valBeforeEdit(val)

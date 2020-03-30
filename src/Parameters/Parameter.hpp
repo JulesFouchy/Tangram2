@@ -11,6 +11,7 @@ public:
 	Parameter(int glUniformLocation, const std::string& name)
 		: m_glUniformLocation(glUniformLocation), m_name(name)
 	{}
+	virtual ~Parameter() = default;
 	virtual bool ImGui(entt::registry& R, Cmp::History& history, entt::entity layer) = 0;
 	virtual void sendToShader() = 0;
 	virtual void* getValuePtr() = 0;

@@ -1,13 +1,19 @@
 #version 430 core
 
-uniform vec2 u_vertices[12];
-const int N = 5;
-
 struct Parameters {
-    float SmoothMin; // default 0.036 min 0 max 0.1
+    float SmoothMin; // default 80 min 5 max 150
+    bool useEvenOdd;
+    vec2 pt1;
+    vec2 pt2;
+    vec2 pt3;
+    vec2 pt4;
+    vec2 pt5;
 };
 
 uniform Parameters u;
+
+//uniform vec2 u_vertices[12];
+const int N = 5;
 
 in vec2 vTexCoords;
 
@@ -17,6 +23,7 @@ float intersectionOfHorizRayWith(vec2 nuv, vec2 p1, vec2 p2){
 
 float evenOdd(vec2 nuv){
     int intersectionsCount = 0;
+    vec2 u_vertices[5] = {u.pt1, u.pt2, u.pt3, u.pt4, u.pt5};
     for (int i = 0; i < N; ++i){
         vec2 p1 = u_vertices[i];
         vec2 p2 = u_vertices[(i+1)%N];
@@ -29,6 +36,7 @@ float evenOdd(vec2 nuv){
 }
 
 float nonZeroWinding(vec2 nuv){
+    vec2 u_vertices[5] = {u.pt1, u.pt2, u.pt3, u.pt4, u.pt5};
     int windingCount = 0;
     for (int i = 0; i < N; ++i){
         vec2 p1 = u_vertices[i];
@@ -55,6 +63,7 @@ float smin( float a, float b, float k )
 }
 
 float strokeDistanceField(vec2 nuv){
+    vec2 u_vertices[5] = {u.pt1, u.pt2, u.pt3, u.pt4, u.pt5};
     float dist = 10000000000000.0;
     for (int i = 0; i < N; ++i){
         vec2 p1 = u_vertices[i];
@@ -82,7 +91,7 @@ void main() {
     //gl_FragColor = vec4(vec3(smoothstep(0.001, -0.001, SDF(nuv))), 1.0);
     
     float alphaStroke = strokeThroughDistanceField(nuv);
-    float alphaFill = evenOdd(nuv);
+    float alphaFill = u.useEvenOdd ? evenOdd(nuv) : nonZeroWinding(nuv);
     vec3 colorStroke = vec3(0.8, 0.2, 0.4);
     vec3 colorFill = vec3(0.3, 0.6, 0.9);
     vec3 color = alphaStroke * colorStroke + (1.-alphaStroke) * colorFill;

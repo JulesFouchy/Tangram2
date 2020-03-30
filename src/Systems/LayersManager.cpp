@@ -93,10 +93,10 @@ entt::entity LayersManager::createFragmentLayer(const std::string& fragmentFilep
 
 entt::entity LayersManager::createPolygonLayer(const std::vector<glm::vec2>& vertices) {
 	entt::registry& R = I.registry();
-	entt::entity e = _createLayerBasedOnAShader("res/shaders/defaultDrawOnTexture.vert", "res/shaders/polygon.frag");
+	entt::entity e = createFragmentLayer("res/shaders/polygon.frag");
 
 	R.assign<entt::tag<"Polygon"_hs>>(e);
-	R.assign<Cmp::Vertices>(e, R, e, vertices);
+	//R.assign<Cmp::Vertices>(e, R, e, vertices);
 
 
 

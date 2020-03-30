@@ -5,9 +5,9 @@ struct Parameters {
     float red; // default 0.5 min 0 max 1
 };
 
-in vec2 vTexCoords;
-
 uniform Parameters u;
+
+in vec2 vTexCoords;
 
 void main(){
     float d = length(vTexCoords - u.center);

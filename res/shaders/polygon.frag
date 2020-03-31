@@ -3,12 +3,13 @@
 struct Parameters {
     float SmoothMin; // default 80 min 5 max 150
     bool useEvenOdd;
-    vec3 col; // default 0.3, 0.6, 0.9
-    vec2 pt1;
-    vec2 pt2;
-    vec2 pt3;
-    vec2 pt4;
-    vec2 pt5;
+    vec3 fill; // default 0.3, 0.6, 0.9
+    vec3 stroke; // default 0.8, 0.2, 0.4
+    vec2 pt1; // default -0.3 -0.5
+    vec2 pt2; // default  0    0
+    vec2 pt3; // default  0.8 -0.5
+    vec2 pt4; // default -0.8 -0.5
+    vec2 pt5; // default  0.8  0.5
 };
 
 uniform Parameters u;
@@ -93,8 +94,8 @@ void main() {
     
     float alphaStroke = strokeThroughDistanceField(nuv);
     float alphaFill = u.useEvenOdd ? evenOdd(nuv) : nonZeroWinding(nuv);
-    vec3 colorStroke = vec3(0.8, 0.2, 0.4);
-    vec3 colorFill = u.col;//vec3(0.3, 0.6, 0.9);
+    vec3 colorStroke = u.stroke;
+    vec3 colorFill = u.fill;
     vec3 color = alphaStroke * colorStroke + (1.-alphaStroke) * colorFill;
     if( alphaStroke >= alphaFill)
         color = colorStroke;

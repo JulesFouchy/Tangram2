@@ -190,7 +190,7 @@ void Color3Parameter::setVal(const glm::vec3& val) {
 	m_valBeforeEdit = val;
 }
 bool Color3Parameter::ImGuiItem() {
-	return ImGui::ColorPicker3(m_name.c_str(), (float*)&m_val, m_flags);
+	return ImGui::ColorEdit3(m_name.c_str(), (float*)&m_val, m_flags);
 }
 bool Color3Parameter::ImGui(entt::registry& R, Cmp::History& history, entt::entity layer) {
 	bool b = ImGuiItem();
@@ -233,7 +233,7 @@ void Color4Parameter::setVal(const glm::vec4& val) {
 	m_valBeforeEdit = val;
 }
 bool Color4Parameter::ImGuiItem() {
-	return ImGui::ColorPicker4(m_name.c_str(), (float*)&m_val, m_flags);
+	return ImGui::ColorEdit4(m_name.c_str(), (float*)&m_val, m_flags);
 }
 bool Color4Parameter::ImGui(entt::registry& R, Cmp::History& history, entt::entity layer) {
 	bool b = ImGuiItem();

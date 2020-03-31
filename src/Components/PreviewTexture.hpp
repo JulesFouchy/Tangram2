@@ -12,7 +12,7 @@ namespace Cmp {
 struct Texture {
 	Texture() = default; // required by registry.snapshot()
 	void Delete() { // called by registry.on_destroy<Cmp::Texture>
-		spdlog::error("Delete Texture {}", id);
+		//spdlog::error("Delete Texture {}", id);
 		glDeleteTextures(1, &id);
 	}
 
@@ -46,7 +46,7 @@ private:
 		// Set size
 		GLCall(glTexImage2D(GL_TEXTURE_2D, 0, m_GLpixelInternalFormat, width, height, 0, m_GLpixelFormat, m_GLpixelType, nullptr));
 		GLCall(glBindTexture(GL_TEXTURE_2D, 0));
-		spdlog::warn("Create Texture {}", id);
+		//spdlog::warn("Create Texture {}", id);
 	}
 
 private:

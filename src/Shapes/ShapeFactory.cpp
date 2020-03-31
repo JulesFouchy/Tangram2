@@ -16,7 +16,7 @@ entt::entity ShapeFactory::CreatePoint2D(entt::registry& R, entt::entity parent,
 	transformMatrix = glm::scale(transformMatrix, glm::vec2(0.05f));
 	R.assign<Cmp::TransformMatrix>(e, Cmp::TransformMatrix(transformMatrix));
 	R.assign<Cmp::Parent>(e, entt::null);
-	//R.assign<Cmp::VisualDependencies>(e).list.push_back(parent);
+	R.assign<Cmp::VisualDependencies>(e).list.push_back(parent);
 	TNG::CreateParentRelationship(R, e, parent);
 	R.assign<Cmp::Children>(e);
 	return e;

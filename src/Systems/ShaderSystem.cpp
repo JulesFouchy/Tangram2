@@ -88,46 +88,72 @@ std::shared_ptr<Parameter> ShaderSystem::CreateParameterFromLine(entt::registry&
 	int glUniformLocation = GetUniformLocation(glShaderID, name);
 	// Read values according to type
 	std::shared_ptr<Parameter> paramPtr;
-	if (!type.compare("float"))
+	std::string paramType;
+	if (!type.compare("float")) {
 		paramPtr = std::make_shared<FloatParameter>(glUniformLocation, name, ReadValue<float>(line, "default"), ReadValue<float>(line, "min"), ReadValue<float>(line, "max"));
+		paramType = type;
+	}
 	else if (!type.compare("vec2")) {
-		if (MyString::FindCaseInsensitive(line, "NOT_A_POINT2D") != std::string::npos)
+		if (MyString::FindCaseInsensitive(line, "NOT_A_POINT2D") != std::string::npos) {
 			paramPtr = std::make_shared<Float2Parameter>(glUniformLocation, name, ReadValue<glm::vec2>(line, "default"), ReadValue<float>(line, "min"), ReadValue<float>(line, "max"));
-		else
+			paramType = "vec2";
+		}
+		else {
 			paramPtr = std::make_shared<Point2DParameter>(R, parentLayer, glUniformLocation, name, ReadValue<glm::vec2>(line, "default"));
+			paramType = "point2D";
+		}
 	}
 	else if (!type.compare("vec3")) {
-		if (MyString::FindCaseInsensitive(line, "NOT_A_COLOR") != std::string::npos)
+		if (MyString::FindCaseInsensitive(line, "NOT_A_COLOR") != std::string::npos) {
 			paramPtr = std::make_shared<Float3Parameter>(glUniformLocation, name, ReadValue<glm::vec3>(line, "default"), ReadValue<float>(line, "min"), ReadValue<float>(line, "max"));
-		else
+			paramType = "vec3";
+		}
+		else {
 			paramPtr = std::make_shared<Color3Parameter>(glUniformLocation, name, ReadValue<glm::vec3>(line, "default"));
+			paramType = "color3";
+		}
 	}
 	else if (!type.compare("vec4")) {
-		if (MyString::FindCaseInsensitive(line, "NOT_A_COLOR") != std::string::npos)
+		if (MyString::FindCaseInsensitive(line, "NOT_A_COLOR") != std::string::npos) {
 			paramPtr = std::make_shared<Float4Parameter>(glUniformLocation, name, ReadValue<glm::vec4>(line, "default"), ReadValue<float>(line, "min"), ReadValue<float>(line, "max"));
-		else
+			paramType = "vec4";
+		}
+		else {
 			paramPtr = std::make_shared<Color4Parameter>(glUniformLocation, name, ReadValue<glm::vec4>(line, "default"));
+			paramType = "color4";
+		}
 	}
-	else if (!type.compare("bool"))
-		paramPtr = std::make_shared<BoolParameter>(glUniformLocation, name, MyString::FindCaseInsensitive(line, "true") != std::string::npos);
-	else if (!type.compare("int"))
+	else if (!type.compare("bool")) {
+		paramPtr = std::make_shared<BoolParameter>(glUniformLocation, name, MyString::FindCaseInsensitive(line, "true") != std::string::npos); 
+		paramType = type;
+	}
+	else if (!type.compare("int")) {
 		paramPtr = std::make_shared<IntParameter>(glUniformLocation, name, ReadValue<int>(line, "default"), ReadValue<int>(line, "min"), ReadValue<int>(line, "max"));
-	else if (!type.compare("ivec2"))
+		paramType = type;
+	}
+	else if (!type.compare("ivec2")) {
 		paramPtr = std::make_shared<Int2Parameter>(glUniformLocation, name, ReadValue<glm::ivec2>(line, "default"), ReadValue<int>(line, "min"), ReadValue<int>(line, "max"));
-	else if (!type.compare("ivec3"))
+		paramType = type;
+	}	
+	else if (!type.compare("ivec3")) {
 		paramPtr = std::make_shared<Int3Parameter>(glUniformLocation, name, ReadValue<glm::ivec3>(line, "default"), ReadValue<int>(line, "min"), ReadValue<int>(line, "max"));
-	else if (!type.compare("ivec4"))
+		paramType = type;
+	}
+	else if (!type.compare("ivec4")) {
 		paramPtr = std::make_shared<Int4Parameter>(glUniformLocation, name, ReadValue<glm::ivec4>(line, "default"), ReadValue<int>(line, "min"), ReadValue<int>(line, "max"));
+		paramType = type;
+	}
 	else {
 		spdlog::error("[ShaderSystem::CreateParameterFromLine] Unknown type : \"{}\"", type);
 		paramPtr = nullptr;
 	}
 	// Check if the parameter already existed and grab the value in this case
-	size_t hashOfParam = Parameter::GetHash(name, type);
+	size_t hashOfParam = Parameter::GetHash(name, paramType);
 	auto it = std::find_if(prevList.begin(), prevList.end(), [hashOfParam](const std::shared_ptr<Parameter>& p) {
 		return p->getHash() == hashOfParam;
 		});
 	if (it != prevList.end()) {
+		spdlog::info("found {}", name);
 		(**it).copyValueTo(paramPtr.get());
 	}
 	return std::move(paramPtr);

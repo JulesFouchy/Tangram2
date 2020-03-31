@@ -90,7 +90,7 @@ void Float2Parameter::sendToShader() {
 	glUniform2f(m_glUniformLocation, m_val.x, m_val.y);
 }
 void Float2Parameter::copyValueTo(Parameter* paramPtr) {
-	((Float2Parameter*)paramPtr)->m_val = m_val;
+	((Float2Parameter*)paramPtr)->setVal(m_val);
 }
 size_t Float2Parameter::getHash() {
 	return GetHash(m_name, "vec2");
@@ -133,7 +133,7 @@ void Float3Parameter::sendToShader() {
 	glUniform3f(m_glUniformLocation, m_val.x, m_val.y, m_val.z);
 }
 void Float3Parameter::copyValueTo(Parameter* paramPtr) {
-	((Float3Parameter*)paramPtr)->m_val = m_val;
+	((Float3Parameter*)paramPtr)->setVal(m_val);
 }
 size_t Float3Parameter::getHash() {
 	return GetHash(m_name, "vec3");
@@ -176,7 +176,7 @@ void Float4Parameter::sendToShader() {
 	glUniform4f(m_glUniformLocation, m_val.x, m_val.y, m_val.z, m_val.w);
 }
 void Float4Parameter::copyValueTo(Parameter* paramPtr) {
-	((Float4Parameter*)paramPtr)->m_val = m_val;
+	((Float4Parameter*)paramPtr)->setVal(m_val);
 }
 size_t Float4Parameter::getHash() {
 	return GetHash(m_name, "vec4");
@@ -219,10 +219,10 @@ void Color3Parameter::sendToShader() {
 	glUniform3f(m_glUniformLocation, m_val.x, m_val.y, m_val.z);
 }
 void Color3Parameter::copyValueTo(Parameter* paramPtr) {
-	((Color3Parameter*)paramPtr)->m_val = m_val;
+	((Color3Parameter*)paramPtr)->setVal(m_val);
 }
 size_t Color3Parameter::getHash() {
-	return GetHash(m_name, "vec3");
+	return GetHash(m_name, "color3");
 }
 // Color4
 Color4Parameter::Color4Parameter(int glUniformLocation, const std::string& name, const glm::vec4& val, ImGuiColorEditFlags flags)
@@ -265,7 +265,7 @@ void Color4Parameter::copyValueTo(Parameter* paramPtr) {
 	((Color4Parameter*)paramPtr)->setVal(m_val);
 }
 size_t Color4Parameter::getHash() {
-	return GetHash(m_name, "vec4");
+	return GetHash(m_name, "color4");
 }
 // Point2D
 #include "Shapes/ShapeFactory.hpp"

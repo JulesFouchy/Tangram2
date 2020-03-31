@@ -12,4 +12,7 @@ namespace MyString {
 	std::string GetFolderHierarchy(const std::string& myString);
 	std::string RemoveFileExtension(const std::string& myString);
 	size_t FindCaseInsensitive(std::string myString, std::string toSearch, size_t pos = 0);
+
+	template <typename T>
+	T ReadNumbersAt(const std::string& str, size_t pos = 0);
 }

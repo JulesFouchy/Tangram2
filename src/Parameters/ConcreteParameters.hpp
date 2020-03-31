@@ -19,9 +19,10 @@ public:
 	~FloatParameter() = default;
 	bool ImGui(entt::registry& R, Cmp::History& history, entt::entity layer) override;
 	void sendToShader() override;
-	void* getValuePtr() override;
+	void copyValueTo(Parameter* paramPtr) override;
 	size_t getHash() override;
 private:
+	void setVal(float val);
 	bool ImGuiItem();
 private:
 	float m_val;
@@ -46,9 +47,10 @@ public:
 	~Float2Parameter() = default;
 	bool ImGui(entt::registry& R, Cmp::History& history, entt::entity layer) override;
 	void sendToShader() override;
-	void* getValuePtr() override;
+	void copyValueTo(Parameter* paramPtr) override;
 	size_t getHash() override;
 private:
+	void setVal(const glm::vec2& val);
 	bool ImGuiItem();
 private:
 	glm::vec2 m_val;
@@ -73,9 +75,10 @@ public:
 	~Float3Parameter() = default;
 	bool ImGui(entt::registry& R, Cmp::History& history, entt::entity layer) override;
 	void sendToShader() override;
-	void* getValuePtr() override;
+	void copyValueTo(Parameter* paramPtr) override;
 	size_t getHash() override;
 private:
+	void setVal(const glm::vec3& val);
 	bool ImGuiItem();
 private:
 	glm::vec3 m_val;
@@ -100,9 +103,10 @@ public:
 	~Float4Parameter() = default;
 	bool ImGui(entt::registry& R, Cmp::History& history, entt::entity layer) override;
 	void sendToShader() override;
-	void* getValuePtr() override;
+	void copyValueTo(Parameter* paramPtr) override;
 	size_t getHash() override;
 private:
+	void setVal(const glm::vec4& val);
 	bool ImGuiItem();
 private:
 	glm::vec4 m_val;
@@ -127,9 +131,10 @@ public:
 	~Color3Parameter() = default;
 	bool ImGui(entt::registry& R, Cmp::History& history, entt::entity layer) override;
 	void sendToShader() override;
-	void* getValuePtr() override;
+	void copyValueTo(Parameter* paramPtr) override;
 	size_t getHash() override;
 private:
+	void setVal(const glm::vec3& val);
 	bool ImGuiItem();
 private:
 	glm::vec3 m_val;
@@ -151,9 +156,10 @@ public:
 	~Color4Parameter() = default;
 	bool ImGui(entt::registry& R, Cmp::History& history, entt::entity layer) override;
 	void sendToShader() override;
-	void* getValuePtr() override;
+	void copyValueTo(Parameter* paramPtr) override;
 	size_t getHash() override;
 private:
+	void setVal(const glm::vec4& val);
 	bool ImGuiItem();
 private:
 	glm::vec4 m_val;
@@ -175,14 +181,15 @@ public:
 	~Point2DParameter();
 	bool ImGui(entt::registry& R, Cmp::History & history, entt::entity layer) override;
 	void sendToShader() override;
-	void* getValuePtr() override;
+	void copyValueTo(Parameter* paramPtr) override;
 	size_t getHash() override;
 private:
+	void setVal(const glm::vec2& val);
 	glm::vec2 getVal();
 private:
 	entt::entity m_entityPoint;
 	glm::vec2 m_valBeforeEdit;
-	entt::registry& m_R; // needed to delete the point entity upon destrutor call
+	entt::registry* m_R; // needed to delete the point entity upon destrutor call
 private:
 	//Serialization
 	friend class cereal::access;
@@ -199,9 +206,10 @@ public:
 	~BoolParameter() = default;
 	bool ImGui(entt::registry& R, Cmp::History& history, entt::entity layer) override;
 	void sendToShader() override;
-	void* getValuePtr() override;
+	void copyValueTo(Parameter* paramPtr) override;
 	size_t getHash() override;
 private:
+	void setVal(bool val);
 	bool ImGuiItem();
 private:
 	bool m_val;
@@ -222,9 +230,10 @@ public:
 	~IntParameter() = default;
 	bool ImGui(entt::registry& R, Cmp::History& history, entt::entity layer) override;
 	void sendToShader() override;
-	void* getValuePtr() override;
+	void copyValueTo(Parameter* paramPtr) override;
 	size_t getHash() override;
 private:
+	void setVal(int val);
 	bool ImGuiItem();
 private:
 	int m_val;
@@ -247,9 +256,10 @@ public:
 	~Int2Parameter() = default;
 	bool ImGui(entt::registry& R, Cmp::History& history, entt::entity layer) override;
 	void sendToShader() override;
-	void* getValuePtr() override;
+	void copyValueTo(Parameter* paramPtr) override;
 	size_t getHash() override;
 private:
+	void setVal(const glm::ivec2& val);
 	bool ImGuiItem();
 private:
 	glm::ivec2 m_val;
@@ -272,9 +282,10 @@ public:
 	~Int3Parameter() = default;
 	bool ImGui(entt::registry& R, Cmp::History& history, entt::entity layer) override;
 	void sendToShader() override;
-	void* getValuePtr() override;
+	void copyValueTo(Parameter* paramPtr) override;
 	size_t getHash() override;
 private:
+	void setVal(const glm::ivec3& val);
 	bool ImGuiItem();
 private:
 	glm::ivec3 m_val;
@@ -297,9 +308,10 @@ public:
 	~Int4Parameter() = default;
 	bool ImGui(entt::registry& R, Cmp::History& history, entt::entity layer) override;
 	void sendToShader() override;
-	void* getValuePtr() override;
+	void copyValueTo(Parameter* paramPtr) override;
 	size_t getHash() override;
 private:
+	void setVal(const glm::ivec4& val);
 	bool ImGuiItem();
 private:
 	glm::ivec4 m_val;
@@ -332,6 +344,9 @@ CEREAL_REGISTER_POLYMORPHIC_RELATION(Parameter, Color3Parameter)
 
 CEREAL_REGISTER_TYPE(Color4Parameter)
 CEREAL_REGISTER_POLYMORPHIC_RELATION(Parameter, Color4Parameter)
+
+CEREAL_REGISTER_TYPE(Point2DParameter)
+CEREAL_REGISTER_POLYMORPHIC_RELATION(Parameter, Point2DParameter)
 
 CEREAL_REGISTER_TYPE(BoolParameter)
 CEREAL_REGISTER_POLYMORPHIC_RELATION(Parameter, BoolParameter)

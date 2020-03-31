@@ -53,7 +53,10 @@ void InputState_Rest::onLeftClicDown() {
 	I.layersManager().setSelectedLayer(clickedLayer);
 	// Translate 
 	if (I.registry().valid(clickedEntity)) {
-		TNG::SetActiveHistoryToTransform(I.registry(), clickedLayer);
+		if (clickedEntity == clickedLayer)
+			TNG::SetActiveHistoryToTransform(I.registry(), clickedLayer);
+		else // because Point2D handles are stored in ParametersHistory
+			TNG::SetActiveHistoryToParameters(I.registry(), clickedLayer);
 		I.inputSystem().m_currentState = std::make_unique<InputState_Translate>(I, clickedEntity, MouseButton::Left);
 	}
 }

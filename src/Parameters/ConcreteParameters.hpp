@@ -32,11 +32,17 @@ private:
 	std::string m_format;
 	float m_power;
 private:
-	//Serialization
+	// Serialization
 	friend class cereal::access;
-	template <class Archive>
-	void serialize(Archive& archive) {
+	template<class Archive>
+	void save(Archive& archive) const {
 		archive(m_name, m_val, m_minVal, m_maxVal, m_format, m_power);
+	}
+
+	template<class Archive>
+	void load(Archive& archive) {
+		archive(m_name, m_val, m_minVal, m_maxVal, m_format, m_power);
+		m_valBeforeEdit = m_val;
 	}
 };
 
@@ -60,11 +66,17 @@ private:
 	std::string m_format;
 	float m_power;
 private:
-	//Serialization
+	// Serialization
 	friend class cereal::access;
-	template <class Archive>
-	void serialize(Archive& archive) {
+	template<class Archive>
+	void save(Archive& archive) const {
 		archive(m_name, m_val.x, m_val.y, m_minVal, m_maxVal, m_format, m_power);
+	}
+
+	template<class Archive>
+	void load(Archive& archive) {
+		archive(m_name, m_val.x, m_val.y, m_minVal, m_maxVal, m_format, m_power);
+		m_valBeforeEdit = m_val;
 	}
 };
 
@@ -88,11 +100,17 @@ private:
 	std::string m_format;
 	float m_power;
 private:
-	//Serialization
+	// Serialization
 	friend class cereal::access;
-	template <class Archive>
-	void serialize(Archive& archive) {
+	template<class Archive>
+	void save(Archive& archive) const {
 		archive(m_name, m_val.x, m_val.y, m_val.z, m_minVal, m_maxVal, m_format, m_power);
+	}
+
+	template<class Archive>
+	void load(Archive& archive) {
+		archive(m_name, m_val.x, m_val.y, m_val.z, m_minVal, m_maxVal, m_format, m_power);
+		m_valBeforeEdit = m_val;
 	}
 };
 
@@ -116,11 +134,17 @@ private:
 	std::string m_format;
 	float m_power;
 private:
-	//Serialization
+	// Serialization
 	friend class cereal::access;
-	template <class Archive>
-	void serialize(Archive& archive) {
+	template<class Archive>
+	void save(Archive& archive) const {
 		archive(m_name, m_val.x, m_val.y, m_val.z, m_val.w, m_minVal, m_maxVal, m_format, m_power);
+	}
+
+	template<class Archive>
+	void load(Archive& archive) {
+		archive(m_name, m_val.x, m_val.y, m_val.z, m_val.w, m_minVal, m_maxVal, m_format, m_power);
+		m_valBeforeEdit = m_val;
 	}
 };
 
@@ -141,11 +165,17 @@ private:
 	glm::vec3 m_valBeforeEdit;
 	ImGuiColorEditFlags m_flags;
 private:
-	//Serialization
+	// Serialization
 	friend class cereal::access;
-	template <class Archive>
-	void serialize(Archive& archive) {
+	template<class Archive>
+	void save(Archive& archive) const {
 		archive(m_name, m_val.x, m_val.y, m_val.z, m_flags);
+	}
+
+	template<class Archive>
+	void load(Archive& archive) {
+		archive(m_name, m_val.x, m_val.y, m_val.z, m_flags);
+		m_valBeforeEdit = m_val;
 	}
 };
 
@@ -166,11 +196,17 @@ private:
 	glm::vec4 m_valBeforeEdit;
 	ImGuiColorEditFlags m_flags;
 private:
-	//Serialization
+	// Serialization
 	friend class cereal::access;
-	template <class Archive>
-	void serialize(Archive& archive) {
+	template<class Archive>
+	void save(Archive& archive) const {
 		archive(m_name, m_val.x, m_val.y, m_val.z, m_val.w, m_flags);
+	}
+
+	template<class Archive>
+	void load(Archive& archive) {
+		archive(m_name, m_val.x, m_val.y, m_val.z, m_val.w, m_flags);
+		m_valBeforeEdit = m_val;
 	}
 };
 
@@ -195,7 +231,7 @@ private:
 	friend class cereal::access;
 	template <class Archive>
 	void serialize(Archive & archive) {
-		archive(m_name, CEREAL_NVP(m_entityPoint));
+		archive(m_name, m_entityPoint);
 	}
 	// Restore registry when loading project
 	inline void initializeRegistry(entt::registry& R) override {
@@ -219,11 +255,17 @@ private:
 	bool m_val;
 	bool m_valBeforeEdit;
 private:
-	//Serialization
+	// Serialization
 	friend class cereal::access;
-	template <class Archive>
-	void serialize(Archive& archive) {
+	template<class Archive>
+	void save(Archive& archive) const {
 		archive(m_name, m_val);
+	}
+
+	template<class Archive>
+	void load(Archive& archive) {
+		archive(m_name, m_val);
+		m_valBeforeEdit = m_val;
 	}
 };
 
@@ -245,11 +287,17 @@ private:
 	int m_minVal;
 	int m_maxVal;
 private:
-	//Serialization
+	// Serialization
 	friend class cereal::access;
-	template <class Archive>
-	void serialize(Archive& archive) {
+	template<class Archive>
+	void save(Archive& archive) const {
 		archive(m_name, m_val, m_minVal, m_maxVal);
+	}
+
+	template<class Archive>
+	void load(Archive& archive) {
+		archive(m_name, m_val, m_minVal, m_maxVal);
+		m_valBeforeEdit = m_val;
 	}
 };
 
@@ -271,11 +319,17 @@ private:
 	int m_minVal;
 	int m_maxVal;
 private:
-	//Serialization
+	// Serialization
 	friend class cereal::access;
-	template <class Archive>
-	void serialize(Archive& archive) {
+	template<class Archive>
+	void save(Archive& archive) const {
 		archive(m_name, m_val.x, m_val.y, m_minVal, m_maxVal);
+	}
+
+	template<class Archive>
+	void load(Archive& archive) {
+		archive(m_name, m_val.x, m_val.y, m_minVal, m_maxVal);
+		m_valBeforeEdit = m_val;
 	}
 };
 
@@ -297,11 +351,17 @@ private:
 	int m_minVal;
 	int m_maxVal;
 private:
-	//Serialization
+	// Serialization
 	friend class cereal::access;
-	template <class Archive>
-	void serialize(Archive& archive) {
+	template<class Archive>
+	void save(Archive& archive) const {
 		archive(m_name, m_val.x, m_val.y, m_val.z, m_minVal, m_maxVal);
+	}
+
+	template<class Archive>
+	void load(Archive& archive) {
+		archive(m_name, m_val.x, m_val.y, m_val.z, m_minVal, m_maxVal);
+		m_valBeforeEdit = m_val;
 	}
 };
 
@@ -323,11 +383,17 @@ private:
 	int m_minVal;
 	int m_maxVal;
 private:
-	//Serialization
+	// Serialization
 	friend class cereal::access;
-	template <class Archive>
-	void serialize(Archive& archive) {
+	template<class Archive>
+	void save(Archive& archive) const {
 		archive(m_name, m_val.x, m_val.y, m_val.z, m_val.w, m_minVal, m_maxVal);
+	}
+
+	template<class Archive>
+	void load(Archive& archive) {
+		archive(m_name, m_val.x, m_val.y, m_val.z, m_val.w, m_minVal, m_maxVal);
+		m_valBeforeEdit = m_val;
 	}
 };
 

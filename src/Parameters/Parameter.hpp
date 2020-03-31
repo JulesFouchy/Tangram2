@@ -14,7 +14,7 @@ public:
 	virtual ~Parameter() = default;
 	virtual bool ImGui(entt::registry& R, Cmp::History& history, entt::entity layer) = 0;
 	virtual void sendToShader() = 0;
-	virtual void* getValuePtr() = 0;
+	virtual void copyValueTo(Parameter* paramPtr) = 0;
 	virtual size_t getHash() = 0;
 	static size_t GetHash(const std::string& name, const std::string& type);
 

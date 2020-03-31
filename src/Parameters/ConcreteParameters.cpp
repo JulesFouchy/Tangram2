@@ -13,6 +13,10 @@
 FloatParameter::FloatParameter(int glUniformLocation, const std::string& name, float val, float minVal, float maxVal, const std::string& format, float power)
 	: Parameter(glUniformLocation, name), m_val(val), m_valBeforeEdit(val), m_minVal(minVal), m_maxVal(maxVal), m_format(format), m_power(power)
 {}
+void FloatParameter::setVal(float val) {
+	m_val = val;
+	m_valBeforeEdit = val;
+}
 bool FloatParameter::ImGuiItem() {
 	return ImGui::SliderFloat(m_name.c_str(), &m_val, m_minVal, m_maxVal, m_format.c_str(), m_power);
 }
@@ -42,8 +46,8 @@ bool FloatParameter::ImGui(entt::registry& R, Cmp::History& history, entt::entit
 void FloatParameter::sendToShader() {
 	glUniform1f(m_glUniformLocation, m_val);
 }
-void* FloatParameter::getValuePtr() {
-	return &m_val;
+void FloatParameter::copyValueTo(Parameter* paramPtr) {
+	((FloatParameter*)paramPtr)->setVal(m_val);
 }
 size_t FloatParameter::getHash() {
 	return GetHash(m_name, "float");
@@ -52,6 +56,10 @@ size_t FloatParameter::getHash() {
 Float2Parameter::Float2Parameter(int glUniformLocation, const std::string& name, const glm::vec2& val, float minVal, float maxVal, const std::string& format, float power)
 	: Parameter(glUniformLocation, name), m_val(val), m_valBeforeEdit(val), m_minVal(minVal), m_maxVal(maxVal), m_format(format), m_power(power)
 {}
+void Float2Parameter::setVal(const glm::vec2& val) {
+	m_val = val;
+	m_valBeforeEdit = val;
+}
 bool Float2Parameter::ImGuiItem() {
 	return ImGui::SliderFloat2(m_name.c_str(), (float*)&m_val, m_minVal, m_maxVal, m_format.c_str(), m_power);
 }
@@ -81,8 +89,8 @@ bool Float2Parameter::ImGui(entt::registry& R, Cmp::History& history, entt::enti
 void Float2Parameter::sendToShader() {
 	glUniform2f(m_glUniformLocation, m_val.x, m_val.y);
 }
-void* Float2Parameter::getValuePtr() {
-	return &m_val;
+void Float2Parameter::copyValueTo(Parameter* paramPtr) {
+	((Float2Parameter*)paramPtr)->setVal(m_val);
 }
 size_t Float2Parameter::getHash() {
 	return GetHash(m_name, "vec2");
@@ -91,6 +99,10 @@ size_t Float2Parameter::getHash() {
 Float3Parameter::Float3Parameter(int glUniformLocation, const std::string& name, const glm::vec3& val, float minVal, float maxVal, const std::string& format, float power)
 	: Parameter(glUniformLocation, name), m_val(val), m_valBeforeEdit(val), m_minVal(minVal), m_maxVal(maxVal), m_format(format), m_power(power)
 {}
+void Float3Parameter::setVal(const glm::vec3& val) {
+	m_val = val;
+	m_valBeforeEdit = val;
+}
 bool Float3Parameter::ImGuiItem() {
 	return ImGui::SliderFloat3(m_name.c_str(), (float*)&m_val, m_minVal, m_maxVal, m_format.c_str(), m_power);
 }
@@ -120,8 +132,8 @@ bool Float3Parameter::ImGui(entt::registry& R, Cmp::History& history, entt::enti
 void Float3Parameter::sendToShader() {
 	glUniform3f(m_glUniformLocation, m_val.x, m_val.y, m_val.z);
 }
-void* Float3Parameter::getValuePtr() {
-	return &m_val;
+void Float3Parameter::copyValueTo(Parameter* paramPtr) {
+	((Float3Parameter*)paramPtr)->setVal(m_val);
 }
 size_t Float3Parameter::getHash() {
 	return GetHash(m_name, "vec3");
@@ -130,6 +142,10 @@ size_t Float3Parameter::getHash() {
 Float4Parameter::Float4Parameter(int glUniformLocation, const std::string& name, const glm::vec4& val, float minVal, float maxVal, const std::string& format, float power)
 	: Parameter(glUniformLocation, name), m_val(val), m_valBeforeEdit(val), m_minVal(minVal), m_maxVal(maxVal), m_format(format), m_power(power)
 {}
+void Float4Parameter::setVal(const glm::vec4& val) {
+	m_val = val;
+	m_valBeforeEdit = val;
+}
 bool Float4Parameter::ImGuiItem() {
 	return ImGui::SliderFloat4(m_name.c_str(), (float*)&m_val, m_minVal, m_maxVal, m_format.c_str(), m_power);
 }
@@ -159,8 +175,8 @@ bool Float4Parameter::ImGui(entt::registry& R, Cmp::History& history, entt::enti
 void Float4Parameter::sendToShader() {
 	glUniform4f(m_glUniformLocation, m_val.x, m_val.y, m_val.z, m_val.w);
 }
-void* Float4Parameter::getValuePtr() {
-	return &m_val;
+void Float4Parameter::copyValueTo(Parameter* paramPtr) {
+	((Float4Parameter*)paramPtr)->setVal(m_val);
 }
 size_t Float4Parameter::getHash() {
 	return GetHash(m_name, "vec4");
@@ -169,6 +185,10 @@ size_t Float4Parameter::getHash() {
 Color3Parameter::Color3Parameter(int glUniformLocation, const std::string& name, const glm::vec3& val, ImGuiColorEditFlags flags)
 	: Parameter(glUniformLocation, name), m_val(val), m_valBeforeEdit(val), m_flags(flags)
 {}
+void Color3Parameter::setVal(const glm::vec3& val) {
+	m_val = val;
+	m_valBeforeEdit = val;
+}
 bool Color3Parameter::ImGuiItem() {
 	return ImGui::ColorPicker3(m_name.c_str(), (float*)&m_val, m_flags);
 }
@@ -198,16 +218,20 @@ bool Color3Parameter::ImGui(entt::registry& R, Cmp::History& history, entt::enti
 void Color3Parameter::sendToShader() {
 	glUniform3f(m_glUniformLocation, m_val.x, m_val.y, m_val.z);
 }
-void* Color3Parameter::getValuePtr() {
-	return &m_val;
+void Color3Parameter::copyValueTo(Parameter* paramPtr) {
+	((Color3Parameter*)paramPtr)->setVal(m_val);
 }
 size_t Color3Parameter::getHash() {
-	return GetHash(m_name, "vec3");
+	return GetHash(m_name, "color3");
 }
 // Color4
 Color4Parameter::Color4Parameter(int glUniformLocation, const std::string& name, const glm::vec4& val, ImGuiColorEditFlags flags)
 	: Parameter(glUniformLocation, name), m_val(val), m_valBeforeEdit(val), m_flags(flags)
 {}
+void Color4Parameter::setVal(const glm::vec4& val) {
+	m_val = val;
+	m_valBeforeEdit = val;
+}
 bool Color4Parameter::ImGuiItem() {
 	return ImGui::ColorPicker4(m_name.c_str(), (float*)&m_val, m_flags);
 }
@@ -237,36 +261,36 @@ bool Color4Parameter::ImGui(entt::registry& R, Cmp::History& history, entt::enti
 void Color4Parameter::sendToShader() {
 	glUniform4f(m_glUniformLocation, m_val.x, m_val.y, m_val.z, m_val.w);
 }
-void* Color4Parameter::getValuePtr() {
-	return &m_val;
+void Color4Parameter::copyValueTo(Parameter* paramPtr) {
+	((Color4Parameter*)paramPtr)->setVal(m_val);
 }
 size_t Color4Parameter::getHash() {
-	return GetHash(m_name, "vec4");
+	return GetHash(m_name, "color4");
 }
 // Point2D
 #include "Shapes/ShapeFactory.hpp"
 #include "Core/GetPosition.hpp"
 Point2DParameter::Point2DParameter(entt::registry& R, entt::entity parentLayer, int glUniformLocation, const std::string& name, const glm::vec2& val)
-	: Parameter(glUniformLocation, name), m_valBeforeEdit(val), m_R(R)
+	: Parameter(glUniformLocation, name), m_valBeforeEdit(val), m_R(&R)
 {
 	m_entityPoint = ShapeFactory::CreatePoint2D(R, parentLayer, val);
 	R.assign<entt::tag<"SaveMeInTheHistoryOfMyParentsParameters"_hs>>(m_entityPoint);
 }
 Point2DParameter::~Point2DParameter() {
-	m_R.destroy(m_entityPoint);
+	m_R->destroy(m_entityPoint);
 }
 glm::vec2 Point2DParameter::getVal() {
-	return TNG::GetPosition(m_R, m_entityPoint);
+	return TNG::GetPosition(*m_R, m_entityPoint);
 }
 bool Point2DParameter::ImGui(entt::registry& R, Cmp::History& history, entt::entity layer) {
-	return true;
+	return false;
 }
 void Point2DParameter::sendToShader() {
 	glm::vec2 val = getVal();
 	glUniform2f(m_glUniformLocation, val.x, val.y);
 }
-void* Point2DParameter::getValuePtr() {
-	return nullptr;
+void Point2DParameter::copyValueTo(Parameter* paramPtr) {
+	m_R->replace<Cmp::TransformMatrix>(((Point2DParameter*)paramPtr)->m_entityPoint, m_R->get<Cmp::TransformMatrix>(m_entityPoint).val());
 }
 size_t Point2DParameter::getHash() {
 	return GetHash(m_name, "point2D");
@@ -275,6 +299,10 @@ size_t Point2DParameter::getHash() {
 BoolParameter::BoolParameter(int glUniformLocation, const std::string& name, bool val)
 	: Parameter(glUniformLocation, name), m_val(val), m_valBeforeEdit(val)
 {}
+void BoolParameter::setVal(bool val) {
+	m_val = val;
+	m_valBeforeEdit = val;
+}
 bool BoolParameter::ImGuiItem() {
 	return ImGui::Checkbox(m_name.c_str(), &m_val);
 }
@@ -304,8 +332,8 @@ bool BoolParameter::ImGui(entt::registry& R, Cmp::History& history, entt::entity
 void BoolParameter::sendToShader() {
 	glUniform1i(m_glUniformLocation, m_val);
 }
-void* BoolParameter::getValuePtr() {
-	return &m_val;
+void BoolParameter::copyValueTo(Parameter* paramPtr) {
+	((BoolParameter*)paramPtr)->setVal(m_val);
 }
 size_t BoolParameter::getHash() {
 	return GetHash(m_name, "bool");
@@ -314,6 +342,10 @@ size_t BoolParameter::getHash() {
 IntParameter::IntParameter(int glUniformLocation, const std::string& name, int val, int minVal, int maxVal)
 	: Parameter(glUniformLocation, name), m_val(val), m_valBeforeEdit(val), m_minVal(minVal), m_maxVal(maxVal)
 {}
+void IntParameter::setVal(int val) {
+	m_val = val;
+	m_valBeforeEdit = val;
+}
 bool IntParameter::ImGuiItem() {
 	return ImGui::SliderInt(m_name.c_str(), &m_val, m_minVal, m_maxVal);
 }
@@ -343,8 +375,8 @@ bool IntParameter::ImGui(entt::registry& R, Cmp::History& history, entt::entity 
 void IntParameter::sendToShader() {
 	glUniform1i(m_glUniformLocation, m_val);
 }
-void* IntParameter::getValuePtr() {
-	return &m_val;
+void IntParameter::copyValueTo(Parameter* paramPtr) {
+	((IntParameter*)paramPtr)->setVal(m_val);
 }
 size_t IntParameter::getHash() {
 	return GetHash(m_name, "int");
@@ -353,6 +385,10 @@ size_t IntParameter::getHash() {
 Int2Parameter::Int2Parameter(int glUniformLocation, const std::string& name, const glm::ivec2& val, int minVal, int maxVal)
 	: Parameter(glUniformLocation, name), m_val(val), m_valBeforeEdit(val), m_minVal(minVal), m_maxVal(maxVal)
 {}
+void Int2Parameter::setVal(const glm::ivec2& val) {
+	m_val = val;
+	m_valBeforeEdit = val;
+}
 bool Int2Parameter::ImGuiItem() {
 	return ImGui::SliderInt2(m_name.c_str(), (int*)&m_val, m_minVal, m_maxVal);
 }
@@ -382,8 +418,8 @@ bool Int2Parameter::ImGui(entt::registry& R, Cmp::History& history, entt::entity
 void Int2Parameter::sendToShader() {
 	glUniform2i(m_glUniformLocation, m_val.x, m_val.y);
 }
-void* Int2Parameter::getValuePtr() {
-	return &m_val;
+void Int2Parameter::copyValueTo(Parameter* paramPtr) {
+	((Int2Parameter*)paramPtr)->setVal(m_val);
 }
 size_t Int2Parameter::getHash() {
 	return GetHash(m_name, "ivec2");
@@ -392,6 +428,10 @@ size_t Int2Parameter::getHash() {
 Int3Parameter::Int3Parameter(int glUniformLocation, const std::string& name, const glm::ivec3& val, int minVal, int maxVal)
 	: Parameter(glUniformLocation, name), m_val(val), m_valBeforeEdit(val), m_minVal(minVal), m_maxVal(maxVal)
 {}
+void Int3Parameter::setVal(const glm::ivec3& val) {
+	m_val = val;
+	m_valBeforeEdit = val;
+}
 bool Int3Parameter::ImGuiItem() {
 	return ImGui::SliderInt3(m_name.c_str(), (int*)&m_val, m_minVal, m_maxVal);
 }
@@ -421,8 +461,8 @@ bool Int3Parameter::ImGui(entt::registry& R, Cmp::History& history, entt::entity
 void Int3Parameter::sendToShader() {
 	glUniform3i(m_glUniformLocation, m_val.x, m_val.y, m_val.z);
 }
-void* Int3Parameter::getValuePtr() {
-	return &m_val;
+void Int3Parameter::copyValueTo(Parameter* paramPtr) {
+	((Int3Parameter*)paramPtr)->setVal(m_val);
 }
 size_t Int3Parameter::getHash() {
 	return GetHash(m_name, "ivec3");
@@ -431,6 +471,10 @@ size_t Int3Parameter::getHash() {
 Int4Parameter::Int4Parameter(int glUniformLocation, const std::string& name, const glm::ivec4& val, int minVal, int maxVal)
 	: Parameter(glUniformLocation, name), m_val(val), m_valBeforeEdit(val), m_minVal(minVal), m_maxVal(maxVal)
 {}
+void Int4Parameter::setVal(const glm::ivec4& val) {
+	m_val = val;
+	m_valBeforeEdit = val;
+}
 bool Int4Parameter::ImGuiItem() {
 	return ImGui::SliderInt4(m_name.c_str(), (int*)&m_val, m_minVal, m_maxVal);
 }
@@ -460,8 +504,8 @@ bool Int4Parameter::ImGui(entt::registry& R, Cmp::History& history, entt::entity
 void Int4Parameter::sendToShader() {
 	glUniform4i(m_glUniformLocation, m_val.x, m_val.y, m_val.z, m_val.w);
 }
-void* Int4Parameter::getValuePtr() {
-	return &m_val;
+void Int4Parameter::copyValueTo(Parameter* paramPtr) {
+	((Int4Parameter*)paramPtr)->setVal(m_val);
 }
 size_t Int4Parameter::getHash() {
 	return GetHash(m_name, "ivec4");

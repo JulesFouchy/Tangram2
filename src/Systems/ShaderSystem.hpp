@@ -30,11 +30,9 @@ private:
 		size_t pos = MyString::FindCaseInsensitive(line, variableName, line.find("//")); // we start the search at the comment (//) to prevent confusion with the name of the variable
 		if (pos != std::string::npos) {
 			pos += variableName.length();
-			return ConvertStringTo<T>(line, pos);
+			return MyString::ReadNumbersAt<T>(line, pos);
 		}
 		spdlog::error("[ShaderSystem::ReadValue] Couldn't read value \"{}\" at line \"{}\"", variableName, line);
 		return T(0);
 	}
-	template <typename T>
-	static T ConvertStringTo(const std::string& str, size_t pos = 0);
 };

@@ -195,7 +195,11 @@ private:
 	friend class cereal::access;
 	template <class Archive>
 	void serialize(Archive & archive) {
-		archive(m_name, m_entityPoint);
+		archive(m_name, CEREAL_NVP(m_entityPoint));
+	}
+	// Restore registry when loading project
+	inline void initializeRegistry(entt::registry& R) override {
+		m_R = &R;
 	}
 };
 

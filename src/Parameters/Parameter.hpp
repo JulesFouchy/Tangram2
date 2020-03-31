@@ -18,6 +18,10 @@ public:
 	virtual size_t getHash() = 0;
 	static size_t GetHash(const std::string& name, const std::string& type);
 
+private:
+	friend class Instance;
+	virtual void initializeRegistry(entt::registry& R) {}; // required by Point2DParameter
+
 protected:
 	std::string m_name;
 

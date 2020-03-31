@@ -340,5 +340,10 @@ void Instance::openProject(const std::string& folderpath) {
 	auto& layersWithShader = registry().view<Cmp::ShaderReference>();
 	for (entt::entity e : layersWithShader)
 		ShaderSystem::ComputeUniformLocations(registry(), e);
+	// For Point2DParameter : Give a reference to the registry
+	auto& params = registry().view<Cmp::Parameters>();
+	for (entt::entity e : params)
+		for (std::shared_ptr<Parameter> param : registry().get<Cmp::Parameters>(e).list)
+			param->initializeRegistry(registry());
 	Log::separationLine();
 }

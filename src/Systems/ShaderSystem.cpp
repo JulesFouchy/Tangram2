@@ -153,7 +153,6 @@ std::shared_ptr<Parameter> ShaderSystem::CreateParameterFromLine(entt::registry&
 		return p->getHash() == hashOfParam;
 		});
 	if (it != prevList.end()) {
-		spdlog::info("found {}", name);
 		(**it).copyValueTo(paramPtr.get());
 	}
 	return std::move(paramPtr);

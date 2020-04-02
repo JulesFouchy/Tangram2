@@ -115,11 +115,13 @@ std::shared_ptr<Parameter> ShaderSystem::CreateParameterFromLine(entt::registry&
 			paramType = "vec2";
 		}
 		else {
-			//paramPtr = std::make_shared<Point2DParameter>(R, parentLayer, glUniformLocation, name, ReadValue<glm::vec2>(line, "default"));
-			//paramType = "point2D";
-			paramPtr = std::make_shared<ListOfPoints2DParameter>(R, parentLayer, name, 2);
-			paramType = "listOfPoints2D";
+			paramPtr = std::make_shared<Point2DParameter>(R, parentLayer, glUniformLocation, name, ReadValue<glm::vec2>(line, "default"));
+			paramType = "point2D";
 		}
+	}
+	else if (!type.compare("vec2[2]")) {
+		paramPtr = std::make_shared<ListOfPoints2DParameter>(R, parentLayer, name, 2);
+		paramType = "listOfPoints2D";
 	}
 	else if (!type.compare("vec3")) {
 		if (MyString::FindCaseInsensitive(line, "NOT_A_COLOR") != std::string::npos) {

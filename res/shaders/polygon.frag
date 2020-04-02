@@ -5,6 +5,7 @@ struct Parameters {
     bool useEvenOdd;
     vec3 fill; // default 0.3, 0.6, 0.9
     vec3 stroke; // default 0.8, 0.2, 0.4
+    vec2[2] list;
     vec2 pt1; // default -0.3 -0.5
     vec2 pt2; // default  0    0
     vec2 pt3; // default  0.8 -0.5

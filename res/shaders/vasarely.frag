@@ -1,6 +1,13 @@
 #version 430 core
 
+struct Parameters {
+    float darkPow; // min 0 max 10
+    float sphereDist; // default 8 min 0 max 15
+};
+
 in vec2 vTexCoords;
+
+uniform Parameters u;
 
 float nsin(float x){
   return sin(x) * 0.5 + 0.5;  
@@ -45,7 +52,7 @@ float sdf(vec3 pos){
     // Plane
     float dPlane = abs(pos.z);
     // Sphere
-    float dSphere = length(pos - vec3(0., 0., -8.)) - 15.;
+    float dSphere = length(pos - vec3(0., 0., -u.sphereDist)) - 15.;
     //
     return smin(dPlane, dSphere, 0.5);
 }
@@ -54,6 +61,15 @@ float distort(float x){
   //float dCar = 3.;
   //return pow(dCar / x, 12.) - pow(dCar / x, 8.);
   return exp(-pow(x,2.)*0.04) + 0.7;
+}
+
+vec3 normal(vec3 p) {
+    float EPSILON = 0.001;
+    return normalize(vec3(
+        sdf(vec3(p.x + EPSILON, p.y, p.z)) - sdf(vec3(p.x - EPSILON, p.y, p.z)),
+        sdf(vec3(p.x, p.y + EPSILON, p.z)) - sdf(vec3(p.x, p.y - EPSILON, p.z)),
+        sdf(vec3(p.x, p.y, p.z + EPSILON)) - sdf(vec3(p.x, p.y, p.z - EPSILON))
+    ));
 }
 
 void main() {
@@ -69,11 +85,15 @@ void main() {
       pos += d * rayDir;
     }
     vec2 uv3D = pos.xy;
+
+    vec3 nor = normal(pos);
+    float dark = nor.z;
+    dark = pow(dark, u.darkPow);
     
     //uv *= 15.;
     //float r = length(uv);
     //vec2 uv3D = uv / vec2(distort(r), distort(r));
     
-    vec3 col = pattern2D(uv3D);
+    vec3 col = dark * pattern2D(uv3D);
     gl_FragColor = vec4(col, 1.0);
 }

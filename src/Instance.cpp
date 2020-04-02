@@ -68,7 +68,9 @@ void Instance::Construct() {
 	// Events
 	//registry().on_construct<Cmp::TransformMatrix>().connect<&Instance::onTransformMatrixChange>(*this);
 	registry().on_replace<Cmp::TransformMatrix>().connect<&Instance::onTransformMatrixChange>(*this);
+	registry().on_replace<Cmp::Texture>().connect<&deleteTexture>();
 	registry().on_destroy<Cmp::Texture>().connect<&deleteTexture>();
+	registry().on_replace<Cmp::Shader>().connect<&deleteShader>();
 	registry().on_destroy<Cmp::Shader>().connect<&deleteShader>();
 	//registry().on_destroy<Cmp::Parameters>().connect<&deleteParameters>();
 }

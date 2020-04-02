@@ -251,6 +251,7 @@ public:
 	void copyValueTo(Parameter* paramPtr) override;
 	size_t getHash() override;
 	void computeUniformLocation(int shaderID) override;
+	void fillListOfDefinesInShader(std::vector<std::pair<std::string, std::string>>& modifyFromTo) override;
 private:
 	std::vector<Point2DParameter> m_list;
 

@@ -26,8 +26,12 @@ void ShaderSystem::CompileShaderAndUpdateParametersList(entt::registry& R, entt:
 	params.history.clear();
 	// Update ParametersList
 	UpdateParametersList(R, layer, shaderRef.entityID, params.list);
+	// Get #defines
+	std::vector<std::pair<std::string, std::string>> modifyFromTo;
+	for (const auto& param : params.list)
+		param->fillListOfDefinesInShader(modifyFromTo);
 	// (Re)compile shader
-	shader.compile(ShaderHelper::parseFile(shader.vertexFilepath), ShaderHelper::parseFile(shader.fragmentFilepath));
+	shader.compile(ShaderHelper::parseFile(shader.vertexFilepath), ShaderHelper::parseFile(shader.fragmentFilepath, modifyFromTo));
 	ComputeUniformLocations(R, layer);
 	// Recompute texture
 	TNG::MustRecomputeTexture(R, layer);
@@ -119,8 +123,8 @@ std::shared_ptr<Parameter> ShaderSystem::CreateParameterFromLine(entt::registry&
 			paramType = "point2D";
 		}
 	}
-	else if (!type.compare("vec2[2]")) {
-		paramPtr = std::make_shared<ListOfPoints2DParameter>(R, parentLayer, name, 2);
+	else if (type.find("vec2[") != std::string::npos) {
+		paramPtr = std::make_shared<ListOfPoints2DParameter>(R, parentLayer, name, ReadValue<int>(line, "size"));
 		paramType = "listOfPoints2D";
 	}
 	else if (!type.compare("vec3")) {

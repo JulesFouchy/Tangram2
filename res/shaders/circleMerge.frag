@@ -3,6 +3,7 @@
 struct Parameters {
     vec2 center1; // default 0 0
     vec2 center2; // default 0 0.3
+    float radius; // default 0.1
     float k; //default 10 min 2 max 30
 };
 
@@ -21,5 +22,5 @@ void main(){
     float d2 = length(vTexCoords - u.center2);
     float d = smin(d1, d2, u.k);
     gl_FragColor = vec4(vTexCoords, 0.5, 1.0);
-    gl_FragColor.a = smoothstep(0.3001, 0.3, d);
+    gl_FragColor.a = smoothstep(u.radius+0.001, u.radius, d);
 }

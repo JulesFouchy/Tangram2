@@ -331,6 +331,9 @@ void ListOfPoints2DParameter::computeUniformLocation(int shaderID) {
 	for (Point2DParameter& param : m_list)
 		param.computeUniformLocation(shaderID);
 }
+void ListOfPoints2DParameter::fillListOfDefinesInShader(std::vector<std::pair<std::string, std::string>>& modifyFromTo) {
+	modifyFromTo.push_back({ "u." + m_name + ".size", std::to_string(m_list.size()) });
+}
 // Bool
 BoolParameter::BoolParameter(int glUniformLocation, const std::string& name, bool val)
 	: Parameter(glUniformLocation, name), m_val(val), m_valBeforeEdit(val)

@@ -2,6 +2,9 @@
 
 #include <string>
 
+#include <vector>
+#include <utility>
+
 #include "Components/History.hpp"
 
 class Parameter {
@@ -18,6 +21,7 @@ public:
 	virtual size_t getHash() = 0;
 	static size_t GetHash(const std::string& name, const std::string& type);
 	virtual void computeUniformLocation(int shaderID);
+	virtual void fillListOfDefinesInShader(std::vector<std::pair<std::string, std::string>>& modifyFromTo) {}
 
 private:
 	friend class Instance;

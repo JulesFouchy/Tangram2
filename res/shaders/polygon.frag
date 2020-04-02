@@ -5,12 +5,7 @@ struct Parameters {
     bool useEvenOdd;
     vec3 fill; // default 0.3, 0.6, 0.9
     vec3 stroke; // default 0.8, 0.2, 0.4
-    vec2[2] list;
-    vec2 pt1; // default -0.3 -0.5
-    vec2 pt2; // default  0    0
-    vec2 pt3; // default  0.8 -0.5
-    vec2 pt4; // default -0.8 -0.5
-    vec2 pt5; // default  0.8  0.5
+    vec2[u.list.size] list; // size 6
 };
 
 uniform Parameters u;
@@ -23,13 +18,13 @@ in vec2 vTexCoords;
 float intersectionOfHorizRayWith(vec2 nuv, vec2 p1, vec2 p2){
     return (nuv - p1).y / (p2 - p1).y;
 }
-
+//? #define u.list.size 1
 float evenOdd(vec2 nuv){
+    int N = u.list.size;
     int intersectionsCount = 0;
-    vec2 u_vertices[5] = {u.pt1, u.pt2, u.pt3, u.pt4, u.pt5};
     for (int i = 0; i < N; ++i){
-        vec2 p1 = u_vertices[i];
-        vec2 p2 = u_vertices[(i+1)%N];
+        vec2 p1 = u.list[i];
+        vec2 p2 = u.list[(i+1)%N];
         float inter = intersectionOfHorizRayWith(nuv, p1 , p2);
         vec2 interPt = p1 + inter * (p2 - p1);
         if (0.0 <= inter && inter <= 1.0 && interPt.x > nuv.x)
@@ -39,11 +34,11 @@ float evenOdd(vec2 nuv){
 }
 
 float nonZeroWinding(vec2 nuv){
-    vec2 u_vertices[5] = {u.pt1, u.pt2, u.pt3, u.pt4, u.pt5};
+    int N = u.list.size;
     int windingCount = 0;
     for (int i = 0; i < N; ++i){
-        vec2 p1 = u_vertices[i];
-        vec2 p2 = u_vertices[(i+1)%N];
+        vec2 p1 = u.list[i];
+        vec2 p2 = u.list[(i+1)%N];
         float inter = intersectionOfHorizRayWith(nuv, p1 , p2);
         vec2 interPt = p1 + inter * (p2 - p1);
         if (0.0 <= inter && inter <= 1.0 && interPt.x > nuv.x){
@@ -66,11 +61,11 @@ float smin( float a, float b, float k )
 }
 
 float strokeDistanceField(vec2 nuv){
-    vec2 u_vertices[5] = {u.pt1, u.pt2, u.pt3, u.pt4, u.pt5};
+    int N = u.list.size;
     float dist = 10000000000000.0;
     for (int i = 0; i < N; ++i){
-        vec2 p1 = u_vertices[i];
-        vec2 p2 = u_vertices[(i+1)%N];
+        vec2 p1 = u.list[i];
+        vec2 p2 = u.list[(i+1)%N];
         float d = distToSegment(nuv, p1, p2);
         dist = smin(dist, d, u.SmoothMin);
         //dist = min(dist, d);
@@ -101,8 +96,4 @@ void main() {
     if( alphaStroke >= alphaFill)
         color = colorStroke;
     gl_FragColor = vec4(color, alphaStroke + alphaFill);
-
-    float d = length(vTexCoords - u.list[1]);
-    float alph = smoothstep(0.31,0.30, d);
-    gl_FragColor.a += alph;
 }

@@ -17,13 +17,15 @@ public:
 	virtual void copyValueTo(Parameter* paramPtr) = 0;
 	virtual size_t getHash() = 0;
 	static size_t GetHash(const std::string& name, const std::string& type);
+	virtual void computeUniformLocation(int shaderID);
 
 private:
 	friend class Instance;
 	virtual void initializeRegistry(entt::registry& R) {}; // required by Point2DParameter
 
-protected:
+public:
 	std::string m_name;
+protected:
 
 	int m_glUniformLocation;
 };

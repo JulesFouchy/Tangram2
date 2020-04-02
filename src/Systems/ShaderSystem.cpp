@@ -71,7 +71,7 @@ void ShaderSystem::ComputeUniformLocations(entt::registry& R, entt::entity layer
 	Cmp::Shader& shader = R.get<Cmp::Shader>(R.get<Cmp::ShaderReference>(layerWithAShader).entityID);
 	glUseProgram(shader.id);
 	for (const auto& param : params.list) {
-		param->m_glUniformLocation = GetUniformLocation(shader.id, param->m_name);
+		param->computeUniformLocation(shader.id);
 	}
 }
 
@@ -115,8 +115,10 @@ std::shared_ptr<Parameter> ShaderSystem::CreateParameterFromLine(entt::registry&
 			paramType = "vec2";
 		}
 		else {
-			paramPtr = std::make_shared<Point2DParameter>(R, parentLayer, glUniformLocation, name, ReadValue<glm::vec2>(line, "default"));
-			paramType = "point2D";
+			//paramPtr = std::make_shared<Point2DParameter>(R, parentLayer, glUniformLocation, name, ReadValue<glm::vec2>(line, "default"));
+			//paramType = "point2D";
+			paramPtr = std::make_shared<ListOfPoints2DParameter>(R, parentLayer, name, 2);
+			paramType = "listOfPoints2D";
 		}
 	}
 	else if (!type.compare("vec3")) {

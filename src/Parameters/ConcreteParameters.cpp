@@ -9,6 +9,9 @@
 
 #include "Debugging/Log.hpp"
 
+#include "Shapes/ShapeFactory.hpp"
+#include "Core/GetPosition.hpp"
+
 // Float1
 FloatParameter::FloatParameter(int glUniformLocation, const std::string& name, float val, float minVal, float maxVal, const std::string& format, float power)
 	: Parameter(glUniformLocation, name), m_val(val), m_valBeforeEdit(val), m_minVal(minVal), m_maxVal(maxVal), m_format(format), m_power(power)
@@ -268,8 +271,6 @@ size_t Color4Parameter::getHash() {
 	return GetHash(m_name, "color4");
 }
 // Point2D
-#include "Shapes/ShapeFactory.hpp"
-#include "Core/GetPosition.hpp"
 Point2DParameter::Point2DParameter(entt::registry& R, entt::entity parentLayer, int glUniformLocation, const std::string& name, const glm::vec2& val)
 	: Parameter(glUniformLocation, name), m_valBeforeEdit(val), m_R(&R)
 {
@@ -294,6 +295,41 @@ void Point2DParameter::copyValueTo(Parameter* paramPtr) {
 }
 size_t Point2DParameter::getHash() {
 	return GetHash(m_name, "point2D");
+}
+// List of Points2D
+ListOfPoints2DParameter::ListOfPoints2DParameter(entt::registry& R, entt::entity parentLayer, const std::string& name, int size)
+	: Parameter(-1, name)
+{
+	m_list.reserve(size);
+	for (int i = 0; i < size; ++i)
+		addPoint2D(R, parentLayer);
+}
+void ListOfPoints2DParameter::addPoint2D(entt::registry& R, entt::entity parentLayer, const glm::vec2& val) {
+	m_list.emplace_back(R, parentLayer, -1, m_name + std::to_string(m_list.size()), val);
+}
+bool ListOfPoints2DParameter::ImGui(entt::registry& R, Cmp::History& history, entt::entity layer) {
+	return false;
+}
+void ListOfPoints2DParameter::sendToShader() {
+	for (Point2DParameter& param : m_list)
+		param.sendToShader();
+}
+void ListOfPoints2DParameter::copyValueTo(Parameter* paramPtr) {
+	ListOfPoints2DParameter* ptr = (ListOfPoints2DParameter*)paramPtr;
+	ptr->m_list.resize(m_list.size());
+	int k = 0;
+	for (Point2DParameter& param : m_list) {
+		ptr->m_list[k].m_name = param.m_name;
+		param.copyValueTo(&ptr->m_list[k]);
+		k++;
+	}
+}
+size_t ListOfPoints2DParameter::getHash() {
+	return GetHash(m_name, "listOfPoints2D");
+}
+void ListOfPoints2DParameter::computeUniformLocation(int shaderID) {
+	for (Point2DParameter& param : m_list)
+		param.computeUniformLocation(shaderID);
 }
 // Bool
 BoolParameter::BoolParameter(int glUniformLocation, const std::string& name, bool val)

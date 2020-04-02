@@ -239,6 +239,35 @@ private:
 	}
 };
 
+class ListOfPoints2DParameter : public Parameter {
+public:
+	ListOfPoints2DParameter() = default;
+	ListOfPoints2DParameter(entt::registry& R, entt::entity parentLayer, const std::string& name, int size = 0);
+	~ListOfPoints2DParameter() = default;
+	bool ImGui(entt::registry& R, Cmp::History& history, entt::entity layer) override;
+	void sendToShader() override;
+	void copyValueTo(Parameter* paramPtr) override;
+	size_t getHash() override;
+	void computeUniformLocation(int shaderID) override;
+private:
+	std::vector<Point2DParameter> m_list;
+
+private:
+	void addPoint2D(entt::registry& R, entt::entity parentLayer, const glm::vec2& val = glm::vec2(0.0f));
+private:
+	// Serialization
+	friend class cereal::access;
+	template<class Archive>
+	void save(Archive& archive) const {
+		archive(m_name, m_list);
+	}
+
+	template<class Archive>
+	void load(Archive& archive) {
+		archive(m_name, m_list);
+	}
+};
+
 class BoolParameter : public Parameter {
 public:
 	BoolParameter() = default;
@@ -417,6 +446,9 @@ CEREAL_REGISTER_POLYMORPHIC_RELATION(Parameter, Color4Parameter)
 
 CEREAL_REGISTER_TYPE(Point2DParameter)
 CEREAL_REGISTER_POLYMORPHIC_RELATION(Parameter, Point2DParameter)
+
+CEREAL_REGISTER_TYPE(ListOfPoints2DParameter)
+CEREAL_REGISTER_POLYMORPHIC_RELATION(Parameter, ListOfPoints2DParameter)
 
 CEREAL_REGISTER_TYPE(BoolParameter)
 CEREAL_REGISTER_POLYMORPHIC_RELATION(Parameter, BoolParameter)

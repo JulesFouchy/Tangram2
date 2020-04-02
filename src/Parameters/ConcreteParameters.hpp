@@ -7,6 +7,7 @@
 #include <cereal/access.hpp>
 #include <cereal/types/string.hpp>
 #include <cereal/types/polymorphic.hpp>
+#include <cereal/types/vector.hpp>
 #include <cereal/archives/binary.hpp>
 #include <cereal/archives/json.hpp>
 
@@ -211,6 +212,7 @@ private:
 };
 
 class Point2DParameter : public Parameter {
+	friend class ListOfPoints2DParameter;
 public:
 	Point2DParameter() = default;
 	Point2DParameter(entt::registry& R, entt::entity parentLayer, int glUniformLocation, const std::string & name, const glm::vec2& val);
@@ -265,6 +267,11 @@ private:
 	template<class Archive>
 	void load(Archive& archive) {
 		archive(m_name, m_list);
+	}
+	// Restore registry when loading project
+	inline void initializeRegistry(entt::registry& R) override {
+		for (Point2DParameter& param : m_list)
+			param.initializeRegistry(R);
 	}
 };
 

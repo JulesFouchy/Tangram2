@@ -5,9 +5,11 @@
 
 #include "Debugging/Log.hpp"
 
+#include "Helper/String.hpp"
+
 #include <glad/glad.h>
 
-std::string ShaderHelper::parseFile(const std::string& filepath) {
+std::string ShaderHelper::parseFile(const std::string& filepath, const std::vector<std::pair<std::string, std::string>>& modifyFromTo) {
 	std::ifstream stream(filepath);
 	if (!stream.is_open()) {
 		spdlog::warn("Failed to open file |{}|", filepath);
@@ -21,6 +23,8 @@ std::string ShaderHelper::parseFile(const std::string& filepath) {
 		str += tempLine + '\n';
 	}
 	stream.close();
+	for (const auto& pair : modifyFromTo)
+		MyString::ReplaceAll(str, pair.first, pair.second);
 	return str;
 }
 

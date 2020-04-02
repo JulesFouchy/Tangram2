@@ -340,14 +340,15 @@ void Instance::openProject(const std::string& folderpath) {
 	auto& layersWithPrevTexture = registry().view<Cmp::Texture>();
 	for (entt::entity e : layersWithPrevTexture)
 		registry().assign<entt::tag<"MustRecomputeTexture"_hs>>(e);
-	// Find uniform locations
-	auto& layersWithShader = registry().view<Cmp::ShaderReference>();
-	for (entt::entity e : layersWithShader)
-		ShaderSystem::ComputeUniformLocations(registry(), e);
 	// For Point2DParameter : Give a reference to the registry
 	auto& params = registry().view<Cmp::Parameters>();
 	for (entt::entity e : params)
 		for (std::shared_ptr<Parameter> param : registry().get<Cmp::Parameters>(e).list)
 			param->initializeRegistry(registry());
+	// Compile Cmp::Shader
+	auto& layersWithShader = registry().view<Cmp::ShaderReference>();
+	for (entt::entity e : layersWithShader)
+		ShaderSystem::CompileShaderAndUpdateParametersList(registry(), e);
+	//
 	Log::separationLine();
 }

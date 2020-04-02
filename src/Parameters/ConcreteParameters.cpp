@@ -305,7 +305,7 @@ ListOfPoints2DParameter::ListOfPoints2DParameter(entt::registry& R, entt::entity
 		addPoint2D(R, parentLayer);
 }
 void ListOfPoints2DParameter::addPoint2D(entt::registry& R, entt::entity parentLayer, const glm::vec2& val) {
-	m_list.emplace_back(R, parentLayer, -1, m_name + std::to_string(m_list.size()), val);
+	m_list.emplace_back(R, parentLayer, -1, m_name + "[" + std::to_string(m_list.size()) + "]", val);
 }
 bool ListOfPoints2DParameter::ImGui(entt::registry& R, Cmp::History& history, entt::entity layer) {
 	return false;

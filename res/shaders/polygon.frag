@@ -101,4 +101,8 @@ void main() {
     if( alphaStroke >= alphaFill)
         color = colorStroke;
     gl_FragColor = vec4(color, alphaStroke + alphaFill);
+
+    float d = length(vTexCoords - u.list[1]);
+    float alph = smoothstep(0.31,0.30, d);
+    gl_FragColor.a += alph;
 }

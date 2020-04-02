@@ -5,6 +5,8 @@
 #include "Components/ParametersList.hpp"
 #include "Components/ShaderReference.hpp"
 
+#include "OpenGL/ShaderHelper.hpp"
+
 #include "Parameters/ConcreteParameters.hpp"
 
 #include "Core/MustRecomputeTexture.hpp"
@@ -13,6 +15,22 @@ entt::entity ShaderSystem::Create(entt::registry& R, const std::string& vertexFi
 	entt::entity e = R.create();
 	R.assign<Cmp::Shader>(e, vertexFilepath, fragmentFilepath);
 	return e;
+}
+
+void ShaderSystem::CompileShaderAndUpdateParametersList(entt::registry& R, entt::entity layer) {
+	// Get components
+	Cmp::Parameters& params = R.get<Cmp::Parameters>(layer);
+	Cmp::ShaderReference& shaderRef = R.get<Cmp::ShaderReference>(layer);
+	Cmp::Shader& shader = R.get<Cmp::Shader>(shaderRef.entityID);
+	// Clear Parameters' history
+	params.history.clear();
+	// Update ParametersList
+	UpdateParametersList(R, layer, shaderRef.entityID, params.list);
+	// (Re)compile shader
+	shader.compile(ShaderHelper::parseFile(shader.vertexFilepath), ShaderHelper::parseFile(shader.fragmentFilepath));
+	ComputeUniformLocations(R, layer);
+	// Recompute texture
+	TNG::MustRecomputeTexture(R, layer);
 }
 
 void ShaderSystem::UpdateParametersList(entt::registry& R, entt::entity parentLayer, entt::entity shaderEntity, std::vector<std::shared_ptr<Parameter>>& parametersList) {
@@ -44,14 +62,8 @@ void ShaderSystem::UpdateParametersList(entt::registry& R, entt::entity parentLa
 
 void ShaderSystem::TryReloadShader(entt::registry& R, entt::entity layer) {
 	Cmp::ShaderReference* shaderRef = R.try_get<Cmp::ShaderReference>(layer);
-	if (shaderRef) {
-		Cmp::Parameters& params = R.get<Cmp::Parameters>(layer);
-		params.history.clear();
-		Cmp::Shader& shader = R.get<Cmp::Shader>(shaderRef->entityID);
-		R.replace<Cmp::Shader>(shaderRef->entityID, shader.vertexFilepath, shader.fragmentFilepath);
-		UpdateParametersList(R, layer, shaderRef->entityID, params.list);
-		TNG::MustRecomputeTexture(R, layer);
-	}
+	if (shaderRef)
+		CompileShaderAndUpdateParametersList(R, layer);
 }
 
 void ShaderSystem::ComputeUniformLocations(entt::registry& R, entt::entity layerWithAShader) {
@@ -61,6 +73,10 @@ void ShaderSystem::ComputeUniformLocations(entt::registry& R, entt::entity layer
 	for (const auto& param : params.list) {
 		param->m_glUniformLocation = GetUniformLocation(shader.id, param->m_name);
 	}
+}
+
+int ShaderSystem::GetUniformLocation(int glShaderID, const std::string& parameterName) {
+	return glGetUniformLocation(glShaderID, ("u." + parameterName).c_str());
 }
 
 void ShaderSystem::GoToFirstLineOfStructParameters(std::ifstream& stream) {
@@ -84,8 +100,8 @@ std::shared_ptr<Parameter> ShaderSystem::CreateParameterFromLine(entt::registry&
 	// Read type and name
 	std::string type = MyString::GetNextWord(line, &pos);
 	std::string name = MyString::GetNextWord(line, &pos);
-	// Get uniform location
-	int glUniformLocation = GetUniformLocation(glShaderID, name);
+	// dummy uniform location because shader hasn't been compiled yet
+	int glUniformLocation = -1;
 	// Read values according to type
 	std::shared_ptr<Parameter> paramPtr;
 	std::string paramType;
@@ -156,8 +172,4 @@ std::shared_ptr<Parameter> ShaderSystem::CreateParameterFromLine(entt::registry&
 		(**it).copyValueTo(paramPtr.get());
 	}
 	return std::move(paramPtr);
-}
-
-int ShaderSystem::GetUniformLocation(int glShaderID, const std::string& parameterName) {
-	return glGetUniformLocation(glShaderID, ("u." + parameterName).c_str());
 }

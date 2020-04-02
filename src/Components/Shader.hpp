@@ -1,8 +1,8 @@
 #pragma once
 
-#include "OpenGL/ShaderHelper.hpp"
-
 #include "Debugging/Log.hpp"
+
+#include "OpenGL/ShaderHelper.hpp"
 
 #include <cereal/access.hpp>
 
@@ -11,20 +11,46 @@
 
 namespace Cmp {
 struct Shader {
-	unsigned int id;
+	unsigned int id = -1;
 	std::string vertexFilepath;
 	std::string fragmentFilepath;
 
 	Shader() = default; // required by registry.snapshot()
 	void Delete()
 	{   // called by registry.on_destroy<Cmp::Shader>
-		spdlog::error("Delete Shader {}", id);
+		spdlog::error("Deleting Shader {}", id);
 		GLCall(glDeleteProgram(id));
 	}
 
 	Shader(const std::string& vertexFilepath, const std::string& fragmentFilepath)
 		: vertexFilepath(vertexFilepath), fragmentFilepath(fragmentFilepath)
-	{ createShader(); }
+	{ 
+		//createShader();
+	}
+
+	void createShader() {
+		spdlog::info("[Creating  Shader Component] " + fragmentFilepath + " & " + vertexFilepath);
+		GLCall(id = glCreateProgram());
+		Log::separationLine();
+	}
+
+	void compile(const std::string& vertexCode, const std::string& fragmentCode) {
+		if (id != -1)
+			Delete();
+		createShader();
+		spdlog::info("[Compiling Shader Component] " + fragmentFilepath + " & " + vertexFilepath);
+		unsigned int vs = ShaderHelper::compileShader(GL_VERTEX_SHADER, vertexCode);
+		unsigned int fs = ShaderHelper::compileShader(GL_FRAGMENT_SHADER, fragmentCode);
+
+		GLCall(glAttachShader(id, vs));
+		GLCall(glAttachShader(id, fs));
+		GLCall(glLinkProgram(id));
+		GLCall(glValidateProgram(id));
+
+		GLCall(glDeleteShader(vs));
+		GLCall(glDeleteShader(fs));
+		Log::separationLine();
+	}
 
 	void bind() {
 		GLCall(glUseProgram(id));
@@ -56,22 +82,6 @@ private:
 	std::unordered_map<std::string, int> m_UniformLocationCache;
 
 private:
-
-	void createShader() {
-		spdlog::info("[Creating Shader Component] " + vertexFilepath + " & " + fragmentFilepath);
-		GLCall(id = glCreateProgram());
-		unsigned int vs = ShaderHelper::compileShader(GL_VERTEX_SHADER, ShaderHelper::parseFile(vertexFilepath));
-		unsigned int fs = ShaderHelper::compileShader(GL_FRAGMENT_SHADER, ShaderHelper::parseFile(fragmentFilepath));
-
-		GLCall(glAttachShader(id, vs));
-		GLCall(glAttachShader(id, fs));
-		GLCall(glLinkProgram(id));
-		GLCall(glValidateProgram(id));
-
-		GLCall(glDeleteShader(vs));
-		GLCall(glDeleteShader(fs));
-		Log::separationLine();
-	}
 
 	int getUniformLocation(const std::string& uniformName) {
 		if (m_UniformLocationCache.find(uniformName) != m_UniformLocationCache.end()) {

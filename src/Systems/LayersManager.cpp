@@ -68,9 +68,7 @@ entt::entity LayersManager::_createLayerBasedOnAShader(const std::string& vertex
 	// Shader
 	entt::entity shader = ShaderSystem::Create(R, vertexFilepath, fragmentFilepath);
 	R.assign<Cmp::ShaderReference>(e, shader);
-	// Shader parameters
-	ShaderSystem::UpdateParametersList(R, e, shader, R.get<Cmp::Parameters>(e).list);
-
+	ShaderSystem::CompileShaderAndUpdateParametersList(R, e);
 	return e;
 }
 

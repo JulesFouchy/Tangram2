@@ -177,6 +177,8 @@ std::shared_ptr<Parameter> ShaderSystem::CreateParameterFromLine(entt::registry&
 		return p->getHash() == hashOfParam;
 		});
 	if (it != prevList.end()) {
+		if (type.find("vec2[") != std::string::npos) // to resize ListOfPoints2DParameter through ImGui and the m_size member
+			paramPtr = std::make_shared<ListOfPoints2DParameter>(R, parentLayer, name, ((ListOfPoints2DParameter*)it->get())->size());
 		(**it).copyValueTo(paramPtr.get());
 	}
 	return std::move(paramPtr);

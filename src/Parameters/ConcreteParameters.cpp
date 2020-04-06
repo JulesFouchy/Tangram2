@@ -12,6 +12,8 @@
 #include "Shapes/ShapeFactory.hpp"
 #include "Core/GetPosition.hpp"
 
+#include "Systems/ShaderSystem.hpp"
+
 // Float1
 FloatParameter::FloatParameter(int glUniformLocation, const std::string& name, float val, float minVal, float maxVal, const std::string& format, float power)
 	: Parameter(glUniformLocation, name), m_val(val), m_valBeforeEdit(val), m_minVal(minVal), m_maxVal(maxVal), m_format(format), m_power(power)
@@ -298,7 +300,7 @@ size_t Point2DParameter::getHash() {
 }
 // List of Points2D
 ListOfPoints2DParameter::ListOfPoints2DParameter(entt::registry& R, entt::entity parentLayer, const std::string& name, int size)
-	: Parameter(-1, name)
+	: Parameter(-1, name), m_size(size)
 {
 	m_list.reserve(size);
 	for (int i = 0; i < size; ++i)
@@ -308,6 +310,11 @@ void ListOfPoints2DParameter::addPoint2D(entt::registry& R, entt::entity parentL
 	m_list.emplace_back(R, parentLayer, -1, m_name + "[" + std::to_string(m_list.size()) + "]", val);
 }
 bool ListOfPoints2DParameter::ImGui(entt::registry& R, Cmp::History& history, entt::entity layer) {
+	ImGui::InputInt("size", &m_size);
+	bool b = ImGui::IsItemDeactivatedAfterEdit();
+	if (b) {
+		ShaderSystem::CompileShaderAndUpdateParametersList(R, layer);
+	}
 	return false;
 }
 void ListOfPoints2DParameter::sendToShader() {

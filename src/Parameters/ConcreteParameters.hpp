@@ -252,9 +252,11 @@ public:
 	size_t getHash() override;
 	void computeUniformLocation(int shaderID) override;
 	void fillListOfDefinesInShader(std::vector<std::pair<std::string, std::string>>& modifyFromTo) override;
+
+	inline int size() { return m_size; }
 private:
 	std::vector<Point2DParameter> m_list;
-
+	int m_size;
 private:
 	void addPoint2D(entt::registry& R, entt::entity parentLayer, const glm::vec2& val = glm::vec2(0.0f));
 private:
@@ -262,12 +264,12 @@ private:
 	friend class cereal::access;
 	template<class Archive>
 	void save(Archive& archive) const {
-		archive(m_name, m_list);
+		archive(m_name, m_list, m_size);
 	}
 
 	template<class Archive>
 	void load(Archive& archive) {
-		archive(m_name, m_list);
+		archive(m_name, m_list, m_size);
 	}
 	// Restore registry when loading project
 	inline void initializeRegistry(entt::registry& R) override {

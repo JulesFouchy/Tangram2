@@ -5,7 +5,7 @@ struct Parameters {
     bool useEvenOdd;
     vec3 fill; // default 0.3, 0.6, 0.9
     vec3 stroke; // default 0.8, 0.2, 0.4
-    vec2[u.list.size] list; // size 7
+    vec2[u.list.size] list; // size 5
 };
 
 uniform Parameters u;

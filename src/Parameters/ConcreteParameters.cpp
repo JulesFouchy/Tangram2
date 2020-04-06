@@ -312,6 +312,8 @@ void ListOfPoints2DParameter::addPoint2D(entt::registry& R, entt::entity parentL
 bool ListOfPoints2DParameter::ImGui(entt::registry& R, Cmp::History& history, entt::entity layer) {
 	ImGui::InputInt(("Nb of " + m_name).c_str(), &m_size);
 	bool b = ImGui::IsItemDeactivatedAfterEdit();
+	if (m_size < 1)
+		m_size = 1;
 	if (b) {
 		ShaderSystem::CompileShaderAndUpdateParametersList(R, layer);
 	}

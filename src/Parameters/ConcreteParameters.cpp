@@ -316,12 +316,10 @@ void ListOfPoints2DParameter::sendToShader() {
 }
 void ListOfPoints2DParameter::copyValueTo(Parameter* paramPtr) {
 	ListOfPoints2DParameter* ptr = (ListOfPoints2DParameter*)paramPtr;
-	ptr->m_list.resize(m_list.size());
-	int k = 0;
-	for (Point2DParameter& param : m_list) {
-		ptr->m_list[k].m_name = param.m_name;
-		param.copyValueTo(&ptr->m_list[k]);
-		k++;
+	size_t size = std::min(ptr->m_list.size(), m_list.size());
+	for (int i = 0; i < size; ++i) {
+		ptr->m_list[i].m_name = m_list[i].m_name;
+		m_list[i].copyValueTo(&ptr->m_list[i]);
 	}
 }
 size_t ListOfPoints2DParameter::getHash() {

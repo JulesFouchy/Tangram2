@@ -6,6 +6,7 @@ struct Parameters {
     vec3 fill; // default 0.3, 0.6, 0.9
     vec3 stroke; // default 0.8, 0.2, 0.4
     vec2[u.pts.size] pts; // size 5
+    float mixStrokeFill; // default 0.001 min 0 max 0.003
 };
 
 uniform Parameters u;
@@ -74,7 +75,7 @@ float strokeDistanceField(vec2 nuv){
 }
 
 float strokeThroughDistanceField(vec2 nuv){
-    return smoothstep(0.007, 0.0, strokeDistanceField(nuv));
+    return smoothstep(u.mixStrokeFill, 0.0, strokeDistanceField(nuv));
 }
 
 float SDF(vec2 nuv){

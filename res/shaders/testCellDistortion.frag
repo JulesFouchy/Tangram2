@@ -26,7 +26,7 @@ void main() {
     for (int i = 0; i < u.pts.size; ++i) {
         rds[i] = length( uv - u.pts[i] ) - 0.1;
     }
-
+    float D = length( uv ) - 0.4;
     float[u.pts.size] ds;
     for (int i = 0; i < u.pts.size; ++i) {
         ds[i] = rds[i];
@@ -37,6 +37,7 @@ void main() {
             }
         }
         ds[i] -= otherDists;
+        ds[i] -= smin(0., -D-0.05, u.smoothMin);
     }
 
     //float rd1 = length(uv-u.pt1) - 0.4;
@@ -54,6 +55,7 @@ void main() {
     for (int i = 0; i < u.pts.size; ++i) {
         color += 1. - smoothstep(u.strokeSize, u.strokeSize + u.aa, abs(ds[i]));
     }
-    
+    color += 1. - smoothstep(u.strokeSize, u.strokeSize + u.aa, abs(D));
+
     gl_FragColor = vec4(color, 1.0);
 }

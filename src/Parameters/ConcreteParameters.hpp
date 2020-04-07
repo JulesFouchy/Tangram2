@@ -221,6 +221,7 @@ public:
 	void sendToShader() override;
 	void copyValueTo(Parameter* paramPtr) override;
 	size_t getHash() override;
+	inline entt::entity getEntity() { return m_entityPoint; }
 private:
 	void setVal(const glm::vec2& val);
 	glm::vec2 getVal();
@@ -254,6 +255,7 @@ public:
 	void fillListOfDefinesInShader(std::vector<std::pair<std::string, std::string>>& modifyFromTo) override;
 
 	inline int size() { return m_size; }
+	inline std::vector<Point2DParameter>& getList() { return m_list; }
 private:
 	std::vector<Point2DParameter> m_list;
 	int m_size;

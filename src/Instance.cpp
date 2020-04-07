@@ -160,7 +160,7 @@ void Instance::onLoopIteration(){
 	renderSystem().checkTexturesToRecompute();
 	inputSystem().update();
 	guiSystem().render(); 
-	m_cellularLife.loopIteration(1./60);
+	m_cellularLife.loopIteration(1./60, registry());
 }
 
 void Instance::createDrawingBoard() {

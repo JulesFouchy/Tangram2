@@ -1,5 +1,7 @@
 #pragma once
 
+#include <entt/entt.hpp>
+
 class LayersManager;
 
 class CellularLife {
@@ -8,5 +10,8 @@ public:
 	CellularLife(LayersManager& layersM);
 	~CellularLife() = default;
 
-	void loopIteration(float dt);
+	void loopIteration(float dt, entt::registry& R);
+
+private:
+	entt::entity m_layer;
 };

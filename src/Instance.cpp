@@ -104,7 +104,7 @@ Instance::Instance()
 	}
 	// Drawing board
 	createDrawingBoard();
-	m_cellularLife = CellularLife(m_layersManager);
+	m_cellularLife = CellularLife(registry(), m_layersManager);
 	//
 	//layersManager().createFragmentLayer("res/shaders/myFirstFrag.frag");
 	//layersManager().createFragmentLayer("res/shaders/second.frag");
@@ -161,6 +161,7 @@ void Instance::onLoopIteration(){
 	inputSystem().update();
 	guiSystem().render(); 
 	m_cellularLife.loopIteration(1./60, registry());
+	m_cellularLife.ImGui(registry());
 }
 
 void Instance::createDrawingBoard() {

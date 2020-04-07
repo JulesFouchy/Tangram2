@@ -3,8 +3,9 @@
 #include <entt/entt.hpp>
 
 #include "Parameters/ConcreteParameters.hpp"
-
 #include "Helper/Random.hpp"
+
+#include "Cell.hpp"
 
 class LayersManager;
 
@@ -23,6 +24,9 @@ private:
 	void resetPositions(entt::registry& R);
 
 private:
-	entt::entity m_layer;
 	Rand m_rand;
+	entt::entity m_layer;
+	std::vector<Cell> m_cells;
+
+	float m_dampingCoef;
 };

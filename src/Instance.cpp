@@ -104,8 +104,8 @@ Instance::Instance()
 	}
 	// Drawing board
 	createDrawingBoard();
+	m_cellularLife = CellularLife(m_layersManager);
 	//
-	//layersManager().createFragmentLayer("res/shaders/vasarely.frag");
 	//layersManager().createFragmentLayer("res/shaders/myFirstFrag.frag");
 	//layersManager().createFragmentLayer("res/shaders/second.frag");
 	//layersManager().createFragmentLayer("res/shaders/myFirstFrag.frag");
@@ -138,7 +138,7 @@ Instance::Instance()
 	//layersManager().createTestLayer();
 	//layersManager().createTestLayer();
 	//layersManager().createTestLayer();
-	layersManager().createPolygonLayer({ glm::vec2(-0.3, -0.5), glm::vec2(0, 0), glm::vec2(0.8, -0.5), glm::vec2(-0.8, -0.5), glm::vec2(0.8, 0.5) });
+	//layersManager().createPolygonLayer({ glm::vec2(-0.3, -0.5), glm::vec2(0, 0), glm::vec2(0.8, -0.5), glm::vec2(-0.8, -0.5), glm::vec2(0.8, 0.5) });
 	//renderSystem().computeTexture_Polygon(m_poly, 32.0f);
 }
 
@@ -159,7 +159,8 @@ void Instance::onLoopIteration(){
 	renderSystem().render();
 	renderSystem().checkTexturesToRecompute();
 	inputSystem().update();
-	guiSystem().render();
+	guiSystem().render(); 
+	m_cellularLife.loopIteration(1./60);
 }
 
 void Instance::createDrawingBoard() {

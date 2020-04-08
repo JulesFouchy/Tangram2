@@ -11,16 +11,17 @@
 
 #include "Core/MustRecomputeTexture.hpp"
 #include "Core/ChangeActiveHistory.hpp"
+#include "Core/GetDrawingBoard.hpp"
 
 bool GUISystem::s_bShowGUI = true;
 
-void GUISystem::LayersWindow(entt::registry& R, const std::vector<entt::entity>& layersOrdered, entt::entity& rSelectedLayer, entt::entity drawingBoardEntity) {
+void GUISystem::LayersWindow(entt::registry& R, const std::vector<entt::entity>& layersOrdered, entt::entity& rSelectedLayer) {
 	float height = 40.0f;
 	ImGui::Begin("Layers");
 	int k = 0;
 	for (entt::entity layer : layersOrdered) {
 		Cmp::Texture& tex = R.get<Cmp::Texture>(layer);
-		float aspect = R.get<Cmp::AspectRatio>(drawingBoardEntity).val;
+		float aspect = R.get<Cmp::AspectRatio>(TNG::GetDrawingBoard(R)).val;
 		ImGui::BeginGroup();
 		if (ImGui::Selectable(("##layer" + std::to_string(k)).c_str(), layer == rSelectedLayer, 0, ImVec2(0, height))) {
 			rSelectedLayer = layer;
@@ -69,9 +70,9 @@ void GUISystem::LayersWindow(entt::registry& R, const std::vector<entt::entity>&
 	ImGui::End();
 }
 
-void GUISystem::Render(entt::registry& R, const std::vector<entt::entity>& layersOrdered, entt::entity& rSelectedLayer, entt::entity drawingBoardEntity) {
+void GUISystem::Render(entt::registry& R, const std::vector<entt::entity>& layersOrdered, entt::entity& rSelectedLayer) {
 	if (s_bShowGUI) {
-		LayersWindow(R, layersOrdered, rSelectedLayer, drawingBoardEntity);
+		LayersWindow(R, layersOrdered, rSelectedLayer);
 		//
 		if (R.valid(rSelectedLayer)) {
 			ImGui::Begin("Parameters");

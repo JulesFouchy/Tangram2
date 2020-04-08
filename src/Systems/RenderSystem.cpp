@@ -12,6 +12,7 @@
 #include "Components/ShaderReference.hpp"
 
 #include "Core/GetMatrix.hpp"
+#include "Core/GetDrawingBoard.hpp"
 
 #include <glm/gtc/matrix_access.hpp>
 #include <glm/gtx/matrix_transform_2d.hpp>
@@ -38,14 +39,14 @@ RenderSystem::RenderSystem(Instance& instance)
 
 void RenderSystem::render() {
 	// Drawing Board
-	renderQuad({ I.drawingBoardId() }, s_shaderDrawingBoard);
+	renderQuad({ TNG::GetDrawingBoard(I.registry()) }, s_shaderDrawingBoard);
 	// Layers
-	Cmp::Texture& dbTexture = I.registry().get<Cmp::Texture>(I.drawingBoardId());
+	Cmp::Texture& dbTexture = I.registry().get<Cmp::Texture>(TNG::GetDrawingBoard(I.registry()));
 	setRenderTarget_Texture(dbTexture);
 	clear();
 	blendTextures(I.layersManager().m_layersOrdered, dbTexture);
 	glEnable(GL_BLEND);
-	renderTextures({ I.drawingBoardId() });
+	renderTextures({ TNG::GetDrawingBoard(I.registry()) });
 	glDisable(GL_BLEND);
 	// Points2D
 	if (GUISystem::ShouldShowGUI()) {
@@ -136,7 +137,7 @@ void RenderSystem::renderTextures(const std::vector<entt::entity>& list) {
 	// Loop
 	for (entt::entity e : list) {
 		// Matrix
-		s_shaderTexture.setUniformMat3f("u_mat", TNG::GetMatrixPlusAspectRatio(I.registry(), I.drawingBoardId()));
+		s_shaderTexture.setUniformMat3f("u_mat", TNG::GetMatrixPlusAspectRatio(I.registry(), TNG::GetDrawingBoard(I.registry())));
 		// Texture
 		Cmp::Texture& tex = I.registry().get<Cmp::Texture>(e);
 		GLCall(glBindTexture(GL_TEXTURE_2D, tex.id));

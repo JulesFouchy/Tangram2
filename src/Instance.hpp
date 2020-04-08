@@ -24,7 +24,6 @@ public:
 	inline RenderSystem& renderSystem() { return m_renderSystem; }
 	inline InputSystem& inputSystem() { return m_inputSystem; }
 	inline LayersManager& layersManager() { return m_layersManager; }
-	inline entt::entity& drawingBoardId() { return m_drawingBoardId; }
 
 private:
 	void onTransformMatrixChange(entt::entity e, entt::registry& R);
@@ -45,7 +44,6 @@ private:
 	RenderSystem m_renderSystem;
 	InputSystem m_inputSystem;
 	LayersManager m_layersManager;
-	entt::entity m_drawingBoardId;
 
 	entt::entity m_poly;
 	entt::entity m_testLayer;

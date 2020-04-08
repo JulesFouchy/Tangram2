@@ -14,6 +14,7 @@
 
 #include "Core/MustRecomputeTexture.hpp"
 #include "Core/GetFirstLayerRelatedTo.hpp"
+#include "Core/GetDrawingBoard.hpp"
 
 #include "Systems/ShaderSystem.hpp"
 #include "Systems/GUISystem.hpp"
@@ -47,7 +48,7 @@ static void deleteShader(entt::entity e, entt::registry& R) {
 //}
 
 void Instance::onTransformMatrixChange(entt::entity e, entt::registry& R) {
-	if (e != drawingBoardId()) {
+	if (e != TNG::GetDrawingBoard(registry())) {
 		onMustRecomputeTexture(e);
 		Cmp::Children& children = R.get<Cmp::Children>(e);
 		for (entt::entity child : children.list) {
@@ -157,20 +158,20 @@ void Instance::onLoopIteration(){
 	renderSystem().render();
 	renderSystem().checkTexturesToRecompute();
 	inputSystem().update();
-	GUISystem::Render(registry(), layersManager().getLayersOrdered(), layersManager().selectedLayer(), drawingBoardId());
+	GUISystem::Render(registry(), layersManager().getLayersOrdered(), layersManager().selectedLayer());
 }
 
 void Instance::createDrawingBoard() {
-	m_drawingBoardId = registry().create();
+	entt::entity e = registry().create();
 	glm::mat3 mat(1.0f);
 	mat = glm::scale(mat, glm::vec2(0.8f));
 	//mat = glm::rotate(mat, 0.1f);
-	registry().assign<entt::tag<"DrawingBoard"_hs>>(m_drawingBoardId);
-	registry().assign<Cmp::TransformMatrix>(drawingBoardId(), mat);
-	registry().assign<Cmp::AspectRatio>(drawingBoardId(), 1.0f);
-	registry().assign<Cmp::Children>(drawingBoardId());
-	registry().assign<Cmp::Texture>(drawingBoardId(), 1000, 1000);
-	registry().assign<Cmp::History>(drawingBoardId());
+	registry().assign<entt::tag<"DrawingBoard"_hs>>(e);
+	registry().assign<Cmp::TransformMatrix>(e, mat);
+	registry().assign<Cmp::AspectRatio>(e, 1.0f);
+	registry().assign<Cmp::Children>(e);
+	registry().assign<Cmp::Texture>(e, 1000, 1000);
+	registry().assign<Cmp::History>(e);
 }
 
 std::string Instance::getProjectPath() {
@@ -248,8 +249,7 @@ void Instance::saveProject(const std::string& folderpath) {
 	{
 		cereal::JSONOutputArchive otherArchive(otherOs);
 		otherArchive(
-			CEREAL_NVP(m_layersManager),
-			CEREAL_NVP(m_drawingBoardId)
+			CEREAL_NVP(m_layersManager)
 		);
 		cereal::JSONOutputArchive registryArchive(registryOs);
 		registry().snapshot()
@@ -277,8 +277,7 @@ void Instance::openProject(const std::string& folderpath) {
 	{
 		cereal::JSONInputArchive otherArchive(otherIs);
 		otherArchive(
-			m_layersManager,
-			m_drawingBoardId
+			m_layersManager
 		);
 		cereal::JSONInputArchive registryArchive(registryIs);
 		registry().loader()

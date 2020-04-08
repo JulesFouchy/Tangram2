@@ -13,7 +13,6 @@
 
 #include "ShaderSystem.hpp"
 #include "RenderSystem.hpp"
-#include "RenderSystem.hpp"
 
 #include "Core/CreateParentRelationship.hpp"
 #include "Core/GetDrawingBoard.hpp"

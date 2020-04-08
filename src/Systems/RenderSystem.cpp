@@ -1,7 +1,5 @@
 #include "RenderSystem.hpp"
 
-#include "Components/Vertices.hpp"
-#include "Components/AspectRatio.hpp"
 #include "Components/ParametersList.hpp"
 #include "Components/Parent.hpp"
 #include "Components/Shader.hpp"
@@ -12,20 +10,15 @@
 #include "Core/GetMatrix.hpp"
 #include "Core/GetDrawingBoard.hpp"
 
-#include <glm/gtc/matrix_access.hpp>
-#include <glm/gtx/matrix_transform_2d.hpp>
-
 #include "Debugging/glException.hpp"
 #include <glad/glad.h>
 
 #include "stb_image/stb_image_write.h"
 
 #include "Helper/String.hpp"
-#include "Helper/DisplayInfos.hpp"
 
 unsigned int RenderSystem::m1to1QuadVBOid;
 unsigned int RenderSystem::m1to1QuadVAOid;
-Shader RenderSystem::s_shaderTest         ("res/shaders/defaultDrawOnTexture.vert", "res/shaders/test.frag", false);
 Shader RenderSystem::s_shaderDrawingBoard ("res/shaders/default.vert", "res/shaders/drawingBoard.frag", false);
 Shader RenderSystem::s_shaderPoint        ("res/shaders/default.vert", "res/shaders/point.frag", false);
 Shader RenderSystem::s_shaderTexture      ("res/shaders/default.vert", "res/shaders/texture.frag", false);
@@ -68,13 +61,6 @@ void RenderSystem::exportImage(entt::registry& R, const std::vector<entt::entity
 		if (R.has<entt::tag<"FragmentLayer"_hs>>(e)) {
 			drawFragment(R, e);
 		}
-		//else if (R.has<entt::tag<"TestLayer"_hs>>(e)) {
-		//	drawTest(e);
-		//}
-		//else if (R.has<entt::tag<"Polygon"_hs>>(e)) {
-		//	drawPolygon(e);
-		//}
-		//
 		blendTextures(tmpTexture, renderTexture);
 	}
 	// Save pixels
@@ -97,15 +83,7 @@ void RenderSystem::checkTexturesToRecompute(entt::registry& R) {
 	R.view<entt::tag<"FragmentLayer"_hs>, entt::tag<"MustRecomputeTexture"_hs>>().each([this, &R](auto e, auto&, auto&) {
 		computeTexture_Fragment(R, e);
 		R.remove<entt::tag<"MustRecomputeTexture"_hs>>(e);
-		});
-	/*R.view<entt::tag<"Polygon"_hs>, entt::tag<"MustRecomputeTexture"_hs>>().each([this](auto e, auto&, auto&) {
-		computeTexture_Polygon(e);
-		I.registry().remove<entt::tag<"MustRecomputeTexture"_hs>>(e);
 	});
-	R.view<entt::tag<"TestLayer"_hs>, entt::tag<"MustRecomputeTexture"_hs>>().each([this](auto e, auto&, auto&) {
-		computeTexture_Test(e);
-		I.registry().remove<entt::tag<"MustRecomputeTexture"_hs>>(e);
-	});*/
 }
 
 void RenderSystem::_renderQuad(entt::entity e, Shader& shader, std::function<glm::mat3(entt::entity)> getMatrix) {
@@ -187,25 +165,6 @@ void RenderSystem::drawFragment(entt::registry& R, entt::entity e) {
 	drawFullscreen();
 }
 
-/*void RenderSystem::drawTest(entt::entity e) {
-	s_shaderTest.bind();
-	s_shaderTest.setUniformMat3f("u_localTransformMat", TNG::GetMatrixToTextureSpace(I.registry(), e));
-	drawFullscreen();
-}*/
-
-/*void RenderSystem::drawPolygon(entt::entity e) {
-	//s_shaderPolygon.bind();
-	//s_shaderPolygon.setUniform1f("u_SmoothMin", 1.0f / I.registry().get<Cmp::SliderFloat>(I.registry().get<Cmp::Parameters>(e).list[0]).val);
-	//s_shaderPolygon.setUniformMat3f("u_localTransformMat", I.getMatrixToTextureSpace(e));
-	//int k = 0;
-	//Cmp::Vertices& vertices = I.registry().get<Cmp::Vertices>(e);
-	//for (entt::entity vertex : vertices.list) {
-	//	s_shaderPolygon.setUniform2f("u_vertices[" + std::to_string(k) + "]", glm::vec2(glm::column(I.getLocalTransform(vertex), 2)));
-	//	k++;
-	//}
-	//drawFullscreen();
-}*/
-
 void RenderSystem::drawFullscreen() {
 	glBindVertexArray(m1to1QuadVAOid);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -231,20 +190,7 @@ void RenderSystem::computeTexture_Fragment(entt::registry& R, entt::entity e) {
 	endComputeTexture();
 }
 
-/*void RenderSystem::computeTexture_Test(entt::entity e) {
-	beginComputeTexture(e);
-	drawTest(e);
-	endComputeTexture();
-}
-
-void RenderSystem::computeTexture_Polygon(entt::entity e) {
-	beginComputeTexture(e);
-	drawPolygon(e);
-	endComputeTexture();
-}*/
-
 void RenderSystem::Initialize() {
-	s_shaderTest.compile();
 	s_shaderDrawingBoard.compile();
 	s_shaderPoint.compile();
 	s_shaderTexture.compile();

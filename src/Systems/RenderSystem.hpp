@@ -40,8 +40,6 @@ private:
 	void endBlendTexture();
 
 	void drawFragment(entt::registry& R, entt::entity e);
-	//void drawTest(entt::entity e);
-	//void drawPolygon(entt::entity e);
 
 	void clear();
 	void drawFullscreen();
@@ -49,8 +47,6 @@ private:
 	void beginComputeTexture(entt::registry& R, entt::entity e);
 	void endComputeTexture();
 	void computeTexture_Fragment(entt::registry& R, entt::entity e);
-	//void computeTexture_Test(entt::entity e);
-	//void computeTexture_Polygon(entt::entity e);
 
 friend class LayersManager;
 friend class Instance;
@@ -63,7 +59,6 @@ friend class Settings;
 private:
 	RenderBuffer m_renderBuffer;
 
-	static Shader s_shaderTest;
 	static Shader s_shaderDrawingBoard;
 	static Shader s_shaderPoint;
 	static Shader s_shaderTexture;

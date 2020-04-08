@@ -153,7 +153,7 @@ Instance::Instance(const std::string& projectFolderpath)
 }
 
 void Instance::onLoopIteration(){
-	renderSystem().render(m_registry, m_layersManager.getLayersOrdered(), m_layersManager.getSelectedLayer());
+	renderSystem().render(m_registry, m_layersManager.getLayersOrdered(), m_layersManager.getSelectedLayer(), GUISystem::ShouldShowGUI());
 	renderSystem().checkTexturesToRecompute(m_registry);
 	inputSystem().update();
 	GUISystem::Render(m_registry, m_layersManager.getLayersOrdered(), m_layersManager.selectedLayer());

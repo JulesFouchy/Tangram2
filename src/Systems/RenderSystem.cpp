@@ -5,8 +5,6 @@
 #include "Components/Shader.hpp"
 #include "Components/ShaderReference.hpp"
 
-#include "GUISystem.hpp"
-
 #include "Core/GetMatrix.hpp"
 #include "Core/GetDrawingBoard.hpp"
 
@@ -24,7 +22,7 @@ Shader RenderSystem::s_shaderPoint        ("res/shaders/default.vert", "res/shad
 Shader RenderSystem::s_shaderTexture      ("res/shaders/default.vert", "res/shaders/texture.frag", false);
 Shader RenderSystem::s_shaderBlend        ("res/shaders/blendDefault.vert", "res/shaders/blendDefault.frag", false);
 
-void RenderSystem::render(entt::registry& R, const std::vector<entt::entity>& layersOrdered, entt::entity selectedLayer) {
+void RenderSystem::render(entt::registry& R, const std::vector<entt::entity>& layersOrdered, entt::entity selectedLayer, bool bShowGUI) {
 	// Drawing Board
 	renderQuad(R, { TNG::GetDrawingBoard(R) }, s_shaderDrawingBoard);
 	// Layers
@@ -36,7 +34,7 @@ void RenderSystem::render(entt::registry& R, const std::vector<entt::entity>& la
 	renderTextures(R, { TNG::GetDrawingBoard(R) });
 	glDisable(GL_BLEND);
 	// Points2D
-	if (GUISystem::ShouldShowGUI()) {
+	if (bShowGUI) {
 		glEnable(GL_BLEND);
 		R.view<entt::tag<"Point2D"_hs>>().each([this, &R, selectedLayer](auto entity, auto& tag) {
 			Cmp::Parent* parent = R.try_get<Cmp::Parent>(entity);

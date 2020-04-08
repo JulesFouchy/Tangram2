@@ -18,7 +18,7 @@ public:
 	static void Initialize();
 	static void ShutDown();
 
-	void render(entt::registry& R, const std::vector<entt::entity>& layersOrdered, entt::entity selectedLayer);
+	void render(entt::registry& R, const std::vector<entt::entity>& layersOrdered, entt::entity selectedLayer, bool bShowGUI);
 	void checkTexturesToRecompute(entt::registry& R);
 
 	void exportImage(entt::registry& R, const std::vector<entt::entity>& layersOrdered, unsigned int width, unsigned int height, const std::string& filepath);

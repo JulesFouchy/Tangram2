@@ -91,7 +91,6 @@ Instance::~Instance() {
 
 Instance::Instance()
 	: m_registry(),
-	  m_renderSystem(*this),
 	  m_inputSystem(*this),
 	  m_projectLocation(MyFile::RootDir+"/MyTangramProjects"),
 	  m_bUserChoseProjectName(false)
@@ -146,7 +145,6 @@ Instance::Instance()
 
 Instance::Instance(const std::string& projectFolderpath)
 	: m_registry(),
-	  m_renderSystem(*this),
 	  m_inputSystem(*this),
 	  m_bUserChoseProjectName(true)
 {
@@ -155,10 +153,10 @@ Instance::Instance(const std::string& projectFolderpath)
 }
 
 void Instance::onLoopIteration(){
-	renderSystem().render();
-	renderSystem().checkTexturesToRecompute();
+	renderSystem().render(m_registry, m_layersManager.getLayersOrdered(), m_layersManager.getSelectedLayer());
+	renderSystem().checkTexturesToRecompute(m_registry);
 	inputSystem().update();
-	GUISystem::Render(registry(), layersManager().getLayersOrdered(), layersManager().selectedLayer());
+	GUISystem::Render(m_registry, m_layersManager.getLayersOrdered(), m_layersManager.selectedLayer());
 }
 
 void Instance::createDrawingBoard() {
@@ -170,7 +168,7 @@ void Instance::createDrawingBoard() {
 	registry().assign<Cmp::TransformMatrix>(e, mat);
 	registry().assign<Cmp::AspectRatio>(e, 1.0f);
 	registry().assign<Cmp::Children>(e);
-	registry().assign<Cmp::Texture>(e, 1000, 1000);
+	registry().assign<Cmp::Texture>(e, Settings::GetPREVIEW_SIZE_IN_PX(), Settings::GetPREVIEW_SIZE_IN_PX());
 	registry().assign<Cmp::History>(e);
 }
 

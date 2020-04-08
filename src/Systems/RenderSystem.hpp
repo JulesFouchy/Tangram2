@@ -1,60 +1,56 @@
 #pragma once
 
-#include "ISystem.hpp"
+#include <entt/entt.hpp>
+#include <vector>
+#include <functional>
 
 #include "OpenGL/Shader.hpp"
 
 #include "Components/PreviewTexture.hpp"
 #include "OpenGL/RenderBuffer.hpp"
 
-#include <vector>
-#include <functional>
-
 #include "Settings/Settings.hpp"
 
-class RenderSystem : public ISystem {
+class RenderSystem {
 public:
-	RenderSystem(Instance& instance);
+	RenderSystem() = default;
 	~RenderSystem() = default;
 	static void Initialize();
 	static void ShutDown();
 
-	void render();
-	void showGUI();
-	void checkTexturesToRecompute();
+	void render(entt::registry& R, const std::vector<entt::entity>& layersOrdered, entt::entity selectedLayer);
+	void checkTexturesToRecompute(entt::registry& R);
+
+	void exportImage(entt::registry& R, const std::vector<entt::entity>& layersOrdered, unsigned int width, unsigned int height, const std::string& filepath);
 
 	inline unsigned int previewWidth() { return Settings::GetPREVIEW_SIZE_IN_PX(); }
 	inline unsigned int previewHeight() { return Settings::GetPREVIEW_SIZE_IN_PX(); }
 
 private:
-	friend class Window_ExportImage;
-	void exportImage(unsigned int width, unsigned int height, const std::string& filepath);
-
-private:
 	void _renderQuad(entt::entity e, Shader& shader, std::function<glm::mat3(entt::entity)> getMatrix);
-	void renderQuad(const std::vector<entt::entity>& list, Shader& shader);
-	void renderSquare(const std::vector<entt::entity>& list, Shader& shader);
-	void renderTextures(const std::vector<entt::entity>& list);
+	void renderQuad(entt::registry& R, const std::vector<entt::entity>& list, Shader& shader);
+	void renderSquare(entt::registry& R, const std::vector<entt::entity>& list, Shader& shader);
+	void renderTextures(entt::registry& R, const std::vector<entt::entity>& list);
 
-	void blendTextures(const std::vector<entt::entity>& sources, Cmp::Texture& destination);
+	void blendTextures(entt::registry& R, const std::vector<entt::entity>& sources, Cmp::Texture& destination);
 	void blendTextures(Cmp::Texture& source, Cmp::Texture& destination);
 
 	void beginBlendTexture(Cmp::Texture& destination);
 	void doBlendTexture(Cmp::Texture& source);
 	void endBlendTexture();
 
-	void drawFragment(entt::entity e);
-	void drawTest(entt::entity e);
-	void drawPolygon(entt::entity e);
+	void drawFragment(entt::registry& R, entt::entity e);
+	//void drawTest(entt::entity e);
+	//void drawPolygon(entt::entity e);
 
 	void clear();
 	void drawFullscreen();
 
-	void beginComputeTexture(entt::entity e);
+	void beginComputeTexture(entt::registry& R, entt::entity e);
 	void endComputeTexture();
-	void computeTexture_Fragment(entt::entity e);
-	void computeTexture_Test(entt::entity e);
-	void computeTexture_Polygon(entt::entity e);
+	void computeTexture_Fragment(entt::registry& R, entt::entity e);
+	//void computeTexture_Test(entt::entity e);
+	//void computeTexture_Polygon(entt::entity e);
 
 friend class LayersManager;
 friend class Instance;

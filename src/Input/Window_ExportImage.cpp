@@ -34,7 +34,8 @@ void Window_ExportImage::Show() {
 }
 
 void Window_ExportImage::OnConfirmation() {
-	I.renderSystem().exportImage(m_widthHeightRatioPicker.getWidth(),
+	I.renderSystem().exportImage(I.registry(), I.layersManager().getLayersOrdered(),
+								 m_widthHeightRatioPicker.getWidth(),
 		                         m_widthHeightRatioPicker.getHeight(), 
 		                         m_filepathPicker.getFilepath()
 	);

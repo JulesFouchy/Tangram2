@@ -5,7 +5,7 @@
 #include "Components/Parent.hpp"
 #include "Components/Children.hpp"
 #include "Components/Vertices.hpp"
-#include "Components/ParametersList.hpp"
+#include "Components/Parameters.hpp"
 #include "Components/PreviewTexture.hpp"
 #include "Components/Name.hpp"
 #include "Components/ShaderReference.hpp"

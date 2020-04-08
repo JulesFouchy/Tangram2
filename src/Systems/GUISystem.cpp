@@ -3,7 +3,7 @@
 #include <imgui/imgui.h>
 #include <imgui/misc/cpp/imgui_stdlib.h>
 
-#include "Components/ParametersList.hpp"
+#include "Components/Parameters.hpp"
 #include "Components/AspectRatio.hpp"
 #include "Components/Name.hpp"
 #include "Components/PreviewTexture.hpp"

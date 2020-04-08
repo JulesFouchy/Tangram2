@@ -6,7 +6,7 @@
 #include "Components/VisualDependencies.hpp"
 #include "Components/AspectRatio.hpp"
 #include "Components/Vertices.hpp"
-#include "Components/ParametersList.hpp"
+#include "Components/Parameters.hpp"
 #include "Components/Name.hpp"
 #include "Components/Shader.hpp"
 #include "Components/ShaderReference.hpp"

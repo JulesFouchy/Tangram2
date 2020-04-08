@@ -1,6 +1,6 @@
 #include "RenderSystem.hpp"
 
-#include "Components/ParametersList.hpp"
+#include "Components/Parameters.hpp"
 #include "Components/Parent.hpp"
 #include "Components/Shader.hpp"
 #include "Components/ShaderReference.hpp"

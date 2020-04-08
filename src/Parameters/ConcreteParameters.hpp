@@ -7,6 +7,7 @@
 #include <cereal/access.hpp>
 #include <cereal/types/string.hpp>
 #include <cereal/types/polymorphic.hpp>
+#include <cereal/types/vector.hpp>
 #include <cereal/archives/binary.hpp>
 #include <cereal/archives/json.hpp>
 
@@ -211,6 +212,7 @@ private:
 };
 
 class Point2DParameter : public Parameter {
+	friend class ListOfPoints2DParameter;
 public:
 	Point2DParameter() = default;
 	Point2DParameter(entt::registry& R, entt::entity parentLayer, int glUniformLocation, const std::string & name, const glm::vec2& val);
@@ -236,6 +238,43 @@ private:
 	// Restore registry when loading project
 	inline void initializeRegistry(entt::registry& R) override {
 		m_R = &R;
+	}
+};
+
+class ListOfPoints2DParameter : public Parameter {
+public:
+	ListOfPoints2DParameter() = default;
+	ListOfPoints2DParameter(entt::registry& R, entt::entity parentLayer, const std::string& name, int size = 0);
+	~ListOfPoints2DParameter() = default;
+	bool ImGui(entt::registry& R, Cmp::History& history, entt::entity layer) override;
+	void sendToShader() override;
+	void copyValueTo(Parameter* paramPtr) override;
+	size_t getHash() override;
+	void computeUniformLocation(int shaderID) override;
+	void fillListOfDefinesInShader(std::vector<std::pair<std::string, std::string>>& modifyFromTo) override;
+
+	inline int size() { return m_size; }
+private:
+	std::vector<Point2DParameter> m_list;
+	int m_size;
+private:
+	void addPoint2D(entt::registry& R, entt::entity parentLayer, const glm::vec2& val = glm::vec2(0.0f));
+private:
+	// Serialization
+	friend class cereal::access;
+	template<class Archive>
+	void save(Archive& archive) const {
+		archive(m_name, m_list, m_size);
+	}
+
+	template<class Archive>
+	void load(Archive& archive) {
+		archive(m_name, m_list, m_size);
+	}
+	// Restore registry when loading project
+	inline void initializeRegistry(entt::registry& R) override {
+		for (Point2DParameter& param : m_list)
+			param.initializeRegistry(R);
 	}
 };
 
@@ -417,6 +456,9 @@ CEREAL_REGISTER_POLYMORPHIC_RELATION(Parameter, Color4Parameter)
 
 CEREAL_REGISTER_TYPE(Point2DParameter)
 CEREAL_REGISTER_POLYMORPHIC_RELATION(Parameter, Point2DParameter)
+
+CEREAL_REGISTER_TYPE(ListOfPoints2DParameter)
+CEREAL_REGISTER_POLYMORPHIC_RELATION(Parameter, ListOfPoints2DParameter)
 
 CEREAL_REGISTER_TYPE(BoolParameter)
 CEREAL_REGISTER_POLYMORPHIC_RELATION(Parameter, BoolParameter)

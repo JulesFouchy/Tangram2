@@ -5,11 +5,8 @@ struct Parameters {
     bool useEvenOdd;
     vec3 fill; // default 0.3, 0.6, 0.9
     vec3 stroke; // default 0.8, 0.2, 0.4
-    vec2 pt1; // default -0.3 -0.5
-    vec2 pt2; // default  0    0
-    vec2 pt3; // default  0.8 -0.5
-    vec2 pt4; // default -0.8 -0.5
-    vec2 pt5; // default  0.8  0.5
+    vec2[u.pts.size] pts; // size 5
+    float mixStrokeFill; // default 0.001 min 0 max 0.003
 };
 
 uniform Parameters u;
@@ -22,13 +19,13 @@ in vec2 vTexCoords;
 float intersectionOfHorizRayWith(vec2 nuv, vec2 p1, vec2 p2){
     return (nuv - p1).y / (p2 - p1).y;
 }
-
+//? #define u.list.size 1
 float evenOdd(vec2 nuv){
+    int N = u.pts.size;
     int intersectionsCount = 0;
-    vec2 u_vertices[5] = {u.pt1, u.pt2, u.pt3, u.pt4, u.pt5};
     for (int i = 0; i < N; ++i){
-        vec2 p1 = u_vertices[i];
-        vec2 p2 = u_vertices[(i+1)%N];
+        vec2 p1 = u.pts[i];
+        vec2 p2 = u.pts[(i+1)%N];
         float inter = intersectionOfHorizRayWith(nuv, p1 , p2);
         vec2 interPt = p1 + inter * (p2 - p1);
         if (0.0 <= inter && inter <= 1.0 && interPt.x > nuv.x)
@@ -38,11 +35,11 @@ float evenOdd(vec2 nuv){
 }
 
 float nonZeroWinding(vec2 nuv){
-    vec2 u_vertices[5] = {u.pt1, u.pt2, u.pt3, u.pt4, u.pt5};
+    int N = u.pts.size;
     int windingCount = 0;
     for (int i = 0; i < N; ++i){
-        vec2 p1 = u_vertices[i];
-        vec2 p2 = u_vertices[(i+1)%N];
+        vec2 p1 = u.pts[i];
+        vec2 p2 = u.pts[(i+1)%N];
         float inter = intersectionOfHorizRayWith(nuv, p1 , p2);
         vec2 interPt = p1 + inter * (p2 - p1);
         if (0.0 <= inter && inter <= 1.0 && interPt.x > nuv.x){
@@ -65,11 +62,11 @@ float smin( float a, float b, float k )
 }
 
 float strokeDistanceField(vec2 nuv){
-    vec2 u_vertices[5] = {u.pt1, u.pt2, u.pt3, u.pt4, u.pt5};
+    int N = u.pts.size;
     float dist = 10000000000000.0;
     for (int i = 0; i < N; ++i){
-        vec2 p1 = u_vertices[i];
-        vec2 p2 = u_vertices[(i+1)%N];
+        vec2 p1 = u.pts[i];
+        vec2 p2 = u.pts[(i+1)%N];
         float d = distToSegment(nuv, p1, p2);
         dist = smin(dist, d, u.SmoothMin);
         //dist = min(dist, d);
@@ -78,7 +75,7 @@ float strokeDistanceField(vec2 nuv){
 }
 
 float strokeThroughDistanceField(vec2 nuv){
-    return smoothstep(0.007, 0.0, strokeDistanceField(nuv));
+    return smoothstep(u.mixStrokeFill, 0.0, strokeDistanceField(nuv));
 }
 
 float SDF(vec2 nuv){

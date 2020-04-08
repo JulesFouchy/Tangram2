@@ -26,8 +26,12 @@ void ShaderSystem::CompileShaderAndUpdateParametersList(entt::registry& R, entt:
 	params.history.clear();
 	// Update ParametersList
 	UpdateParametersList(R, layer, shaderRef.entityID, params.list);
+	// Get #defines
+	std::vector<std::pair<std::string, std::string>> modifyFromTo;
+	for (const auto& param : params.list)
+		param->fillListOfDefinesInShader(modifyFromTo);
 	// (Re)compile shader
-	shader.compile(ShaderHelper::parseFile(shader.vertexFilepath), ShaderHelper::parseFile(shader.fragmentFilepath));
+	shader.compile(ShaderHelper::parseFile(shader.vertexFilepath), ShaderHelper::parseFile(shader.fragmentFilepath, modifyFromTo));
 	ComputeUniformLocations(R, layer);
 	// Recompute texture
 	TNG::MustRecomputeTexture(R, layer);
@@ -71,7 +75,7 @@ void ShaderSystem::ComputeUniformLocations(entt::registry& R, entt::entity layer
 	Cmp::Shader& shader = R.get<Cmp::Shader>(R.get<Cmp::ShaderReference>(layerWithAShader).entityID);
 	glUseProgram(shader.id);
 	for (const auto& param : params.list) {
-		param->m_glUniformLocation = GetUniformLocation(shader.id, param->m_name);
+		param->computeUniformLocation(shader.id);
 	}
 }
 
@@ -118,6 +122,10 @@ std::shared_ptr<Parameter> ShaderSystem::CreateParameterFromLine(entt::registry&
 			paramPtr = std::make_shared<Point2DParameter>(R, parentLayer, glUniformLocation, name, ReadValue<glm::vec2>(line, "default"));
 			paramType = "point2D";
 		}
+	}
+	else if (type.find("vec2[") != std::string::npos) {
+		paramPtr = std::make_shared<ListOfPoints2DParameter>(R, parentLayer, name, ReadValue<int>(line, "size"));
+		paramType = "listOfPoints2D";
 	}
 	else if (!type.compare("vec3")) {
 		if (MyString::FindCaseInsensitive(line, "NOT_A_COLOR") != std::string::npos) {
@@ -169,6 +177,8 @@ std::shared_ptr<Parameter> ShaderSystem::CreateParameterFromLine(entt::registry&
 		return p->getHash() == hashOfParam;
 		});
 	if (it != prevList.end()) {
+		if (type.find("vec2[") != std::string::npos) // to resize ListOfPoints2DParameter through ImGui and the m_size member
+			paramPtr = std::make_shared<ListOfPoints2DParameter>(R, parentLayer, name, ((ListOfPoints2DParameter*)it->get())->size());
 		(**it).copyValueTo(paramPtr.get());
 	}
 	return std::move(paramPtr);

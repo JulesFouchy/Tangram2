@@ -26,7 +26,9 @@ public:
 
 	void swapLayers(size_t i1, size_t i2);
 
-	inline entt::entity selectedLayer() { return m_selectedLayer; }
+	inline const std::vector<entt::entity>& getLayersOrdered() { return m_layersOrdered; }
+	inline entt::entity getSelectedLayer() { return m_selectedLayer; }
+	inline entt::entity& selectedLayer() { return m_selectedLayer; }
 
 private:
 	entt::entity createLayerEntity();
@@ -35,8 +37,6 @@ private:
 	bool isEntityHoveredBy(entt::entity e, const glm::vec2& posInNDC);
 friend class InputState_Rest;
 	inline void setSelectedLayer(entt::entity e) { m_selectedLayer = e; }
-friend class GUISystem;
-	const std::vector<entt::entity>& getLayersOrdered() { return m_layersOrdered; }
 
 private:
 	unsigned int m_nbTestLayers = 0;

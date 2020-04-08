@@ -1,17 +1,17 @@
 #pragma once
 
-#include "ISystem.hpp"
+#include <entt/entt.hpp>
 
-class GUISystem : public ISystem {
+class GUISystem {
 public:
-	GUISystem(Instance& instance);
+	GUISystem() = default;
 	~GUISystem() = default;
 
 	static inline bool ShowGUI() { return s_bShowGUI; }
 private:
-	void LayersWindow();
+	void LayersWindow(entt::registry& R, const std::vector<entt::entity>& layersOrdered, entt::entity& selectedLayer, entt::entity drawingBoardEntity);
 friend class Instance;
-	void render();
+	void render(entt::registry& R, const std::vector<entt::entity>& layersOrdered, entt::entity& rSelectedLayer, entt::entity drawingBoardEntity);
 friend class InputState_Rest;
 	static inline void ToggleOnOff() { s_bShowGUI = !s_bShowGUI; }
 

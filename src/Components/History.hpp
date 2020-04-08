@@ -41,7 +41,7 @@ public:
 		if (m_tmpActionBuffer.size() > 0) {
 			//
 			m_cumulNbOfActionsToGetToThisUndoGroup.resize(m_indexOfCumulfNbOfActions + 1);
-			m_cumulNbOfActionsToGetToThisUndoGroup.push_back(m_tmpActionBuffer.size() + (m_indexOfCumulfNbOfActions > -1 ? m_cumulNbOfActionsToGetToThisUndoGroup[m_indexOfCumulfNbOfActions] : 0));
+			m_cumulNbOfActionsToGetToThisUndoGroup.push_back((int)m_tmpActionBuffer.size() + (m_indexOfCumulfNbOfActions > -1 ? m_cumulNbOfActionsToGetToThisUndoGroup[m_indexOfCumulfNbOfActions] : 0));
 			m_indexOfCumulfNbOfActions++;
 			//
 			m_actions.resize(m_indexOfCumulfNbOfActions > 0 ? m_cumulNbOfActionsToGetToThisUndoGroup[m_indexOfCumulfNbOfActions - 1] : 0);
@@ -63,7 +63,7 @@ public:
 	void moveBackward() {
 		if (m_indexOfCumulfNbOfActions > -1) {
 			//spdlog::info("moving backward");
-			for (int i = 0; i < nbOfActionsBetweenThisAndPreviousUndoGroup(m_indexOfCumulfNbOfActions); ++i) {
+			for (size_t i = 0; i < nbOfActionsBetweenThisAndPreviousUndoGroup(m_indexOfCumulfNbOfActions); ++i) {
 				m_actions[m_index].Undo();
 				m_index--;
 			}
@@ -74,7 +74,7 @@ public:
 	void moveForward() {
 		if (m_indexOfCumulfNbOfActions < (int)(m_cumulNbOfActionsToGetToThisUndoGroup.size() - 1)) { // cast to an int because size_t is an unsigned type and it causes a bug when m_indexOfCumulfNbOfActions == -1
 			//spdlog::info("moving forward");
-			for (int i = 0; i < nbOfActionsBetweenThisAndPreviousUndoGroup(m_indexOfCumulfNbOfActions + 1); ++i) {
+			for (size_t i = 0; i < nbOfActionsBetweenThisAndPreviousUndoGroup(m_indexOfCumulfNbOfActions + 1); ++i) {
 				m_index++;
 				m_actions[m_index].Do();
 			}

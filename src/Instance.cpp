@@ -13,11 +13,10 @@
 #include "Components/History.hpp"
 
 #include "Core/MustRecomputeTexture.hpp"
+#include "Core/GetFirstLayerRelatedTo.hpp"
 
 #include "Systems/ShaderSystem.hpp"
 #include "Systems/GUISystem.hpp"
-
-#include "glm/gtx/matrix_transform_2d.hpp"
 
 #include "Helper/DisplayInfos.hpp"
 #include "Helper/String.hpp"
@@ -31,6 +30,8 @@
 #include <cereal/archives/json.hpp>
 #include <fstream>
 #include "Debugging/Log.hpp"
+
+#include "glm/gtx/matrix_transform_2d.hpp"
 
 #include "App.hpp"
 
@@ -91,7 +92,6 @@ Instance::Instance()
 	: m_registry(),
 	  m_renderSystem(*this),
 	  m_inputSystem(*this),
-	  m_layersManager(*this),
 	  m_projectLocation(MyFile::RootDir+"/MyTangramProjects"),
 	  m_bUserChoseProjectName(false)
 {
@@ -138,7 +138,7 @@ Instance::Instance()
 	//layersManager().createTestLayer();
 	//layersManager().createTestLayer();
 	//layersManager().createTestLayer();
-	layersManager().createPolygonLayer({ glm::vec2(-0.3, -0.5), glm::vec2(0, 0), glm::vec2(0.8, -0.5), glm::vec2(-0.8, -0.5), glm::vec2(0.8, 0.5) });
+	layersManager().createPolygonLayer(registry(), { glm::vec2(-0.3, -0.5), glm::vec2(0, 0), glm::vec2(0.8, -0.5), glm::vec2(-0.8, -0.5), glm::vec2(0.8, 0.5) });
 	//renderSystem().computeTexture_Polygon(m_poly, 32.0f);
 }
 
@@ -147,7 +147,6 @@ Instance::Instance(const std::string& projectFolderpath)
 	: m_registry(),
 	  m_renderSystem(*this),
 	  m_inputSystem(*this),
-	  m_layersManager(*this),
 	  m_bUserChoseProjectName(true)
 {
 	Construct();
@@ -166,57 +165,12 @@ void Instance::createDrawingBoard() {
 	glm::mat3 mat(1.0f);
 	mat = glm::scale(mat, glm::vec2(0.8f));
 	//mat = glm::rotate(mat, 0.1f);
+	registry().assign<entt::tag<"DrawingBoard"_hs>>(m_drawingBoardId);
 	registry().assign<Cmp::TransformMatrix>(drawingBoardId(), mat);
 	registry().assign<Cmp::AspectRatio>(drawingBoardId(), 1.0f);
 	registry().assign<Cmp::Children>(drawingBoardId());
 	registry().assign<Cmp::Texture>(drawingBoardId(), 1000, 1000);
 	registry().assign<Cmp::History>(drawingBoardId());
-}
-
-glm::mat3 Instance::getLocalTransform(entt::entity e) {
-	return registry().get<Cmp::TransformMatrix>(e).val();
-}
-
-glm::mat3 Instance::getMatrix(entt::entity e) {
-	glm::mat3 model = getLocalTransform(e);
-	return DisplayInfos::Matrix() * getParentModelMatrix(e) * model;
-}
-
-glm::mat3 Instance::getMatrixPlusAspectRatio(entt::entity e) {
-	glm::mat3 model = getLocalTransform(e);
-	Cmp::AspectRatio* ratio = registry().try_get<Cmp::AspectRatio>(e);
-	if (ratio)
-		model = glm::scale(model, glm::vec2(ratio->val, 1.0f));
-	return DisplayInfos::Matrix() * getParentModelMatrix(e) * model;
-}
-
-glm::mat3 Instance::getMatrixToDBSpace(entt::entity e) {
-	glm::mat3 model = getLocalTransform(e);
-	return getParentModelMatrixExcludingDB(e) * model;
-}
-
-glm::mat3 Instance::getMatrixToTextureSpace(entt::entity e) {
-	glm::mat3 mat = glm::inverse(getMatrixToDBSpace(e));
-	float DBratio = registry().get<Cmp::AspectRatio>(drawingBoardId()).val;
-	mat = glm::scale(mat, glm::vec2(2.0f*DBratio, 2.0f));
-	mat = glm::translate(glm::mat3(1.0f), -glm::vec2(DBratio, 1.0f)) * mat;
-	return mat;
-}
-
-glm::mat3 Instance::getParentModelMatrix(entt::entity e) {
-	Cmp::Parent* parent = registry().try_get<Cmp::Parent>(e);
-	if (parent)
-		return getParentModelMatrix(parent->id) * getLocalTransform(parent->id);
-	else
-		return glm::mat3(1.0f);
-}
-
-glm::mat3 Instance::getParentModelMatrixExcludingDB(entt::entity e) {
-	Cmp::Parent* parent = registry().try_get<Cmp::Parent>(e);
-	if (parent && parent->id != drawingBoardId())
-		return getParentModelMatrixExcludingDB(parent->id) * getLocalTransform(parent->id);
-	else
-		return glm::mat3(1.0f);
 }
 
 std::string Instance::getProjectPath() {
@@ -241,7 +195,9 @@ void Instance::onEvent(const SDL_Event& e) {
 	case SDL_MOUSEBUTTONDOWN:
 		if (!ImGui::GetIO().WantCaptureMouse) {
 			if (e.button.button == SDL_BUTTON_LEFT) {
-				inputSystem().onLeftClicDown();
+				entt::entity clickedEntity = layersManager().getEntityHoveredByMouse(registry(), renderSystem());
+				entt::entity clickedLayer = TNG::GetFirstLayerRelatedTo(registry(), clickedEntity);
+				inputSystem().onLeftClicDown(clickedEntity, clickedLayer, layersManager().selectedLayer());
 			}
 			else if (e.button.button == SDL_BUTTON_RIGHT) {
 				inputSystem().onRightClicDown();

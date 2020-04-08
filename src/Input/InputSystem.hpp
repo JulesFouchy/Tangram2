@@ -18,7 +18,7 @@ public:
 
 	inline void update() { m_currentState->update(); }
 
-	inline void onLeftClicDown()            { m_currentState->onLeftClicDown(); }
+	inline void onLeftClicDown(entt::entity clickedEntity, entt::entity clickedLayer, entt::entity& rSelectedLayer) { m_currentState->onLeftClicDown(clickedEntity, clickedLayer, rSelectedLayer); }
 	inline void onLeftClicUp()              { m_currentState->onLeftClicUp(); }
 	inline void onRightClicDown()           { m_currentState->onRightClicDown(); }
 	inline void onRightClicUp()             { m_currentState->onRightClicUp(); }

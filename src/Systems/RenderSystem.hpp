@@ -10,6 +10,8 @@
 #include <vector>
 #include <functional>
 
+#include "Settings/Settings.hpp"
+
 class RenderSystem : public ISystem {
 public:
 	RenderSystem(Instance& instance);
@@ -21,8 +23,8 @@ public:
 	void showGUI();
 	void checkTexturesToRecompute();
 
-	inline unsigned int previewWidth() { return 1000; }
-	inline unsigned int previewHeight() { return 1000; }
+	inline unsigned int previewWidth() { return Settings::GetPREVIEW_SIZE_IN_PX(); }
+	inline unsigned int previewHeight() { return Settings::GetPREVIEW_SIZE_IN_PX(); }
 
 private:
 	friend class Window_ExportImage;

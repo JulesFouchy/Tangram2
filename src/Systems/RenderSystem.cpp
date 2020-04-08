@@ -11,6 +11,8 @@
 #include "Components/Shader.hpp"
 #include "Components/ShaderReference.hpp"
 
+#include "Core/GetMatrix.hpp"
+
 #include <glm/gtc/matrix_access.hpp>
 #include <glm/gtx/matrix_transform_2d.hpp>
 
@@ -119,12 +121,12 @@ void RenderSystem::_renderQuad(entt::entity e, Shader& shader, std::function<glm
 
 void RenderSystem::renderQuad(const std::vector<entt::entity>& list, Shader& shader) {
 	for (const entt::entity& entity : list)
-		_renderQuad(entity, shader, [this](entt::entity e) { return I.getMatrixPlusAspectRatio(e);  });
+		_renderQuad(entity, shader, [this](entt::entity e) { return TNG::GetMatrixPlusAspectRatio(I.registry(), e);  });
 }
 
 void RenderSystem::renderSquare(const std::vector<entt::entity>& list, Shader& shader) {
 	for (const entt::entity& entity : list)
-		_renderQuad(entity, shader, [this](entt::entity e) { return I.getMatrix(e); });
+		_renderQuad(entity, shader, [this](entt::entity e) { return TNG::GetMatrix(I.registry(), e); });
 }
 
 void RenderSystem::renderTextures(const std::vector<entt::entity>& list) {
@@ -134,7 +136,7 @@ void RenderSystem::renderTextures(const std::vector<entt::entity>& list) {
 	// Loop
 	for (entt::entity e : list) {
 		// Matrix
-		s_shaderTexture.setUniformMat3f("u_mat", I.getMatrixPlusAspectRatio(I.drawingBoardId()));
+		s_shaderTexture.setUniformMat3f("u_mat", TNG::GetMatrixPlusAspectRatio(I.registry(), I.drawingBoardId()));
 		// Texture
 		Cmp::Texture& tex = I.registry().get<Cmp::Texture>(e);
 		GLCall(glBindTexture(GL_TEXTURE_2D, tex.id));
@@ -186,13 +188,13 @@ void RenderSystem::drawFragment(entt::entity e) {
 	for (const auto& param : I.registry().get<Cmp::Parameters>(e).list) {
 		param->sendToShader();
 	}
-	shader.setUniformMat3f("u_localTransformMat", I.getMatrixToTextureSpace(e));
+	shader.setUniformMat3f("u_localTransformMat", TNG::GetMatrixToTextureSpace(I.registry(), e));
 	drawFullscreen();
 }
 
 void RenderSystem::drawTest(entt::entity e) {
 	s_shaderTest.bind();
-	s_shaderTest.setUniformMat3f("u_localTransformMat", I.getMatrixToTextureSpace(e));
+	s_shaderTest.setUniformMat3f("u_localTransformMat", TNG::GetMatrixToTextureSpace(I.registry(), e));
 	drawFullscreen();
 }
 

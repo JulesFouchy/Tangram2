@@ -9,11 +9,8 @@ public:
 	InputState_Rest(Instance& instance);
 	~InputState_Rest() = default;
 
-	void onLeftClicDown() override;
+	void onLeftClicDown(entt::entity clickedEntity, entt::entity clickedLayer, entt::entity& rSelectedLayer) override;
 	void onWheelDown() override;
 	void onWheelScroll(float dl) override;
 	void onKeyDown(SDL_Scancode key) override;
-
-private:
-	entt::entity getFirstLayerOf(entt::entity e);
 };

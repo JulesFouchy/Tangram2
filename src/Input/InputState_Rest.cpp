@@ -30,28 +30,8 @@ InputState_Rest::InputState_Rest(Instance& instance)
 	: IInputState(instance)
 {}
 
-entt::entity InputState_Rest::getFirstLayerOf(entt::entity e) {
-	// (e.g. if you click on the handle of a polygon, this will return the associated polygon layer)
-	entt::registry& R = I.registry();
-	if (R.valid(e)) {
-		if (R.has<entt::tag<"Layer"_hs>>(e))
-			return e;
-		else {
-			Cmp::Parent* parent = R.try_get<Cmp::Parent>(e);
-			if (parent)
-				return getFirstLayerOf(parent->id);
-			else
-				return entt::null;
-		}
-	}
-	else
-		return entt::null;
-}
-
-void InputState_Rest::onLeftClicDown() {
-	entt::entity clickedEntity = I.layersManager().getEntityHoveredByMouse();
-	entt::entity clickedLayer = getFirstLayerOf(clickedEntity);
-	I.layersManager().setSelectedLayer(clickedLayer);
+void InputState_Rest::onLeftClicDown(entt::entity clickedEntity, entt::entity clickedLayer, entt::entity& rSelectedLayer) {
+	rSelectedLayer = clickedLayer;
 	// Translate 
 	if (I.registry().valid(clickedEntity)) {
 		if (clickedEntity == clickedLayer)

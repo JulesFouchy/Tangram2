@@ -10,6 +10,8 @@
 
 #include "GUI/FileBrowser.hpp"
 
+#include "Systems/GUISystem.hpp"
+
 #include "Debugging/Log.hpp"
 
 #include <SDL2/SDL.h>
@@ -175,7 +177,7 @@ void App::ShutDown() {
 }
 
 void App::onLoopIteration() {
-	glClearColor(0.5, 0.75, 0.9, 1.0);
+	glClearColor(0.5f, 0.75f, 0.9f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 	// Events
 	handleEvents();
@@ -183,7 +185,7 @@ void App::onLoopIteration() {
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplSDL2_NewFrame(m_window);
 	ImGui::NewFrame();
-	if (GUISystem::ShowGUI()) {
+	if (GUISystem::ShouldShowGUI()) {
 		// ImGui Debug and Demo
 		#ifndef NDEBUG 
 			ImGui::Begin("Debug");

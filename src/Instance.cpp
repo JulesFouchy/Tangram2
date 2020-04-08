@@ -15,6 +15,7 @@
 #include "Core/MustRecomputeTexture.hpp"
 
 #include "Systems/ShaderSystem.hpp"
+#include "Systems/GUISystem.hpp"
 
 #include "glm/gtx/matrix_transform_2d.hpp"
 
@@ -157,7 +158,7 @@ void Instance::onLoopIteration(){
 	renderSystem().render();
 	renderSystem().checkTexturesToRecompute();
 	inputSystem().update();
-	guiSystem().render(registry(), layersManager().getLayersOrdered(), layersManager().selectedLayer(), drawingBoardId());
+	GUISystem::Render(registry(), layersManager().getLayersOrdered(), layersManager().selectedLayer(), drawingBoardId());
 }
 
 void Instance::createDrawingBoard() {

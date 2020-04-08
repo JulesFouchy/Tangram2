@@ -69,7 +69,7 @@ void GUISystem::LayersWindow(entt::registry& R, const std::vector<entt::entity>&
 	ImGui::End();
 }
 
-void GUISystem::render(entt::registry& R, const std::vector<entt::entity>& layersOrdered, entt::entity& rSelectedLayer, entt::entity drawingBoardEntity) {
+void GUISystem::Render(entt::registry& R, const std::vector<entt::entity>& layersOrdered, entt::entity& rSelectedLayer, entt::entity drawingBoardEntity) {
 	if (s_bShowGUI) {
 		LayersWindow(R, layersOrdered, rSelectedLayer, drawingBoardEntity);
 		//

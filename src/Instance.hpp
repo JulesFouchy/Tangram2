@@ -7,7 +7,6 @@ union SDL_Event;
 
 #include "Input/InputSystem.hpp"
 #include "Systems/RenderSystem.hpp"
-#include "Systems/GUISystem.hpp"
 #include "Systems/LayersManager.hpp"
 #include "Shapes/ShapeFactory.hpp"
 
@@ -33,7 +32,6 @@ public:
 	inline RenderSystem& renderSystem() { return m_renderSystem; }
 	inline InputSystem& inputSystem() { return m_inputSystem; }
 	inline LayersManager& layersManager() { return m_layersManager; }
-	inline GUISystem& guiSystem() { return m_guiSystem; }
 	inline entt::entity& drawingBoardId() { return m_drawingBoardId; }
 
 private:
@@ -55,7 +53,6 @@ private:
 	RenderSystem m_renderSystem;
 	InputSystem m_inputSystem;
 	LayersManager m_layersManager;
-	GUISystem m_guiSystem;
 	entt::entity m_drawingBoardId;
 
 	entt::entity m_poly;

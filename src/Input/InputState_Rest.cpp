@@ -17,8 +17,9 @@
 #include "Core/ChangeActiveHistory.hpp"
 
 #include "Components/ShaderReference.hpp"
-#include "Systems/ShaderSystem.hpp"
 
+#include "Systems/ShaderSystem.hpp"
+#include "Systems/GUISystem.hpp"
 #include "Systems/HistoryManager.hpp"
 
 #include "GUI/FileBrowser.hpp"

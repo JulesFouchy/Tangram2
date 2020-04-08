@@ -46,7 +46,7 @@ void RenderSystem::render() {
 	renderTextures({ I.drawingBoardId() });
 	glDisable(GL_BLEND);
 	// Points2D
-	if (GUISystem::ShowGUI()) {
+	if (GUISystem::ShouldShowGUI()) {
 		glEnable(GL_BLEND);
 		I.registry().view<entt::tag<"Point2D"_hs>>().each([this](auto entity, auto& tag) {
 			Cmp::Parent* parent = I.registry().try_get<Cmp::Parent>(entity);

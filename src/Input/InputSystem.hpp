@@ -1,19 +1,17 @@
 #pragma once
 
-#include "Systems/ISystem.hpp"
-
 #include "IInputState.hpp"
 
 #include <memory>
 
-class InputSystem : public ISystem {
+class InputSystem {
 friend class IInputState;
 friend class InputState_Rest;
 friend class InputState_Translate;
 friend class InputState_GUI;
 friend class Window_SaveAsProject;
 public:
-	InputSystem(Instance& instance);
+	InputSystem();
 	~InputSystem() = default;
 
 	inline void update() { m_currentState->update(); }
@@ -30,9 +28,9 @@ public:
 
 private:
 	template <typename State>
-	inline void setState() { m_currentState = std::make_unique<State>(I); }
+	inline void setState() { m_currentState = std::make_unique<State>(*this); }
 	template <typename WindowType>
-	inline void setGUIState() { m_currentState = std::make_unique<InputState_GUI>(I, [](Instance& instance) { return std::make_unique<WindowType>(instance); });}
+	inline void setGUIState() { m_currentState = std::make_unique<InputState_GUI>(*this, [](Instance& instance) { return std::make_unique<WindowType>(instance); });}
 
 private:
 	std::unique_ptr<IInputState> m_currentState;

@@ -2,8 +2,7 @@
 
 #include "InputState_Rest.hpp"
 
-InputSystem::InputSystem(Instance& instance)
-	: ISystem(instance)
+InputSystem::InputSystem()
 {
 	setState<InputState_Rest>();
 }

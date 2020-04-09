@@ -10,13 +10,13 @@
 
 class InputState_Translate : public IInputState {
 public:
-	InputState_Translate(Instance& instance, entt::entity targetID, MouseButton enterExitButton);
+	InputState_Translate(InputSystem& inputSystem, entt::entity targetID, MouseButton enterExitButton);
 	~InputState_Translate() = default;
 
-	void onLeftClicUp() override;
-	void onWheelUp() override;
+	void onLeftClicUp(entt::registry& R) override;
+	void onWheelUp(entt::registry& R) override;
 
-	void update() override;
+	void update(entt::registry& R) override;
 
 private:
 	entt::entity m_targetID;

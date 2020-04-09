@@ -5,25 +5,27 @@
 
 #include "Debugging/Log.hpp"
 
-class Instance;
+class InputSystem;
 
 class IInputState {
 public:
-	IInputState(Instance& instance);
+	IInputState(InputSystem& inputSystem) 
+		: m_inputSystem(inputSystem)
+	{}
 	virtual ~IInputState() = default;
 
-	virtual void update() {}
+	virtual void update(entt::registry& R) {}
 
-	virtual void onLeftClicDown(entt::entity clickedEntity, entt::entity clickedLayer, entt::entity& rSelectedLayer) {}
-	virtual void onLeftClicUp() {}
-	virtual void onRightClicDown() {}
-	virtual void onRightClicUp() {}
-	virtual void onWheelDown() {}
-	virtual void onWheelUp() {}
-	virtual void onKeyDown(SDL_Scancode key) {}
-	virtual void onKeyUp(SDL_Scancode key) {}
-	virtual void onWheelScroll(float dl) {}
+	virtual void onLeftClicDown(entt::registry& R, entt::entity clickedEntity, entt::entity clickedLayer, entt::entity& rSelectedLayer) {}
+	virtual void onLeftClicUp(entt::registry& R) {}
+	virtual void onRightClicDown(entt::registry& R) {}
+	virtual void onRightClicUp(entt::registry& R) {}
+	virtual void onWheelDown(entt::registry& R) {}
+	virtual void onWheelUp(entt::registry& R) {}
+	virtual void onKeyDown(entt::registry& R, SDL_Scancode key) {}
+	virtual void onKeyUp(entt::registry& R, SDL_Scancode key) {}
+	virtual void onWheelScroll(entt::registry& R, float dl) {}
 
 protected:
-	Instance& I;
+	InputSystem& m_inputSystem;
 };

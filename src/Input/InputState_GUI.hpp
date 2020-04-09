@@ -10,10 +10,10 @@ class PopupWindow;
 
 class InputState_GUI : public IInputState {
 public:
-	InputState_GUI::InputState_GUI(Instance& instance, std::function<std::unique_ptr<PopupWindow>(Instance&)> windowConstructor);
+	InputState_GUI(InputSystem& inputSystem, std::function<std::unique_ptr<PopupWindow>()> windowConstructor);
 	~InputState_GUI() = default;
 
-	void InputState_GUI::update() override;
+	void update(entt::registry& R) override;
 
 private:
 	std::unique_ptr<PopupWindow> m_window;

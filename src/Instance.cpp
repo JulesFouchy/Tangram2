@@ -156,9 +156,21 @@ void Instance::onLoopIteration(){
 	renderSystem().render(m_registry, m_layersManager.getLayersOrdered(), m_layersManager.getSelectedLayer(), GUISystem::ShouldShowGUI());
 	renderSystem().checkTexturesToRecompute(m_registry);
 	inputSystem().update();
-	m_scriptsManager.loopIteration(registry(), 1.0f/60);
+	m_scriptsManager.loopIteration(registry(), 1.0f/25);
 	m_scriptsManager.ImGui(registry());
 	GUISystem::Render(m_registry, m_layersManager.getLayersOrdered(), m_layersManager.selectedLayer());
+
+	static bool bRecord = false;
+	static unsigned int frameNb = 0;
+	ImGui::Begin("Record");
+	ImGui::Checkbox("Recording", &bRecord);
+	ImGui::End();
+	if (bRecord) {
+		m_renderSystem.exportImage(m_registry, m_layersManager.getLayersOrdered(), 1080, 1080, "C:\\Users\\Pc\\Desktop\\ExportBouncyCells\\" + std::to_string(frameNb) + ".png");
+		frameNb++;
+		if (frameNb > 7500)
+			bRecord = false;
+	}
 }
 
 void Instance::createDrawingBoard() {

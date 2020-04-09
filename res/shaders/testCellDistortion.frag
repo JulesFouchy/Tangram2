@@ -7,6 +7,8 @@ struct Parameters {
     float smoothMin; // min 16 max 500 default 116 OR 88
     float strokeSize; // min 0. max 0.01 default 0.002
     float aa; // min 0 max 0.01 default 0.003
+    float centerRadius; // min 0 max 0.05 default 0.017
+    float centerInnerRadius; // min 0 max 0.05 default 0.011
 };
 
 uniform Parameters u;
@@ -54,6 +56,10 @@ void main() {
 
     for (int i = 0; i < u.pts.size; ++i) {
         color += 1. - smoothstep(u.strokeSize, u.strokeSize + u.aa, abs(ds[i]));
+    }
+    for (int i = 0; i < u.pts.size; ++i) {
+        color += 1. - smoothstep(u.centerRadius, u.centerRadius + u.aa, abs(rds[i]+0.1));
+        color -= 1. - smoothstep(u.centerInnerRadius, u.centerInnerRadius + u.aa, abs(rds[i]+0.1));
     }
     color += 1. - smoothstep(u.strokeSize, u.strokeSize + u.aa, abs(D));
 

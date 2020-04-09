@@ -1,33 +1,30 @@
 #include "GUISystem.hpp"
 
-#include "Instance.hpp"
-
 #include <imgui/imgui.h>
 #include <imgui/misc/cpp/imgui_stdlib.h>
 
-#include "Components/ParametersList.hpp"
+#include "Components/Parameters.hpp"
 #include "Components/AspectRatio.hpp"
 #include "Components/Name.hpp"
+#include "Components/PreviewTexture.hpp"
+#include "Components/AspectRatio.hpp"
 
 #include "Core/MustRecomputeTexture.hpp"
 #include "Core/ChangeActiveHistory.hpp"
+#include "Core/GetDrawingBoard.hpp"
 
 bool GUISystem::s_bShowGUI = true;
 
-GUISystem::GUISystem(Instance& instance)
-	: ISystem(instance)
-{}
-
-void GUISystem::LayersWindow() {
+void GUISystem::LayersWindow(entt::registry& R, const std::vector<entt::entity>& layersOrdered, entt::entity& rSelectedLayer) {
 	float height = 40.0f;
 	ImGui::Begin("Layers");
 	int k = 0;
-	for (entt::entity layer : I.layersManager().getLayersOrdered()) {
-		Cmp::Texture& tex = I.registry().get<Cmp::Texture>(layer);
-		float aspect = I.registry().get<Cmp::AspectRatio>(I.drawingBoardId()).val;
+	for (entt::entity layer : layersOrdered) {
+		Cmp::Texture& tex = R.get<Cmp::Texture>(layer);
+		float aspect = R.get<Cmp::AspectRatio>(TNG::GetDrawingBoard(R)).val;
 		ImGui::BeginGroup();
-		if (ImGui::Selectable(("##layer" + std::to_string(k)).c_str(), layer == I.layersManager().m_selectedLayer, 0, ImVec2(0, height))) {
-			I.layersManager().m_selectedLayer = layer;
+		if (ImGui::Selectable(("##layer" + std::to_string(k)).c_str(), layer == rSelectedLayer, 0, ImVec2(0, height))) {
+			rSelectedLayer = layer;
 		}
 		//
 		ImGui::SameLine();
@@ -39,7 +36,7 @@ void GUISystem::LayersWindow() {
 		//if (layer == I.layersManager().m_selectedLayer)
 		//	ImGui::InputText("", &str);
 		//else
-			ImGui::Text(I.registry().get<Cmp::Name>(layer).val.c_str());
+			ImGui::Text(R.get<Cmp::Name>(layer).val.c_str());
 		//ImGui::PopStyleVar();
 		ImGui::EndGroup();
 		//if (ImGui::IsItemActivated()) {
@@ -73,23 +70,21 @@ void GUISystem::LayersWindow() {
 	ImGui::End();
 }
 
-void GUISystem::render() {
+void GUISystem::Render(entt::registry& R, const std::vector<entt::entity>& layersOrdered, entt::entity& rSelectedLayer) {
 	if (s_bShowGUI) {
-		LayersWindow();
+		LayersWindow(R, layersOrdered, rSelectedLayer);
 		//
-		entt::registry& R = I.registry();
-		entt::entity selLayer = I.layersManager().selectedLayer();
-		if (I.registry().valid(selLayer)) {
+		if (R.valid(rSelectedLayer)) {
 			ImGui::Begin("Parameters");
 			if (ImGui::GetIO().WantCaptureMouse && ImGui::IsWindowFocused())
-				TNG::SetActiveHistoryToParameters(R, selLayer);
+				TNG::SetActiveHistoryToParameters(R, rSelectedLayer);
 			bool bImGuiUsed = false;
-			Cmp::Parameters& parameters = R.get<Cmp::Parameters>(selLayer);
+			Cmp::Parameters& parameters = R.get<Cmp::Parameters>(rSelectedLayer);
 			for (const auto& param : parameters.list) {
-				bImGuiUsed |= param->ImGui(R, parameters.history, selLayer);
+				bImGuiUsed |= param->ImGui(R, parameters.history, rSelectedLayer);
 			}
 			if (bImGuiUsed)
-				TNG::MustRecomputeTexture(R, selLayer);
+				TNG::MustRecomputeTexture(R, rSelectedLayer);
 			ImGui::End();
 		}
 	}

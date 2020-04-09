@@ -2,7 +2,7 @@
 
 #include "Helper/String.hpp"
 
-#include "Components/ParametersList.hpp"
+#include "Components/Parameters.hpp"
 #include "Components/ShaderReference.hpp"
 
 #include "OpenGL/ShaderHelper.hpp"

@@ -27,7 +27,7 @@ void Window_CreateFragmentLayer::Show() {
 void Window_CreateFragmentLayer::OnConfirmation() {
 	std::string filepath = m_filepathPicker.getFilepath();
 	if (MyFile::Exists(filepath))
-		I.layersManager().createFragmentLayer(filepath);
+		I.layersManager().createFragmentLayer(I.registry(), filepath);
 	else
 		spdlog::error("[Window_CreateFragmentLayer::OnConfirmation] File doesn't exist : '{}'", filepath);
 }

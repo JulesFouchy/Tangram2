@@ -7,7 +7,6 @@ union SDL_Event;
 
 #include "Input/InputSystem.hpp"
 #include "Systems/RenderSystem.hpp"
-#include "Systems/GUISystem.hpp"
 #include "Systems/LayersManager.hpp"
 #include "Shapes/ShapeFactory.hpp"
 
@@ -20,14 +19,6 @@ public:
 	void Construct();
 	~Instance();
 
-	glm::mat3 getLocalTransform(entt::entity e);
-	glm::mat3 getMatrixPlusAspectRatio(entt::entity e);
-	glm::mat3 getMatrix(entt::entity e);
-	glm::mat3 getMatrixToDBSpace(entt::entity e);
-	glm::mat3 getMatrixToTextureSpace(entt::entity e);
-	glm::mat3 getParentModelMatrix(entt::entity e);
-	glm::mat3 getParentModelMatrixExcludingDB(entt::entity e);
-
 	inline const std::string& getProjectName() { return m_projectName; }
 	std::string getProjectPath();
 
@@ -35,8 +26,6 @@ public:
 	inline RenderSystem& renderSystem() { return m_renderSystem; }
 	inline InputSystem& inputSystem() { return m_inputSystem; }
 	inline LayersManager& layersManager() { return m_layersManager; }
-	inline GUISystem& guiSystem() { return m_guiSystem; }
-	inline entt::entity& drawingBoardId() { return m_drawingBoardId; }
 
 private:
 	void onTransformMatrixChange(entt::entity e, entt::registry& R);
@@ -57,8 +46,6 @@ private:
 	RenderSystem m_renderSystem;
 	InputSystem m_inputSystem;
 	LayersManager m_layersManager;
-	GUISystem m_guiSystem;
-	entt::entity m_drawingBoardId;
 
 	entt::entity m_poly;
 	entt::entity m_testLayer;

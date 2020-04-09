@@ -9,6 +9,8 @@
 
 #include "Systems/HistoryManager.hpp"
 
+#include "Core/GetMatrix.hpp"
+
 #include "Settings/Settings.hpp"
 
 #include "Debugging/Log.hpp"
@@ -49,6 +51,6 @@ void InputState_Translate::onWheelUp() {
 
 void InputState_Translate::update() {
 	glm::vec2 dl = DisplayInfos::MousePositionInScreen() - m_mouseInitialPosInScreen;
-	dl = glm::inverse(I.getParentModelMatrix(m_targetID)) * glm::vec3(dl, 0.0f);
+	dl = glm::inverse(TNG::GetParentModelMatrix(I.registry(), m_targetID)) * glm::vec3(dl, 0.0f);
 	I.registry().replace<Cmp::TransformMatrix>(m_targetID, glm::translate(glm::mat3(1.0f), dl) * m_initialMat);
 }

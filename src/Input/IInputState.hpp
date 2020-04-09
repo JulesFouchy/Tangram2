@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SDL2/SDL_scancode.h>
+#include <entt/entt.hpp>
 
 #include "Debugging/Log.hpp"
 
@@ -13,7 +14,7 @@ public:
 
 	virtual void update() {}
 
-	virtual void onLeftClicDown() {}
+	virtual void onLeftClicDown(entt::entity clickedEntity, entt::entity clickedLayer, entt::entity& rSelectedLayer) {}
 	virtual void onLeftClicUp() {}
 	virtual void onRightClicDown() {}
 	virtual void onRightClicUp() {}

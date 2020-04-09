@@ -8,12 +8,14 @@
 
 #include "Components/AspectRatio.hpp"
 
+#include "Core/GetDrawingBoard.hpp"
+
 
 Window_ExportImage::Window_ExportImage(Instance& instance)
 	: PopupWindow_WithConfirmationWarning("Exporting image"), I(instance),
 	  m_filepathPicker(FileFilter::Image)
 {
-	m_widthHeightRatioPicker.setRatio(I.registry().get<Cmp::AspectRatio>(I.drawingBoardId()).val);
+	m_widthHeightRatioPicker.setRatio(I.registry().get<Cmp::AspectRatio>(TNG::GetDrawingBoard(I.registry())).val);
 	m_filepathPicker.setFilepath("");
 }
 void Window_ExportImage::Show() {
@@ -32,7 +34,8 @@ void Window_ExportImage::Show() {
 }
 
 void Window_ExportImage::OnConfirmation() {
-	I.renderSystem().exportImage(m_widthHeightRatioPicker.getWidth(),
+	I.renderSystem().exportImage(I.registry(), I.layersManager().getLayersOrdered(),
+								 m_widthHeightRatioPicker.getWidth(),
 		                         m_widthHeightRatioPicker.getHeight(), 
 		                         m_filepathPicker.getFilepath()
 	);

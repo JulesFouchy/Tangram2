@@ -1,7 +1,7 @@
 #include "HistoryManager.hpp"
 
 #include "Components/Parent.hpp"
-#include "Components/ParametersList.hpp"
+#include "Components/Parameters.hpp"
 
 #include "Components/TransformMatrix.hpp"
 

@@ -15,10 +15,12 @@
 #include "Components/Parent.hpp"
 
 #include "Core/ChangeActiveHistory.hpp"
+#include "Core/GetDrawingBoard.hpp"
 
 #include "Components/ShaderReference.hpp"
-#include "Systems/ShaderSystem.hpp"
 
+#include "Systems/ShaderSystem.hpp"
+#include "Systems/GUISystem.hpp"
 #include "Systems/HistoryManager.hpp"
 
 #include "GUI/FileBrowser.hpp"
@@ -29,28 +31,8 @@ InputState_Rest::InputState_Rest(Instance& instance)
 	: IInputState(instance)
 {}
 
-entt::entity InputState_Rest::getFirstLayerOf(entt::entity e) {
-	// (e.g. if you click on the handle of a polygon, this will return the associated polygon layer)
-	entt::registry& R = I.registry();
-	if (R.valid(e)) {
-		if (R.has<entt::tag<"Layer"_hs>>(e))
-			return e;
-		else {
-			Cmp::Parent* parent = R.try_get<Cmp::Parent>(e);
-			if (parent)
-				return getFirstLayerOf(parent->id);
-			else
-				return entt::null;
-		}
-	}
-	else
-		return entt::null;
-}
-
-void InputState_Rest::onLeftClicDown() {
-	entt::entity clickedEntity = I.layersManager().getEntityHoveredByMouse();
-	entt::entity clickedLayer = getFirstLayerOf(clickedEntity);
-	I.layersManager().setSelectedLayer(clickedLayer);
+void InputState_Rest::onLeftClicDown(entt::entity clickedEntity, entt::entity clickedLayer, entt::entity& rSelectedLayer) {
+	rSelectedLayer = clickedLayer;
 	// Translate 
 	if (I.registry().valid(clickedEntity)) {
 		if (clickedEntity == clickedLayer)
@@ -62,14 +44,15 @@ void InputState_Rest::onLeftClicDown() {
 }
 
 void InputState_Rest::onWheelDown() {
-	I.inputSystem().m_currentState = std::make_unique<InputState_Translate>(I, I.drawingBoardId(), MouseButton::Wheel);
+	I.inputSystem().m_currentState = std::make_unique<InputState_Translate>(I, TNG::GetDrawingBoard(I.registry()), MouseButton::Wheel);
 }
 
 void InputState_Rest::onWheelScroll(float dl) {
-	glm::mat3 mat = I.registry().get<Cmp::TransformMatrix>(I.drawingBoardId()).val();
+	entt::entity drawingBoard = TNG::GetDrawingBoard(I.registry());
+	glm::mat3 mat = I.registry().get<Cmp::TransformMatrix>(drawingBoard).val();
 	glm::vec2 transformCenter = glm::inverse(mat) * glm::vec3(DisplayInfos::MousePositionInScreen(), 1.0f);
-	I.registry().replace<Cmp::TransformMatrix>(I.drawingBoardId(), MyMaths::Scale(mat, glm::vec2(pow(0.95f, -dl)), transformCenter));
-	HistoryManager::RecordTransform(I.registry(), I.drawingBoardId(), mat);
+	I.registry().replace<Cmp::TransformMatrix>(drawingBoard, MyMaths::Scale(mat, glm::vec2(pow(0.95f, -dl)), transformCenter));
+	HistoryManager::RecordTransform(I.registry(), drawingBoard, mat);
 }
 
 void InputState_Rest::onKeyDown(SDL_Scancode key) {
@@ -96,14 +79,14 @@ void InputState_Rest::onKeyDown(SDL_Scancode key) {
 			if (I.registry().valid(layer))
 				HistoryManager::MoveBackward(I.registry(), layer);
 			else
-				HistoryManager::MoveBackward(I.registry(), I.drawingBoardId());
+				HistoryManager::MoveBackward(I.registry(), TNG::GetDrawingBoard(I.registry()));
 		}
 		else if (key == SDL_SCANCODE_Y) {
 			entt::entity layer = I.layersManager().selectedLayer();
 			if (I.registry().valid(layer))
 				HistoryManager::MoveForward(I.registry(), layer);
 			else
-				HistoryManager::MoveForward(I.registry(), I.drawingBoardId());
+				HistoryManager::MoveForward(I.registry(), TNG::GetDrawingBoard(I.registry()));
 		}
 	}
 	// no modifier key

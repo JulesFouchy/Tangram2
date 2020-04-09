@@ -6,17 +6,18 @@
 #include "Components/VisualDependencies.hpp"
 #include "Components/AspectRatio.hpp"
 #include "Components/Vertices.hpp"
-#include "Components/ParametersList.hpp"
+#include "Components/Parameters.hpp"
 #include "Components/Name.hpp"
 #include "Components/Shader.hpp"
 #include "Components/ShaderReference.hpp"
 #include "Components/History.hpp"
 
 #include "Core/MustRecomputeTexture.hpp"
+#include "Core/GetFirstLayerRelatedTo.hpp"
+#include "Core/GetDrawingBoard.hpp"
 
 #include "Systems/ShaderSystem.hpp"
-
-#include "glm/gtx/matrix_transform_2d.hpp"
+#include "Systems/GUISystem.hpp"
 
 #include "Helper/DisplayInfos.hpp"
 #include "Helper/String.hpp"
@@ -30,6 +31,8 @@
 #include <cereal/archives/json.hpp>
 #include <fstream>
 #include "Debugging/Log.hpp"
+
+#include "glm/gtx/matrix_transform_2d.hpp"
 
 #include "App.hpp"
 
@@ -45,7 +48,7 @@ static void deleteShader(entt::entity e, entt::registry& R) {
 //}
 
 void Instance::onTransformMatrixChange(entt::entity e, entt::registry& R) {
-	if (e != drawingBoardId()) {
+	if (e != TNG::GetDrawingBoard(registry())) {
 		onMustRecomputeTexture(e);
 		Cmp::Children& children = R.get<Cmp::Children>(e);
 		for (entt::entity child : children.list) {
@@ -88,10 +91,7 @@ Instance::~Instance() {
 
 Instance::Instance()
 	: m_registry(),
-	  m_renderSystem(*this),
 	  m_inputSystem(*this),
-	  m_layersManager(*this),
-	  m_guiSystem(*this),
 	  m_projectLocation(MyFile::RootDir+"/MyTangramProjects"),
 	  m_bUserChoseProjectName(false)
 {
@@ -145,10 +145,7 @@ Instance::Instance()
 
 Instance::Instance(const std::string& projectFolderpath)
 	: m_registry(),
-	  m_renderSystem(*this),
 	  m_inputSystem(*this),
-	  m_layersManager(*this),
-	  m_guiSystem(*this),
 	  m_bUserChoseProjectName(true)
 {
 	Construct();
@@ -156,70 +153,25 @@ Instance::Instance(const std::string& projectFolderpath)
 }
 
 void Instance::onLoopIteration(){
-	renderSystem().render();
-	renderSystem().checkTexturesToRecompute();
+	renderSystem().render(m_registry, m_layersManager.getLayersOrdered(), m_layersManager.getSelectedLayer(), GUISystem::ShouldShowGUI());
+	renderSystem().checkTexturesToRecompute(m_registry);
 	inputSystem().update();
-	guiSystem().render(); 
 	m_cellularLife.loopIteration(1./60, registry());
 	m_cellularLife.ImGui(registry());
+	GUISystem::Render(m_registry, m_layersManager.getLayersOrdered(), m_layersManager.selectedLayer());
 }
 
 void Instance::createDrawingBoard() {
-	m_drawingBoardId = registry().create();
+	entt::entity e = registry().create();
 	glm::mat3 mat(1.0f);
 	mat = glm::scale(mat, glm::vec2(0.8f));
 	//mat = glm::rotate(mat, 0.1f);
-	registry().assign<Cmp::TransformMatrix>(drawingBoardId(), mat);
-	registry().assign<Cmp::AspectRatio>(drawingBoardId(), 1.0f);
-	registry().assign<Cmp::Children>(drawingBoardId());
-	registry().assign<Cmp::Texture>(drawingBoardId(), 1000, 1000);
-	registry().assign<Cmp::History>(drawingBoardId());
-}
-
-glm::mat3 Instance::getLocalTransform(entt::entity e) {
-	return registry().get<Cmp::TransformMatrix>(e).val();
-}
-
-glm::mat3 Instance::getMatrix(entt::entity e) {
-	glm::mat3 model = getLocalTransform(e);
-	return DisplayInfos::Matrix() * getParentModelMatrix(e) * model;
-}
-
-glm::mat3 Instance::getMatrixPlusAspectRatio(entt::entity e) {
-	glm::mat3 model = getLocalTransform(e);
-	Cmp::AspectRatio* ratio = registry().try_get<Cmp::AspectRatio>(e);
-	if (ratio)
-		model = glm::scale(model, glm::vec2(ratio->val, 1.0f));
-	return DisplayInfos::Matrix() * getParentModelMatrix(e) * model;
-}
-
-glm::mat3 Instance::getMatrixToDBSpace(entt::entity e) {
-	glm::mat3 model = getLocalTransform(e);
-	return getParentModelMatrixExcludingDB(e) * model;
-}
-
-glm::mat3 Instance::getMatrixToTextureSpace(entt::entity e) {
-	glm::mat3 mat = glm::inverse(getMatrixToDBSpace(e));
-	float DBratio = registry().get<Cmp::AspectRatio>(drawingBoardId()).val;
-	mat = glm::scale(mat, glm::vec2(2.0f*DBratio, 2.0f));
-	mat = glm::translate(glm::mat3(1.0f), -glm::vec2(DBratio, 1.0f)) * mat;
-	return mat;
-}
-
-glm::mat3 Instance::getParentModelMatrix(entt::entity e) {
-	Cmp::Parent* parent = registry().try_get<Cmp::Parent>(e);
-	if (parent)
-		return getParentModelMatrix(parent->id) * getLocalTransform(parent->id);
-	else
-		return glm::mat3(1.0f);
-}
-
-glm::mat3 Instance::getParentModelMatrixExcludingDB(entt::entity e) {
-	Cmp::Parent* parent = registry().try_get<Cmp::Parent>(e);
-	if (parent && parent->id != drawingBoardId())
-		return getParentModelMatrixExcludingDB(parent->id) * getLocalTransform(parent->id);
-	else
-		return glm::mat3(1.0f);
+	registry().assign<entt::tag<"DrawingBoard"_hs>>(e);
+	registry().assign<Cmp::TransformMatrix>(e, mat);
+	registry().assign<Cmp::AspectRatio>(e, 1.0f);
+	registry().assign<Cmp::Children>(e);
+	registry().assign<Cmp::Texture>(e, Settings::GetPREVIEW_SIZE_IN_PX(), Settings::GetPREVIEW_SIZE_IN_PX());
+	registry().assign<Cmp::History>(e);
 }
 
 std::string Instance::getProjectPath() {
@@ -244,7 +196,9 @@ void Instance::onEvent(const SDL_Event& e) {
 	case SDL_MOUSEBUTTONDOWN:
 		if (!ImGui::GetIO().WantCaptureMouse) {
 			if (e.button.button == SDL_BUTTON_LEFT) {
-				inputSystem().onLeftClicDown();
+				entt::entity clickedEntity = layersManager().getEntityHoveredByMouse(registry(), renderSystem());
+				entt::entity clickedLayer = TNG::GetFirstLayerRelatedTo(registry(), clickedEntity);
+				inputSystem().onLeftClicDown(clickedEntity, clickedLayer, layersManager().selectedLayer());
 			}
 			else if (e.button.button == SDL_BUTTON_RIGHT) {
 				inputSystem().onRightClicDown();
@@ -295,8 +249,7 @@ void Instance::saveProject(const std::string& folderpath) {
 	{
 		cereal::JSONOutputArchive otherArchive(otherOs);
 		otherArchive(
-			CEREAL_NVP(m_layersManager),
-			CEREAL_NVP(m_drawingBoardId)
+			CEREAL_NVP(m_layersManager)
 		);
 		cereal::JSONOutputArchive registryArchive(registryOs);
 		registry().snapshot()
@@ -305,6 +258,7 @@ void Instance::saveProject(const std::string& folderpath) {
 			.component<Cmp::AspectRatio, Cmp::Children, Cmp::Parent, Cmp::Texture, Cmp::TransformMatrix, Cmp::Vertices, Cmp::VisualDependencies,
 			Cmp::Name, Cmp::Shader, Cmp::ShaderReference,
 			Cmp::History,
+			entt::tag<"DrawingBoard"_hs>,
 			entt::tag<"Point2D"_hs>, entt::tag<"Layer"_hs>,
 			entt::tag<"Polygon"_hs>, entt::tag<"TestLayer"_hs>, entt::tag<"FragmentLayer"_hs>,
 			entt::tag<"SaveMeInTheHistoryOfMyParentsParameters"_hs>,
@@ -323,8 +277,7 @@ void Instance::openProject(const std::string& folderpath) {
 	{
 		cereal::JSONInputArchive otherArchive(otherIs);
 		otherArchive(
-			m_layersManager,
-			m_drawingBoardId
+			m_layersManager
 		);
 		cereal::JSONInputArchive registryArchive(registryIs);
 		registry().loader()
@@ -333,6 +286,7 @@ void Instance::openProject(const std::string& folderpath) {
 			.component < Cmp::AspectRatio, Cmp::Children, Cmp::Parent, Cmp::Texture, Cmp::TransformMatrix, Cmp::Vertices, Cmp::VisualDependencies,
 			Cmp::Name, Cmp::Shader, Cmp::ShaderReference,
 			Cmp::History,
+			entt::tag<"DrawingBoard"_hs>,
 			entt::tag<"Point2D"_hs>, entt::tag<"Layer"_hs>,
 			entt::tag<"Polygon"_hs>, entt::tag<"TestLayer"_hs>, entt::tag<"FragmentLayer"_hs>,
 			entt::tag<"SaveMeInTheHistoryOfMyParentsParameters"_hs>,

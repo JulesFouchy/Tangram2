@@ -1,19 +1,17 @@
 #pragma once
 
-#include "ISystem.hpp"
+#include <entt/entt.hpp>
 
-class GUISystem : public ISystem {
+class GUISystem {
 public:
-	GUISystem(Instance& instance);
-	~GUISystem() = default;
+	GUISystem() = delete;
 
-	static inline bool ShowGUI() { return s_bShowGUI; }
-private:
-	void LayersWindow();
-friend class Instance;
-	void render();
-friend class InputState_Rest;
+	static void Render(entt::registry& R, const std::vector<entt::entity>& layersOrdered, entt::entity& rSelectedLayer);
+	static inline bool ShouldShowGUI() { return s_bShowGUI; }
 	static inline void ToggleOnOff() { s_bShowGUI = !s_bShowGUI; }
+
+private:
+	static void LayersWindow(entt::registry& R, const std::vector<entt::entity>& layersOrdered, entt::entity& selectedLayer);
 
 private:
 	static bool s_bShowGUI;

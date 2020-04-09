@@ -1,7 +1,5 @@
 #pragma once
 
-#include <vector>
-#include <entt/entt.hpp>
 class Script;
 class LayersManager;
 

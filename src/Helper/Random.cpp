@@ -1,7 +1,5 @@
 #include "Random.hpp"
 
-#include "Debugging/Log.hpp"
-
 std::random_device Rand::trueRandomGenerator;
 
 Rand::Rand()

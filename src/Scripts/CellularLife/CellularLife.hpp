@@ -1,7 +1,5 @@
 #pragma once
 
-#include <entt/entt.hpp>
-
 #include "Scripts/Script.hpp"
 
 #include "Parameters/ConcreteParameters.hpp"

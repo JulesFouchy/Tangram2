@@ -10,8 +10,6 @@
 #include "Helper/DisplayInfos.hpp"
 #include "Helper/Random.hpp"
 
-#include <imgui/imgui.h>
-
 CellularLife::CellularLife(entt::registry& R, LayersManager& layersM)
 	: m_dampingCoef(8.645f), m_repulsionMargin(0.2f), m_maxRadius(0.82f), m_maxRepulsionStrength(40.0f),
 	m_maxAttractionStrength(4.0f), m_maxAttractionDistance(0.2f)

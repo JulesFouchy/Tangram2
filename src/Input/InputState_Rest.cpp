@@ -11,7 +11,6 @@
 
 #include "Helper/Geometry.hpp"
 #include "Components/TransformMatrix.hpp"
-#include <glm/gtx/matrix_transform_2d.hpp>
 #include "Components/Parent.hpp"
 
 #include "Core/ChangeActiveHistory.hpp"
@@ -24,7 +23,6 @@
 #include "Systems/HistoryManager.hpp"
 
 #include "GUI/FileBrowser.hpp"
-#include "Debugging/Log.hpp"
 
 
 InputState_Rest::InputState_Rest(Instance& instance)

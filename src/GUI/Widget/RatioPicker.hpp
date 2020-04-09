@@ -2,8 +2,6 @@
 
 #include "Helper/Ratio.hpp"
 
-#include <functional>
-
 enum ButtonFlag {
 	ButtonFlag_Square = 1 << 0
 };

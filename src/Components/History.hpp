@@ -1,13 +1,5 @@
 #pragma once
 
-#include <entt/entt.hpp>
-#include <cereal/access.hpp>
-#include <cereal/types/vector.hpp>
-
-#include <functional>
-
-#include "Debugging/Log.hpp"
-
 class Action {
 public:
 	Action(std::function<void(void)> howToDo, std::function<void(void)> howToUndo) 

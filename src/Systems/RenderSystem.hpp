@@ -1,9 +1,5 @@
 #pragma once
 
-#include <entt/entt.hpp>
-#include <vector>
-#include <functional>
-
 #include "OpenGL/Shader.hpp"
 
 #include "Components/PreviewTexture.hpp"

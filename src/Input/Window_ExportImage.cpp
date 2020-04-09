@@ -2,7 +2,6 @@
 
 #include "Instance.hpp"
 
-#include <imgui/imgui.h>
 #include "Helper/File.hpp"
 #include "Helper/DisplayInfos.hpp"
 

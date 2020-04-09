@@ -5,18 +5,12 @@
 #include "Helper/DisplayInfos.hpp"
 
 #include "Components/TransformMatrix.hpp"
-#include <glm/gtx/matrix_transform_2d.hpp>
 
 #include "Systems/HistoryManager.hpp"
 
 #include "Core/GetMatrix.hpp"
 
 #include "Settings/Settings.hpp"
-
-#include "Debugging/Log.hpp"
-
-#include <SDL2/SDL.h>
-
 
 InputState_Translate::InputState_Translate(Instance& instance, entt::entity targetID, MouseButton enterExitButton)
 	: IInputState(instance),

@@ -1,8 +1,5 @@
 #pragma once
 
-#include <glm/glm.hpp>
-#include <cereal/access.hpp>
-
 namespace Cmp {
 struct TransformMatrix {
 	TransformMatrix()

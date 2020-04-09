@@ -1,10 +1,5 @@
 #pragma once
 
-#include <glm/glm.hpp>
-
-#include <SDL2/SDL_scancode.h>
-struct SDL_Window;
-
 class DisplayInfos {
 public:
 	static void Initialize();

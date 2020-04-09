@@ -23,8 +23,6 @@
 
 #include "Settings/Settings.hpp"
 
-#include "Debugging/Log.hpp"
-
 LayersManager::LayersManager()
 	: m_selectedLayer(entt::null)
 {}

@@ -6,9 +6,6 @@ union SDL_Event;
 #include "Instance.hpp"
 #include "Settings/Settings.hpp"
 
-#include <list>
-#include <string>
-
 class App {
 friend class Window_SaveAsProject;
 private:

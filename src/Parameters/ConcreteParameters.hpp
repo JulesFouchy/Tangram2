@@ -4,14 +4,9 @@
 
 #include <glm/glm.hpp>
 
-#include <cereal/access.hpp>
-#include <cereal/types/string.hpp>
 #include <cereal/types/polymorphic.hpp>
-#include <cereal/types/vector.hpp>
 #include <cereal/archives/binary.hpp>
 #include <cereal/archives/json.hpp>
-
-#include <imgui/imgui.h>
 
 class FloatParameter : public Parameter {
 public:

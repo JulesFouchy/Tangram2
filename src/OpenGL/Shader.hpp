@@ -1,10 +1,5 @@
 #pragma once
 
-#include <string>
-#include <unordered_map>
-
-#include <glm/glm.hpp>
-
 #include "ShaderHelper.hpp"
 
 class Shader {

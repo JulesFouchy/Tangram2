@@ -1,9 +1,5 @@
 #include "Shader.hpp"
 
-#include <glad/glad.h>
-
-#include "Debugging/Log.hpp"
-
 Shader::Shader(const std::string& vertexShaderFilepath, const std::string& fragmentShaderFilepath, bool compileShader)
 	: m_shaderId(-1), m_vertexShaderFilepath(vertexShaderFilepath), m_fragmentShaderFilepath(fragmentShaderFilepath),
 	  m_bCreatedSuccessfully(true)

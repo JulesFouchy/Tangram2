@@ -1,7 +1,5 @@
 #include "Ratio.hpp"
 
-#include "Debugging/Log.hpp"
-
 Ratio::Ratio(unsigned int numerator, unsigned int denominator)
 	: m_numerator(numerator), m_denominator(denominator),
 	  m_bMustRecomputeAspectRatio(false), m_bMustRecomputeNumAndDenom(false)

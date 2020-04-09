@@ -1,13 +1,10 @@
 #pragma once
 
-#include <entt/entt.hpp>
 #include <fstream>
 
 #include "Components/Shader.hpp"
 
 #include "Parameters/Parameter.hpp"
-
-#include <memory>
 
 class ShaderSystem {
 public:

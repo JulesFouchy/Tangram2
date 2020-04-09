@@ -1,11 +1,5 @@
 #include "DisplayInfos.hpp"
 
-#include <SDL2/SDL.h>
-#include <glad/glad.h>
-
-#include <glm/gtx/matrix_transform_2d.hpp>
-
-
 int DisplayInfos::m_windowWidth;
 int DisplayInfos::m_windowHeight;
 float DisplayInfos::m_aspectRatio;

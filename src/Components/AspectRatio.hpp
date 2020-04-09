@@ -1,7 +1,5 @@
 #pragma once
 
-#include <cereal/access.hpp>
-
 namespace Cmp {
 	struct AspectRatio {
 		float val;

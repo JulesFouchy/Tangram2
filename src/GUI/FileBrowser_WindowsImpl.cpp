@@ -6,7 +6,6 @@
 
 #include "FileBrowser.hpp"
 #include <atlstr.h> // includes CW2A to convert LPCWSTR to std::string
-#include "Debugging/Log.hpp"
 
 
 void FileBrowser::Initialize() {

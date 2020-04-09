@@ -1,6 +1,5 @@
 #include "App.hpp"
 
-#include <imgui/imgui.h>
 #include <imgui/imgui_impl_sdl.h>
 #include <imgui/imgui_impl_opengl3.h>
 #include "MyImGui/MyImGui.hpp"
@@ -11,11 +10,6 @@
 #include "GUI/FileBrowser.hpp"
 
 #include "Systems/GUISystem.hpp"
-
-#include "Debugging/Log.hpp"
-
-#include <SDL2/SDL.h>
-#include <glad/glad.h>
 
 App* App::m_appInstance = nullptr;
 

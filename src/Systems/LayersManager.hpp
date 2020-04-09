@@ -1,13 +1,5 @@
 #pragma once
 
-#include <entt/entt.hpp>
-
-#include <vector>
-#include <glm/glm.hpp>
-
-#include <cereal/access.hpp>
-#include <cereal/types/vector.hpp>
-
 class RenderSystem;
 
 class LayersManager {

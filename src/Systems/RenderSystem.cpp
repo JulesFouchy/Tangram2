@@ -9,9 +9,8 @@
 #include "Core/GetDrawingBoard.hpp"
 
 #include "Debugging/glException.hpp"
-#include <glad/glad.h>
 
-#include "stb_image/stb_image_write.h"
+#include <stb_image/stb_image_write.h>
 
 #include "Helper/String.hpp"
 

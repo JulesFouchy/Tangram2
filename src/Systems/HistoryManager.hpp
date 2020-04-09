@@ -2,8 +2,6 @@
 
 #include "Components/History.hpp"
 
-#include <entt/entt.hpp>
-
 class HistoryManager {
 public:
 	HistoryManager() = delete;

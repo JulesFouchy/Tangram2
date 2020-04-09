@@ -1,9 +1,5 @@
 #pragma once
 
-#include <entt/entt.hpp>
-#include <cereal/access.hpp>
-#include <cereal/types/vector.hpp>
-
 namespace Cmp {
 struct Children {
 	std::vector<entt::entity> list;

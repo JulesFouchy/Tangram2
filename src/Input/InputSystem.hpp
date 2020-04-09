@@ -4,8 +4,6 @@
 
 #include "IInputState.hpp"
 
-#include <memory>
-
 class InputSystem : public ISystem {
 friend class IInputState;
 friend class InputState_Rest;

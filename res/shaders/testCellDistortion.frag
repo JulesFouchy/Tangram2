@@ -3,7 +3,7 @@
 //? #define u.pts.size 1
 
 struct Parameters {
-    vec2[u.pts.size] pts; // size 3
+    vec2[u.pts.size] pts; // size 15
     float smoothMin; // min 16 max 500 default 116 OR 88
     float strokeSize; // min 0. max 0.01 default 0.002
     float aa; // min 0 max 0.01 default 0.003
@@ -26,7 +26,7 @@ void main() {
     for (int i = 0; i < u.pts.size; ++i) {
         rds[i] = length( uv - u.pts[i] ) - 0.1;
     }
-    float D = length( uv ) - 0.4;
+    float D = length( uv ) - 0.9;
     float[u.pts.size] ds;
     for (int i = 0; i < u.pts.size; ++i) {
         ds[i] = rds[i];

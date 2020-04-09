@@ -33,7 +33,9 @@ private:
 	std::vector<Cell> m_cells;
 
 	float m_dampingCoef;
-	float m_attraction;
+	float m_maxAttractionStrength;
+	float m_maxAttractionDistance;
 	float m_repulsionMargin;
+	float m_maxRepulsionStrength;
 	float m_maxRadius;
 };

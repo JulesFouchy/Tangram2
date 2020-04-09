@@ -13,7 +13,8 @@
 #include <imgui/imgui.h>
 
 CellularLife::CellularLife(entt::registry& R, LayersManager& layersM)
-	: m_dampingCoef(8.0f), m_attraction(4.42f), m_repulsionMargin(0.674f), m_maxRadius(0.341f)
+	: m_dampingCoef(8.645f), m_repulsionMargin(0.2f), m_maxRadius(0.82f), m_maxRepulsionStrength(40.0f),
+	m_maxAttractionStrength(4.0f), m_maxAttractionDistance(0.2f)
 {
 	m_layer = layersM.createFragmentLayer(R, "res/shaders/testCellDistortion.frag");
 	std::vector<Point2DParameter>& pts = getPointsList(R);
@@ -45,9 +46,29 @@ void CellularLife::applyInteractions(entt::registry& R, float dt) {
 			glm::vec2 p1 = m_cells[i].getPosition(R);
 			glm::vec2 p2 = m_cells[j].getPosition(R);
 			float d = glm::distance(p1, p2);
-			float m = m_repulsionMargin;
-			float force = 1 / pow(d + m, 2.0f) - 1 / pow(d + m, 4.0f);
-			force *= m_attraction;
+			float r = m_repulsionMargin;
+			// Force computation
+			float force;
+			//force = 1 / pow(d + r, 2.0f) - 1 / pow(d + r, 4.0f);
+			//force *= m_maxAttractionStrength;
+			if (d < r) {
+				force = (sqrt(d / r) - 1.0f) * m_maxRepulsionStrength;
+			}
+			else {
+				d -= r;
+				if (d < m_maxAttractionDistance / 2.0f) {
+					force = d * m_maxAttractionStrength / m_maxAttractionDistance * 2.0f;
+				}
+				else {
+					d -= m_maxAttractionDistance / 2.0f;
+					if (d < m_maxAttractionDistance / 2.0f) {
+						force = m_maxAttractionStrength - d * m_maxAttractionStrength / m_maxAttractionDistance * 2.0f;
+					}
+					else
+						force = 0.0f;
+				}
+			}
+			//
 			glm::vec2 dir = glm::normalize(p2 - p1);
 			m_cells[i].applyForce(dt,  force * dir);
 			m_cells[j].applyForce(dt, -force * dir);
@@ -68,9 +89,11 @@ void CellularLife::ImGui(entt::registry& R) {
 		resetPositions(R);
 	}
 	ImGui::SliderFloat("Damping Coef", &m_dampingCoef, 0.0f, 13.0f);
-	ImGui::SliderFloat("Attraction Force", &m_attraction, 0.0f, 10.0f); 
-	ImGui::SliderFloat("Repulsion margin", &m_repulsionMargin, 0.4f, 1.0f);
-	ImGui::SliderFloat("Container Radius", &m_maxRadius, 0.1f, 0.75f);
+	ImGui::SliderFloat("Max Attraction Strength", &m_maxAttractionStrength, -10.0f, 10.0f);
+	ImGui::SliderFloat("Max Attraction Distance", &m_maxAttractionDistance, 0.0f, 1.0f);
+	ImGui::SliderFloat("Repulsion margin", &m_repulsionMargin, 0.05f, 0.4f);
+	ImGui::SliderFloat("Max Repulsion Strength", &m_maxRepulsionStrength, 0.0f, 100.0f);
+	ImGui::SliderFloat("Container Radius", &m_maxRadius, 0.8f, 1.0f);
 	ImGui::End();
 }
 

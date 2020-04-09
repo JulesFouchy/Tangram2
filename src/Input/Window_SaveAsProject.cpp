@@ -4,13 +4,7 @@
 
 #include "Helper/File.hpp"
 
-#include <imgui/imgui.h>
-#include "imgui/misc/cpp/imgui_stdlib.h"
-
-#include "Debugging/Log.hpp"
-
 #include "App.hpp"
-
 
 Window_SaveAsProject::Window_SaveAsProject(Instance& instance)
 	: PopupWindow_WithConfirmationWarning("Saving project as"), I(instance),

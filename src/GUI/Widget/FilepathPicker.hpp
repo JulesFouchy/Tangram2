@@ -1,7 +1,5 @@
 #pragma once
 
-#include <string>
-
 #include "GUI/FileBrowser.hpp"
 
 class GUIwidget_FilepathPicker {

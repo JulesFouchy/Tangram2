@@ -1,12 +1,6 @@
 #pragma once
 
-#include <glm/glm.hpp>
 #include "Debugging/glException.hpp"
-#include <glad/glad.h>
-
-#include "Debugging/Log.hpp"
-
-#include <cereal/access.hpp>
 
 namespace Cmp {
 struct Texture {

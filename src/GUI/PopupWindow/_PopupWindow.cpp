@@ -1,9 +1,5 @@
 #include "_PopupWindow.hpp"
 
-#include "Debugging/Log.hpp"
-
-#include <imgui/imgui.h>
-
 void PopupWindow::Open() {
 	m_bMustShow = true;
 }

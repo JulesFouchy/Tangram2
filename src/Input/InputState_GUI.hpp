@@ -2,9 +2,6 @@
 
 #include "IInputState.hpp"
 
-#include <functional>
-#include <memory>
-
 class Instance;
 class PopupWindow;
 

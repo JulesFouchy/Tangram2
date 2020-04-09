@@ -1,7 +1,5 @@
 #pragma once
 
-#include <imgui/imgui.h>
-
 class MyImGui {
 public:
 	static void BeginInstancesMenu();

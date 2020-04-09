@@ -2,8 +2,6 @@
 
 #include "IInputState.hpp"
 
-#include <entt/entt.hpp>
-
 class InputState_Rest : public IInputState {
 public:
 	InputState_Rest(Instance& instance);

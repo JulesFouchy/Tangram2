@@ -1,10 +1,5 @@
 #include "String.hpp"
 
-#include <algorithm>
-
-#include <glm/glm.hpp>
-#include "Debugging/Log.hpp"
-
 size_t MyString::BeginningOfNextWord(const std::string& myString, size_t beginPos, const std::string& charsToIgnore) {
 	return myString.find_first_not_of(charsToIgnore, beginPos);
 }

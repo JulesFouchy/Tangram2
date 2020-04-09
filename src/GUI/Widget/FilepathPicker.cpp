@@ -1,8 +1,5 @@
 #include "FilepathPicker.hpp"
 
-#include "imgui/imgui.h"
-#include "imgui/misc/cpp/imgui_stdlib.h"
-
 #include "GUI/FileBrowser.hpp"
 
 GUIwidget_FilepathPicker::GUIwidget_FilepathPicker(FileFilter filter)

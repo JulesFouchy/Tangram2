@@ -1,10 +1,5 @@
 #pragma once
 
-#include <SDL2/SDL_scancode.h>
-#include <entt/entt.hpp>
-
-#include "Debugging/Log.hpp"
-
 class Instance;
 
 class IInputState {

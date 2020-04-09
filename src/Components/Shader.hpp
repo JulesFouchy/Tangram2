@@ -1,13 +1,8 @@
 #pragma once
 
-#include "Debugging/Log.hpp"
-
 #include "OpenGL/ShaderHelper.hpp"
 
-#include <cereal/access.hpp>
-
 #include "Debugging/glException.hpp"
-#include <glad/glad.h>
 
 namespace Cmp {
 struct Shader {

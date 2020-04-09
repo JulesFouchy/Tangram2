@@ -4,10 +4,6 @@
 
 #include "MouseButtons.hpp"
 
-#include <glm/glm.hpp>
-
-#include <entt/entt.hpp>
-
 class InputState_Translate : public IInputState {
 public:
 	InputState_Translate(Instance& instance, entt::entity targetID, MouseButton enterExitButton);

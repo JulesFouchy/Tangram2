@@ -1,7 +1,5 @@
 #include "_AreYouSure.hpp"
 
-#include "imgui/imgui.h"
-
 PopupWindow_AreYouSure::PopupWindow_AreYouSure(PopupWindow* windowWaitingForConfirmation)
 	: PopupWindow("Are you sure ?"), m_windowWaitingForConfirmation(windowWaitingForConfirmation)
 {

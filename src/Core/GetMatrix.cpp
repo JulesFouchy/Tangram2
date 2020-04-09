@@ -8,8 +8,6 @@
 
 #include "GetDrawingBoard.hpp"
 
-#include "glm/gtx/matrix_transform_2d.hpp"
-
 glm::mat3 TNG::GetLocalTransform(entt::registry& R, entt::entity e) {
 	return R.get<Cmp::TransformMatrix>(e).val();
 }

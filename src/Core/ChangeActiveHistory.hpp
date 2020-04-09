@@ -1,7 +1,5 @@
 #pragma once
 
-#include <entt/entt.hpp>
-
 namespace TNG {
 	inline void SetActiveHistoryToParameters(entt::registry& R, entt::entity layer) {
 		R.assign_or_replace<entt::tag<"ActiveHistoryIsParameter"_hs>>(layer);

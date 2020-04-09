@@ -1,7 +1,5 @@
 #include "Settings.hpp"
 
-#include <imgui/imgui.h>
-
 #include "Systems/RenderSystem.hpp"
 
 float Settings::s_MIN_OPACITY_TO_GRAB_LAYER = 0.5f;

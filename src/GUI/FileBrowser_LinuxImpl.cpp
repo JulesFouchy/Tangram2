@@ -2,9 +2,6 @@
 
 #include "FileBrowser.hpp"
 
-#include "Debugging/Log.hpp"
-
-
 void FileBrowser::Initialize(
 	spdlog::warn("Sorry, file explorer not implemented for Linux yet ! ");
 }

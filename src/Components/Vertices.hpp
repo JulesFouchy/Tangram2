@@ -1,14 +1,6 @@
 #pragma once
 
-#include <entt/entt.hpp>
-
 #include "Shapes/ShapeFactory.hpp"
-
-#include <glm/glm.hpp>
-#include <vector>
-
-#include <cereal/access.hpp>
-#include <cereal/types/vector.hpp>
 
 namespace Cmp {
 	struct Vertices {

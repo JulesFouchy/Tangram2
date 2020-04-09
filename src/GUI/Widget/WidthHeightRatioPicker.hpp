@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Helper/Ratio.hpp"
-#include <functional>
 
 #include "RatioPicker.hpp"
 

@@ -1,7 +1,5 @@
 #pragma once
 
-#include <string>
-
 namespace MyString {
 	size_t BeginningOfNextWord(const std::string& myString, size_t beginPos, const std::string& charsToIgnore = " ,;/()|\t");
 	size_t EndOfNextWord(const std::string& myString, size_t beginPos, const std::string& charsToIgnore = " ,;/()|\t");

@@ -23,16 +23,8 @@
 #include "Helper/String.hpp"
 #include "Helper/File.hpp"
 
-#include <SDL2/SDL.h>
-#include <glad/glad.h>
-
-#include <imgui/imgui.h>
-
 #include <cereal/archives/json.hpp>
 #include <fstream>
-#include "Debugging/Log.hpp"
-
-#include "glm/gtx/matrix_transform_2d.hpp"
 
 #include "App.hpp"
 

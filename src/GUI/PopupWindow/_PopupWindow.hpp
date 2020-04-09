@@ -1,7 +1,5 @@
 #pragma once
 
-#include <string>
-
 class PopupWindow {
 friend class PopupWindow_AreYouSure;
 public:

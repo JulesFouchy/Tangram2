@@ -1,8 +1,5 @@
 #pragma once
 
-#include <entt/entt.hpp>
-#include <glm/glm.hpp>
-
 namespace TNG {
 	glm::mat3 GetLocalTransform(entt::registry& R, entt::entity e);
 	glm::mat3 GetMatrixPlusAspectRatio(entt::registry& R, entt::entity e);

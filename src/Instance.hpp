@@ -1,10 +1,5 @@
 #pragma once
 
-union SDL_Event;
-
-#include <entt/entt.hpp>
-#include <string>
-
 #include "Input/InputSystem.hpp"
 #include "Systems/RenderSystem.hpp"
 #include "Systems/LayersManager.hpp"

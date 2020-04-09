@@ -3,11 +3,7 @@
 #include <fstream>
 #include <iostream>
 
-#include "Debugging/Log.hpp"
-
 #include "Helper/String.hpp"
-
-#include <glad/glad.h>
 
 std::string ShaderHelper::parseFile(const std::string& filepath, const std::vector<std::pair<std::string, std::string>>& modifyFromTo) {
 	std::ifstream stream(filepath);

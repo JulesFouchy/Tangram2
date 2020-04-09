@@ -1,7 +1,5 @@
 #include "GUI/Widget/RatioPicker.hpp"
 
-#include "imgui/imgui.h"
-
 GUIwidget_RatioPicker::GUIwidget_RatioPicker(int buttonFlags, Ratio initialRatio, std::function<void(void)> onUpdate)
 	: m_ratio(initialRatio), m_buttonFlags(buttonFlags), m_onUpdate(onUpdate)
 {}

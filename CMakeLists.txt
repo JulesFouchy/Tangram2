@@ -1,11 +1,7 @@
 # Set standards
-cmake_minimum_required(VERSION 3.8)
+cmake_minimum_required(VERSION 3.16)
 project(TANGRAM2 C CXX)
 
-# Because the ShaderSystem obj file got too big !
-if(WIN32)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /bigobj")
-endif()
 
 # /////////////////////////////////////////////////////////////////////////////
 # ////////////////////////////// PROJECT FILES ////////////////////////////////
@@ -85,6 +81,11 @@ if (UNIX)
     target_link_libraries(${PROJECT_NAME} -ldl)
 endif()
 
+# Because the ShaderSystem obj file got too big !
+if(WIN32)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /bigobj")
+endif()
+
 if (WIN32) # Copy .dll to build folder
     add_custom_command(
         TARGET ${PROJECT_NAME} POST_BUILD
@@ -105,4 +106,41 @@ add_custom_command(
 # Setup working directory in Visual Studio (to access the res folder) :
 set_target_properties(
     ${PROJECT_NAME} PROPERTIES
-    VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}")
+    VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+)
+
+# Enable multithreaded compilation on Visual Studio
+if(MSVC)
+  add_definitions(/MP)
+endif()
+
+# /////////////////////////////////////////////////////////////////////////////
+# ////////////////////////// PRECOMPILED HEADER ! /////////////////////////////
+# /////////////////////////////////////////////////////////////////////////////
+
+target_precompile_headers(${PROJECT_NAME}
+  PRIVATE
+  # Project Code
+    [["Debugging/Log.hpp"]]
+  # Libraries
+    <glad/glad.h>
+    <SDL2/SDL.h>
+    <entt/entt.hpp>
+    <imgui/imgui.h>
+    <imgui/misc/cpp/imgui_stdlib.h>
+    <glm/glm.hpp>
+    <glm/gtx/matrix_transform_2d.hpp>
+    <cereal/access.hpp>
+    <cereal/types/vector.hpp>
+    <cereal/types/string.hpp>
+    <cereal/types/memory.hpp>
+  # std
+    <vector>
+    <string>
+    <functional>
+    <memory>
+    <algorithm>
+    <unordered_map>
+    <utility>
+    <list>
+)

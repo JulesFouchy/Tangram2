@@ -1,20 +1,14 @@
 #include "App.hpp"
 
-#include <imgui/imgui.h>
 #include <imgui/imgui_impl_sdl.h>
 #include <imgui/imgui_impl_opengl3.h>
 #include "MyImGui/MyImGui.hpp"
 
 #include <debug_break/debug_break.h>
 
-#include "Debugging/Log.hpp"
-
 #include "Systems/RenderSystem.hpp"
 #include "Helper/DisplayInfos.hpp"
 #include "GUI/FileBrowser.hpp"
-
-#include <SDL2/SDL.h>
-#include <glad/glad.h>
 
 #ifdef _WIN32
 	#define _CRTDBG_MAP_ALLOC

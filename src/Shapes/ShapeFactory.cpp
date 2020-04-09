@@ -7,8 +7,6 @@
 
 #include "Core/CreateParentRelationship.hpp"
 
-#include <glm/gtx/matrix_transform_2d.hpp>
-
 entt::entity ShapeFactory::CreatePoint2D(entt::registry& R, entt::entity parent, glm::vec2 posInDrawingBoardSpace) {
 	entt::entity e = R.create();
 	R.assign<entt::tag<"Point2D"_hs>>(e);

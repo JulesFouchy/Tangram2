@@ -2,13 +2,6 @@
 
 #include "Core/MustRecomputeTexture.hpp"
 
-#include <imgui/imgui.h>
-
-#include <glad/glad.h>
-#include <entt/entt.hpp>
-
-#include "Debugging/Log.hpp"
-
 #include "Shapes/ShapeFactory.hpp"
 #include "Core/GetPosition.hpp"
 

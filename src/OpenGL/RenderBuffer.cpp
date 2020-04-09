@@ -2,9 +2,7 @@
 
 #include "Helper/DisplayInfos.hpp"
 
-#include "Debugging/Log.hpp"
 #include "Debugging/glException.hpp"
-#include <glad/glad.h>
 
 RenderBuffer::RenderBuffer() {
 	GLCall(glGenFramebuffers(1, &m_frameBufferId));

@@ -30,7 +30,7 @@ void CellularLife::resetPositions(entt::registry& R) {
 		cell.setPosition(R, glm::vec2((m_rand.Float()-0.5f)*ratio, m_rand.Float()-0.5f));
 }
 
-void CellularLife::loopIteration(float dt, entt::registry& R) {
+void CellularLife::loopIteration(entt::registry& R, float dt) {
 	checkEntityValidity(R);
 	applyInteractions(R, dt);
 	for (Cell& cell : m_cells) {

@@ -10,7 +10,7 @@ union SDL_Event;
 #include "Systems/LayersManager.hpp"
 #include "Shapes/ShapeFactory.hpp"
 
-#include "Scripts/CellularLife/CellularLife.hpp"
+#include "Scripts/ScriptsManager.hpp"
 
 class Instance {
 public:
@@ -51,7 +51,7 @@ private:
 	entt::entity m_testLayer;
 	entt::entity m_testLayer2;
 
-	CellularLife m_cellularLife;
+	ScriptsManager m_scriptsManager;
 
 	std::string m_projectLocation;
 	std::string m_projectName;

@@ -1,8 +1,11 @@
 #pragma once
 
+#include <entt/entt.hpp>
+
 class Script {
 public:
 	Script() = default;
 	virtual ~Script() = default;
-	virtual void loopIteration(float dt) = 0;
+	virtual void loopIteration(entt::registry& R, float dt) = 0;
+	virtual void ImGui(entt::registry& R) = 0;
 };

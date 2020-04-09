@@ -104,7 +104,7 @@ Instance::Instance()
 	}
 	// Drawing board
 	createDrawingBoard();
-	m_cellularLife = CellularLife(registry(), m_layersManager);
+	m_scriptsManager.initialize(registry(), m_layersManager);
 	//
 	//layersManager().createFragmentLayer("res/shaders/myFirstFrag.frag");
 	//layersManager().createFragmentLayer("res/shaders/second.frag");
@@ -156,8 +156,8 @@ void Instance::onLoopIteration(){
 	renderSystem().render(m_registry, m_layersManager.getLayersOrdered(), m_layersManager.getSelectedLayer(), GUISystem::ShouldShowGUI());
 	renderSystem().checkTexturesToRecompute(m_registry);
 	inputSystem().update();
-	m_cellularLife.loopIteration(1./60, registry());
-	m_cellularLife.ImGui(registry());
+	m_scriptsManager.loopIteration(registry(), 1.0f/60);
+	m_scriptsManager.ImGui(registry());
 	GUISystem::Render(m_registry, m_layersManager.getLayersOrdered(), m_layersManager.selectedLayer());
 }
 

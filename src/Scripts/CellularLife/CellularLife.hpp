@@ -2,6 +2,8 @@
 
 #include <entt/entt.hpp>
 
+#include "Scripts/Script.hpp"
+
 #include "Parameters/ConcreteParameters.hpp"
 #include "Helper/Random.hpp"
 
@@ -9,15 +11,14 @@
 
 class LayersManager;
 
-class CellularLife {
+class CellularLife : Script {
 public:
 	CellularLife() = default;
 	CellularLife(entt::registry& R, LayersManager& layersM);
 	~CellularLife() = default;
 
-	void loopIteration(float dt, entt::registry& R);
-
-	void ImGui(entt::registry& R);
+	void loopIteration(entt::registry& R, float dt) override;
+	void ImGui(entt::registry& R) override;
 
 private:
 	void applyInteractions(entt::registry& R, float dt);

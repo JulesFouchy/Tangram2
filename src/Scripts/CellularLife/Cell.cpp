@@ -14,9 +14,13 @@ Cell::Cell(entt::entity e)
 	m_speed.y = vel * sin(agl);*/
 }
 
-void Cell::move(entt::registry& R, float dt) {
+void Cell::move(entt::registry& R, float dt, float maxRadius) {
 	glm::vec2 pos = getPosition(R);
 	pos += m_speed * dt;
+	float d = glm::length(pos);
+	if (d > maxRadius) {
+		pos *= maxRadius / d;
+	}
 	setPosition(R, pos);
 }
 

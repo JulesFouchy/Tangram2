@@ -34,4 +34,5 @@ private:
 	float m_dampingCoef;
 	float m_attraction;
 	float m_repulsionMargin;
+	float m_maxRadius;
 };

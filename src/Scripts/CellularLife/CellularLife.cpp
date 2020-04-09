@@ -13,7 +13,7 @@
 #include <imgui/imgui.h>
 
 CellularLife::CellularLife(entt::registry& R, LayersManager& layersM)
-	: m_dampingCoef(8.0f), m_attraction(4.42f), m_repulsionMargin(0.674f)
+	: m_dampingCoef(8.0f), m_attraction(4.42f), m_repulsionMargin(0.674f), m_maxRadius(0.341f)
 {
 	m_layer = layersM.createFragmentLayer(R, "res/shaders/testCellDistortion.frag");
 	std::vector<Point2DParameter>& pts = getPointsList(R);
@@ -35,7 +35,7 @@ void CellularLife::loopIteration(float dt, entt::registry& R) {
 	applyInteractions(R, dt);
 	for (Cell& cell : m_cells) {
 		cell.applyDamping(dt, m_dampingCoef);
-		cell.move(R, dt);
+		cell.move(R, dt, m_maxRadius);
 	}
 }
 
@@ -70,6 +70,7 @@ void CellularLife::ImGui(entt::registry& R) {
 	ImGui::SliderFloat("Damping Coef", &m_dampingCoef, 0.0f, 13.0f);
 	ImGui::SliderFloat("Attraction Force", &m_attraction, 0.0f, 10.0f); 
 	ImGui::SliderFloat("Repulsion margin", &m_repulsionMargin, 0.4f, 1.0f);
+	ImGui::SliderFloat("Container Radius", &m_maxRadius, 0.1f, 0.75f);
 	ImGui::End();
 }
 

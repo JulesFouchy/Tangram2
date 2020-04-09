@@ -9,7 +9,7 @@ public:
 	Cell() = default;
 	Cell(entt::entity e);
 
-	void move(entt::registry& R, float dt);
+	void move(entt::registry& R, float dt, float maxRadius);
 	void applyForce(float dt, const glm::vec2& force);
 	void applyDamping(float dt, float dampingCoef);
 

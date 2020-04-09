@@ -105,4 +105,10 @@ add_custom_command(
 # Setup working directory in Visual Studio (to access the res folder) :
 set_target_properties(
     ${PROJECT_NAME} PROPERTIES
-    VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}")
+    VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+)
+
+# Enable multithreaded compilation on Visual Studio
+if(MSVC)
+  add_definitions(/MP)
+endif()

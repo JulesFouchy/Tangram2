@@ -2,7 +2,7 @@
 
 #include "Systems/LayersManager.hpp"
 
-#include "Components/ParametersList.hpp"
+#include "Components/Parameters.hpp"
 
 #include "Core/GetPosition.hpp"
 #include "Core/SetPosition.hpp"
@@ -15,7 +15,7 @@
 CellularLife::CellularLife(entt::registry& R, LayersManager& layersM)
 	: m_dampingCoef(8.0f), m_attraction(4.42f), m_repulsionMargin(0.674f)
 {
-	m_layer = layersM.createFragmentLayer("res/shaders/testCellDistortion.frag");
+	m_layer = layersM.createFragmentLayer(R, "res/shaders/testCellDistortion.frag");
 	std::vector<Point2DParameter>& pts = getPointsList(R);
 	for (Point2DParameter& pt : pts) {
 		entt::entity e = pt.getEntity();

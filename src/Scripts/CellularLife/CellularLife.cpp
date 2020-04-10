@@ -33,12 +33,7 @@ CellularLife::CellularLife(entt::registry& R, LayersManager& layersM)
 	resetPositions(R);
 	randomizeTypesDistribution();
 	//
-	//InteractionSettings settings = { 4.0f, 0.2f, 40.0f, 0.2f };
-	//for (size_t i = 0; i < NB_TYPES; ++i) {
-	//	for (size_t j = 0; j < NB_TYPES; ++j) {
-	//		m_settings[i][j] = settings;
-	//	}
-	//}
+	m_multipliers = { 1.0f, 1.0f, 1.0f, 1.0f };
 	randomizeSettings();
 }
 
@@ -55,7 +50,7 @@ void CellularLife::randomizeSettings() {
 			m_settings[i][j].attractionStrengthMax = m_rand.Float(attractionStrengthRange[0], attractionStrengthRange[1]);
 			m_settings[i][j].attractionDistanceMax = m_rand.Float(attractionDistanceRange[0], attractionDistanceRange[1]);
 			m_settings[i][j].repulsionStrengthMax  = m_rand.Float(repulsionStrengthRange [0], repulsionStrengthRange [1]);
-			m_settings[i][j].repulsionDistanceMax  = m_rand.Float(repulsionDistanceRange [0], repulsionDistanceRange [1]);
+			m_settings[i][j].repulsionDistanceMax = 0.2f;// m_rand.Float(repulsionDistanceRange[0], repulsionDistanceRange[1]);
 
 		}
 	}
@@ -66,7 +61,8 @@ void CellularLife::saveSettings() {
 	{
 		cereal::JSONOutputArchive archive(os);
 		archive(
-			CEREAL_NVP(m_settings)
+			CEREAL_NVP(m_settings),
+			CEREAL_NVP(m_multipliers)
 		);
 	}
 }
@@ -77,7 +73,10 @@ void CellularLife::loadSettings() {
 		std::ifstream is(path);
 		{
 			cereal::JSONInputArchive archive(is);
-			archive(m_settings);
+			archive(
+				m_settings,
+				m_multipliers
+			);
 		}
 	}
 }
@@ -102,19 +101,23 @@ glm::vec2 CellularLife::computeForce(glm::vec2 p1, glm::vec2 p2, unsigned int id
 
 	float force;
 	float d = glm::distance(p1, p2);
-	float r = settings.repulsionDistanceMax;
+	float r = settings.repulsionDistanceMax * m_multipliers.repulsionDistanceMax;
+	float repStrength = settings.repulsionStrengthMax * m_multipliers.repulsionStrengthMax;
+	float attDistance = settings.attractionDistanceMax * m_multipliers.attractionDistanceMax;
+	float attStrength = settings.attractionStrengthMax * m_multipliers.attractionStrengthMax;
+
 	if (d < r) {
-		force = (sqrt(d / r) - 1.0f) * settings.repulsionStrengthMax;
+		force = (sqrt(d / r) - 1.0f) * repStrength;
 	}
 	else {
 		d -= r;
-		if (d < settings.attractionDistanceMax / 2.0f) {
-			force = d * settings.attractionStrengthMax / settings.attractionDistanceMax * 2.0f;
+		if (d < attDistance / 2.0f) {
+			force = d * attStrength / attDistance * 2.0f;
 		}
 		else {
-			d -= settings.attractionDistanceMax / 2.0f;
-			if (d < settings.attractionDistanceMax / 2.0f) {
-				force = settings.attractionStrengthMax - d * settings.attractionStrengthMax / settings.attractionDistanceMax * 2.0f;
+			d -= attDistance / 2.0f;
+			if (d < attDistance / 2.0f) {
+				force = attStrength - d * attStrength / attDistance * 2.0f;
 			}
 			else
 				force = 0.0f;
@@ -151,6 +154,11 @@ void CellularLife::ImGui(entt::registry& R) {
 	}
 	ImGui::SliderFloat("Damping Coef", &m_dampingCoef, 0.0f, 13.0f);
 	ImGui::SliderFloat("Container Radius", &m_maxRadius, 0.8f, 1.0f);
+	ImGui::Separator();
+	ImGui::SliderFloat("Strength Attraction Mult", &m_multipliers.attractionStrengthMax, 0.0f, 3.0f);
+	ImGui::SliderFloat("Distance Attraction Mult", &m_multipliers.attractionDistanceMax, 0.0f, 3.0f);
+	ImGui::SliderFloat("Strength Repulsion Mult",  &m_multipliers.repulsionStrengthMax,  0.0f, 3.0f);
+	ImGui::SliderFloat("Distance Replusion Mult",  &m_multipliers.repulsionDistanceMax,  0.0f, 3.0f);
 	for (size_t i = 0; i < NB_TYPES; ++i) {
 		for (size_t j = 0; j < NB_TYPES; ++j) {
 			ImGui::Separator();

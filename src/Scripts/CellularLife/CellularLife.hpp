@@ -41,4 +41,5 @@ private:
 	float m_dampingCoef;
 	float m_maxRadius;
 	std::array<std::array<InteractionSettings, NB_TYPES>, NB_TYPES> m_settings;
+	InteractionSettings m_multipliers;
 };

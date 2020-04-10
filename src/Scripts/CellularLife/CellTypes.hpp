@@ -1,7 +1,7 @@
 #pragma once
 
 #include <array>
-#define NB_TYPES 2
+#define NB_TYPES 4
 
 struct InteractionSettings {
 	float attractionStrengthMax;

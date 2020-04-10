@@ -6,6 +6,7 @@
 #include "Helper/Random.hpp"
 
 #include "Cell.hpp"
+#include "CellTypes.hpp"
 
 class LayersManager;
 
@@ -20,6 +21,9 @@ public:
 
 private:
 	void applyInteractions(entt::registry& R, float dt);
+	glm::vec2 computeForce(glm::vec2 p1, glm::vec2 p2, unsigned int id1, unsigned int id2);
+
+	void randomizeSettings();
 
 	std::vector<Point2DParameter>& getPointsList(entt::registry& R);
 	void resetPositions(entt::registry& R);
@@ -31,9 +35,6 @@ private:
 	std::vector<Cell> m_cells;
 
 	float m_dampingCoef;
-	float m_maxAttractionStrength;
-	float m_maxAttractionDistance;
-	float m_repulsionMargin;
-	float m_maxRepulsionStrength;
 	float m_maxRadius;
+	ListOfSettings m_settings;
 };

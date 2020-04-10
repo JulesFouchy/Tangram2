@@ -15,3 +15,16 @@ Rand::Rand(int seed)
 float Rand::Float() {
 	return m_distributionFloat(m_generator);
 }
+float Rand::Float(float max) {
+	return Float() * max;
+}
+float Rand::Float(float min, float max) {
+	return Float(max - min) + min;
+}
+
+int Rand::Int(int maxExcluded) {
+	return floor(Float() * maxExcluded);
+}
+int Rand::Int(int min, int maxExcluded) {
+	return floor(Float() * (maxExcluded - min) + min);
+}

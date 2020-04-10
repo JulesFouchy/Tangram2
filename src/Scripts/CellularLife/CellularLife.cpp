@@ -10,17 +10,41 @@
 #include "Helper/DisplayInfos.hpp"
 #include "Helper/Random.hpp"
 
+static float attractionStrengthRange[2] = { -10.0f , 10.0f };
+static float attractionDistanceRange[2] = { 0.0f , 1.0f };
+static float repulsionStrengthRange[2] = { 0.0f, 100.0f };
+static float repulsionDistanceRange[2] = { 0.0f, 0.4f };
+
 CellularLife::CellularLife(entt::registry& R, LayersManager& layersM)
-	: m_dampingCoef(8.645f), m_repulsionMargin(0.2f), m_maxRadius(0.82f), m_maxRepulsionStrength(40.0f),
-	m_maxAttractionStrength(4.0f), m_maxAttractionDistance(0.2f)
+	: m_dampingCoef(8.645f), m_maxRadius(0.82f)
 {
 	m_layer = layersM.createFragmentLayer(R, "res/shaders/testCellDistortion.frag");
 	std::vector<Point2DParameter>& pts = getPointsList(R);
 	for (Point2DParameter& pt : pts) {
 		entt::entity e = pt.getEntity();
-		m_cells.emplace_back(e);
+		m_cells.emplace_back(m_rand, e);
 	}
 	resetPositions(R);
+	//
+	//InteractionSettings settings = { 4.0f, 0.2f, 40.0f, 0.2f };
+	//for (size_t i = 0; i < NB_TYPES; ++i) {
+	//	for (size_t j = 0; j < NB_TYPES; ++j) {
+	//		m_settings[i][j] = settings;
+	//	}
+	//}
+	randomizeSettings();
+}
+
+void CellularLife::randomizeSettings() {
+	for (size_t i = 0; i < NB_TYPES; ++i) {
+		for (size_t j = 0; j < NB_TYPES; ++j) {
+			m_settings[i][j].attractionStrengthMax = m_rand.Float(attractionStrengthRange[0], attractionStrengthRange[1]);
+			m_settings[i][j].attractionDistanceMax = m_rand.Float(attractionDistanceRange[0], attractionDistanceRange[1]);
+			m_settings[i][j].repulsionStrengthMax  = m_rand.Float(repulsionStrengthRange [0], repulsionStrengthRange [1]);
+			m_settings[i][j].repulsionDistanceMax  = m_rand.Float(repulsionDistanceRange [0], repulsionDistanceRange [1]);
+
+		}
+	}
 }
 
 void CellularLife::resetPositions(entt::registry& R) {
@@ -38,38 +62,43 @@ void CellularLife::loopIteration(entt::registry& R, float dt) {
 	}
 }
 
+glm::vec2 CellularLife::computeForce(glm::vec2 p1, glm::vec2 p2, unsigned int id1, unsigned int id2) {
+	InteractionSettings settings = m_settings[id1][id2];
+
+	float force;
+	float d = glm::distance(p1, p2);
+	float r = settings.repulsionDistanceMax;
+	if (d < r) {
+		force = (sqrt(d / r) - 1.0f) * settings.repulsionStrengthMax;
+	}
+	else {
+		d -= r;
+		if (d < settings.attractionDistanceMax / 2.0f) {
+			force = d * settings.attractionStrengthMax / settings.attractionDistanceMax * 2.0f;
+		}
+		else {
+			d -= settings.attractionDistanceMax / 2.0f;
+			if (d < settings.attractionDistanceMax / 2.0f) {
+				force = settings.attractionStrengthMax - d * settings.attractionStrengthMax / settings.attractionDistanceMax * 2.0f;
+			}
+			else
+				force = 0.0f;
+		}
+	}
+	//
+	return force * glm::normalize(p2 - p1);
+}
+
 void CellularLife::applyInteractions(entt::registry& R, float dt) {
 	for (size_t i = 0; i < m_cells.size(); ++i) {
 		for (size_t j = i + 1; j < m_cells.size(); ++j) {
 			glm::vec2 p1 = m_cells[i].getPosition(R);
 			glm::vec2 p2 = m_cells[j].getPosition(R);
-			float d = glm::distance(p1, p2);
-			float r = m_repulsionMargin;
-			// Force computation
-			float force;
-			//force = 1 / pow(d + r, 2.0f) - 1 / pow(d + r, 4.0f);
-			//force *= m_maxAttractionStrength;
-			if (d < r) {
-				force = (sqrt(d / r) - 1.0f) * m_maxRepulsionStrength;
-			}
-			else {
-				d -= r;
-				if (d < m_maxAttractionDistance / 2.0f) {
-					force = d * m_maxAttractionStrength / m_maxAttractionDistance * 2.0f;
-				}
-				else {
-					d -= m_maxAttractionDistance / 2.0f;
-					if (d < m_maxAttractionDistance / 2.0f) {
-						force = m_maxAttractionStrength - d * m_maxAttractionStrength / m_maxAttractionDistance * 2.0f;
-					}
-					else
-						force = 0.0f;
-				}
-			}
-			//
-			glm::vec2 dir = glm::normalize(p2 - p1);
-			m_cells[i].applyForce(dt,  force * dir);
-			m_cells[j].applyForce(dt, -force * dir);
+			unsigned int id1 = m_cells[i].getTypeID();
+			unsigned int id2 = m_cells[j].getTypeID();
+			
+			m_cells[i].applyForce(dt, computeForce(p1, p2, id1, id2));
+			m_cells[j].applyForce(dt, computeForce(p2, p1, id2, id1));
 		}
 	}
 }
@@ -86,12 +115,22 @@ void CellularLife::ImGui(entt::registry& R) {
 		}*/
 		resetPositions(R);
 	}
+	if (ImGui::Button("Randomize Interaction Settings")) {
+		randomizeSettings();
+	}
 	ImGui::SliderFloat("Damping Coef", &m_dampingCoef, 0.0f, 13.0f);
-	ImGui::SliderFloat("Max Attraction Strength", &m_maxAttractionStrength, -10.0f, 10.0f);
-	ImGui::SliderFloat("Max Attraction Distance", &m_maxAttractionDistance, 0.0f, 1.0f);
-	ImGui::SliderFloat("Repulsion margin", &m_repulsionMargin, 0.05f, 0.4f);
-	ImGui::SliderFloat("Max Repulsion Strength", &m_maxRepulsionStrength, 0.0f, 100.0f);
 	ImGui::SliderFloat("Container Radius", &m_maxRadius, 0.8f, 1.0f);
+	for (size_t i = 0; i < NB_TYPES; ++i) {
+		for (size_t j = 0; j < NB_TYPES; ++j) {
+			ImGui::Separator();
+			ImGui::PushID(i * NB_TYPES + j);
+			ImGui::SliderFloat("Strength Attraction Max", &m_settings[i][j].attractionStrengthMax, attractionStrengthRange[0], attractionStrengthRange[1]);
+			ImGui::SliderFloat("Distance Attraction Max", &m_settings[i][j].attractionDistanceMax, attractionDistanceRange[0], attractionDistanceRange[1]);
+			ImGui::SliderFloat("Strength Repulsion Max", &m_settings[i][j].repulsionStrengthMax, repulsionStrengthRange[0], repulsionStrengthRange[1]);
+			ImGui::SliderFloat("Distance Replusion Max", &m_settings[i][j].repulsionDistanceMax, repulsionDistanceRange[0], repulsionDistanceRange[1]);
+			ImGui::PopID();
+		}
+	}
 	ImGui::End();
 }
 
@@ -109,7 +148,7 @@ void CellularLife::checkEntityValidity(entt::registry& R) {
 			if (i < m_cells.size())
 				m_cells[i].m_entity = e;
 			else
-				m_cells.emplace_back(e);
+				m_cells.emplace_back(m_rand, e);
 			i++;
 		}
 	}

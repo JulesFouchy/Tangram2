@@ -1,10 +1,14 @@
 #include "Cell.hpp"
 
+#include "CellTypes.hpp"
+
 #include "Core/GetPosition.hpp"
 #include "Core/SetPosition.hpp"
 
-Cell::Cell(entt::entity e)
-	: m_entity(e), m_speed(0.0f)
+#include "Helper/Random.hpp"
+
+Cell::Cell(Rand& rand, entt::entity e)
+	: m_entity(e), m_speed(0.0f), m_typeID(rand.Int(NB_TYPES))
 {
 	/*int N = 10;
 	int i = ((int)e) % N;

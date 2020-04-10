@@ -8,6 +8,10 @@ public:
 	Rand(int seed);
 
 	float Float();
+	float Float(float max);
+	float Float(float min, float max);
+	int Int(int maxExcluded);
+	int Int(int min, int maxExcluded);
 
 private:
 	static std::random_device trueRandomGenerator;

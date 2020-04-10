@@ -24,7 +24,8 @@ static float repulsionDistanceRange[2] = { 0.0f, 0.4f };
 CellularLife::CellularLife(entt::registry& R, LayersManager& layersM)
 	: m_dampingCoef(8.645f), m_maxRadius(0.82f)
 {
-	m_layer = layersM.createFragmentLayer(R, "res/shaders/testCellDistortion.frag");
+	layersM.createFragmentLayer(R, "res/shaders/CellularLife_Background.frag");
+	m_layer = layersM.createFragmentLayer(R, "res/shaders/CellularLife_Cells.frag");
 	std::vector<Point2DParameter>& pts = getPointsList(R);
 	for (Point2DParameter& pt : pts) {
 		entt::entity e = pt.getEntity();

@@ -154,6 +154,7 @@ void CellularLife::ImGui(entt::registry& R) {
 	for (size_t i = 0; i < NB_TYPES; ++i) {
 		for (size_t j = 0; j < NB_TYPES; ++j) {
 			ImGui::Separator();
+			ImGui::TextColored({ 0.8, 0.3, 0.2, 1.0 }, (std::to_string(i) + "->" + std::to_string(j)).c_str());
 			ImGui::PushID(i * NB_TYPES + j);
 			ImGui::SliderFloat("Strength Attraction Max", &m_settings[i][j].attractionStrengthMax, attractionStrengthRange[0], attractionStrengthRange[1]);
 			ImGui::SliderFloat("Distance Attraction Max", &m_settings[i][j].attractionDistanceMax, attractionDistanceRange[0], attractionDistanceRange[1]);

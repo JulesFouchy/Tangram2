@@ -10,6 +10,12 @@
 #include "Helper/DisplayInfos.hpp"
 #include "Helper/Random.hpp"
 
+#include <cereal/archives/json.hpp>
+#include <cereal/types/array.hpp>
+#include <fstream>
+
+#include "GUI/FileBrowser.hpp"
+
 static float attractionStrengthRange[2] = { -10.0f , 10.0f };
 static float attractionDistanceRange[2] = { 0.0f , 1.0f };
 static float repulsionStrengthRange[2] = { 0.0f, 100.0f };
@@ -44,6 +50,25 @@ void CellularLife::randomizeSettings() {
 			m_settings[i][j].repulsionDistanceMax  = m_rand.Float(repulsionDistanceRange [0], repulsionDistanceRange [1]);
 
 		}
+	}
+}
+
+void CellularLife::saveSettings() {
+	std::ofstream os("C:\\Dev\\Tangram2\\MyTangramProjects\\CellsForAmanthilde\\settings.json");
+	{
+		cereal::JSONOutputArchive archive(os);
+		archive(
+			CEREAL_NVP(m_settings)
+		);
+	}
+}
+
+void CellularLife::loadSettings() {
+	const std::string path = FileBrowser::GetFileOpen();
+	std::ifstream is(path);
+	{
+		cereal::JSONInputArchive archive(is);
+		archive(m_settings);
 	}
 }
 
@@ -130,6 +155,14 @@ void CellularLife::ImGui(entt::registry& R) {
 			ImGui::SliderFloat("Distance Replusion Max", &m_settings[i][j].repulsionDistanceMax, repulsionDistanceRange[0], repulsionDistanceRange[1]);
 			ImGui::PopID();
 		}
+	}
+	ImGui::Separator();
+	if (ImGui::Button("Save Interaction Settings")) {
+		saveSettings();
+	}
+
+	if (ImGui::Button("Load Interaction Settings")) {
+		loadSettings();
 	}
 	ImGui::End();
 }

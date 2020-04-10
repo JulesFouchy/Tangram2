@@ -24,6 +24,8 @@ private:
 	glm::vec2 computeForce(glm::vec2 p1, glm::vec2 p2, unsigned int id1, unsigned int id2);
 
 	void randomizeSettings();
+	void saveSettings();
+	void loadSettings();
 
 	std::vector<Point2DParameter>& getPointsList(entt::registry& R);
 	void resetPositions(entt::registry& R);
@@ -36,5 +38,5 @@ private:
 
 	float m_dampingCoef;
 	float m_maxRadius;
-	ListOfSettings m_settings;
+	std::array<std::array<InteractionSettings, NB_TYPES>, NB_TYPES> m_settings;
 };

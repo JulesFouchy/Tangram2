@@ -8,6 +8,20 @@ struct InteractionSettings {
 	float attractionDistanceMax;
 	float repulsionStrengthMax;
 	float repulsionDistanceMax;
+
+private:
+	//Serialization
+	friend class cereal::access;
+	template <class Archive>
+	void serialize(Archive& archive)
+	{
+		archive(
+			CEREAL_NVP(attractionStrengthMax), 
+			CEREAL_NVP(attractionDistanceMax),
+			CEREAL_NVP(repulsionStrengthMax),
+			CEREAL_NVP(repulsionDistanceMax)
+		);
+	}
 };
 
 struct ListOfSettings {

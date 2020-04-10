@@ -23,6 +23,8 @@ private:
 	void applyInteractions(entt::registry& R, float dt);
 	glm::vec2 computeForce(glm::vec2 p1, glm::vec2 p2, unsigned int id1, unsigned int id2);
 
+	void randomizeTypesDistribution();
+
 	void randomizeSettings();
 	void saveSettings();
 	void loadSettings();

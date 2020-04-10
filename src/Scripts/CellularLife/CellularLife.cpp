@@ -31,6 +31,7 @@ CellularLife::CellularLife(entt::registry& R, LayersManager& layersM)
 		m_cells.emplace_back(m_rand, e);
 	}
 	resetPositions(R);
+	randomizeTypesDistribution();
 	//
 	//InteractionSettings settings = { 4.0f, 0.2f, 40.0f, 0.2f };
 	//for (size_t i = 0; i < NB_TYPES; ++i) {
@@ -39,6 +40,13 @@ CellularLife::CellularLife(entt::registry& R, LayersManager& layersM)
 	//	}
 	//}
 	randomizeSettings();
+}
+
+void CellularLife::randomizeTypesDistribution() {
+	Log::separationLine();
+	for (Cell cell : m_cells) {
+		cell.m_typeID = m_rand.Int(NB_TYPES);
+	}
 }
 
 void CellularLife::randomizeSettings() {
@@ -65,10 +73,12 @@ void CellularLife::saveSettings() {
 
 void CellularLife::loadSettings() {
 	const std::string path = FileBrowser::GetFileOpen();
-	std::ifstream is(path);
-	{
-		cereal::JSONInputArchive archive(is);
-		archive(m_settings);
+	if (!path.empty()) {
+		std::ifstream is(path);
+		{
+			cereal::JSONInputArchive archive(is);
+			archive(m_settings);
+		}
 	}
 }
 
@@ -131,17 +141,13 @@ void CellularLife::applyInteractions(entt::registry& R, float dt) {
 void CellularLife::ImGui(entt::registry& R) {
 	ImGui::Begin("Cellular Life");
 	if (ImGui::Button("Reset Positions")) {
-		/*std::vector<Point2DParameter>& pts = getPointsList(R);
-		int i = 0;
-		for (Point2DParameter& pt : pts) {
-			entt::entity e = pt.getEntity();
-			m_cells[i] = Cell(e);
-			i++;
-		}*/
 		resetPositions(R);
 	}
 	if (ImGui::Button("Randomize Interaction Settings")) {
 		randomizeSettings();
+	}
+	if (ImGui::Button("Randomize Types Distribution")) {
+		randomizeTypesDistribution();
 	}
 	ImGui::SliderFloat("Damping Coef", &m_dampingCoef, 0.0f, 13.0f);
 	ImGui::SliderFloat("Container Radius", &m_maxRadius, 0.8f, 1.0f);
@@ -180,8 +186,9 @@ void CellularLife::checkEntityValidity(entt::registry& R) {
 			entt::entity e = pt.getEntity();
 			if (i < m_cells.size())
 				m_cells[i].m_entity = e;
-			else
+			else {
 				m_cells.emplace_back(m_rand, e);
+			}
 			i++;
 		}
 	}

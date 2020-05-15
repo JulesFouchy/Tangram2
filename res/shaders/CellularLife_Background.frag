@@ -42,7 +42,8 @@ float snoise(vec2 v){
 in vec2 vTexCoords;
 
 void main() {
-    vec2 uv = vTexCoords / u.scale;
-
-    gl_FragColor = vec4(vec3(snoise(uv)*u.max), 1.0);
+    //vec2 uv = vTexCoords / u.scale;
+    //
+    //gl_FragColor = vec4(vec3(snoise(uv)*u.max), 1.0);
+    gl_FragColor = vec4(vec3(0.), 1.);
 }

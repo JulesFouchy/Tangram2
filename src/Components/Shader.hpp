@@ -38,9 +38,9 @@ struct Shader {
 		unsigned int fs = ShaderHelper::compileShader(GL_FRAGMENT_SHADER, fragmentCode);
 
 		GLCall(glAttachShader(id, vs));
-		GLCall(glAttachShader(id, fs));
-		GLCall(glLinkProgram(id));
-		GLCall(glValidateProgram(id));
+		(glAttachShader(id, fs));
+		(glLinkProgram(id));
+		(glValidateProgram(id));
 
 		GLCall(glDeleteShader(vs));
 		GLCall(glDeleteShader(fs));

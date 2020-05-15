@@ -30,6 +30,7 @@ private:
 	void loadSettings();
 
 	std::vector<Point2DParameter>& getPointsList(entt::registry& R);
+	std::vector<Point2DParameter>& getRandList(entt::registry& R);
 	void resetPositions(entt::registry& R);
 	void checkEntityValidity(entt::registry& R);
 
@@ -37,6 +38,7 @@ private:
 	Rand m_rand;
 	entt::entity m_layer;
 	std::vector<Cell> m_cells;
+	bool m_bPlay = false;
 
 	float m_dampingCoef;
 	float m_maxRadius;

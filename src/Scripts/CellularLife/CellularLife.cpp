@@ -24,7 +24,9 @@ static float repulsionDistanceRange[2] = { 0.0f, 0.4f };
 CellularLife::CellularLife(entt::registry& R, LayersManager& layersM)
 	: m_dampingCoef(8.645f), m_maxRadius(0.82f)
 {
-	layersM.createFragmentLayer(R, "res/shaders/CellularLife_Background.frag");
+
+
+	//layersM.createFragmentLayer(R, "res/shaders/CellularLife_Background.frag");
 	m_layer = layersM.createFragmentLayer(R, "res/shaders/CellularLife_Cells.frag");
 	std::vector<Point2DParameter>& pts = getPointsList(R);
 	for (Point2DParameter& pt : pts) {
@@ -35,66 +37,51 @@ CellularLife::CellularLife(entt::registry& R, LayersManager& layersM)
 	randomizeTypesDistribution();
 	//
 	m_multipliers = { 1.0f, 1.0f, 1.0f, 1.0f };
-	randomizeSettings();
-}
+	//randomizeSettings();
 
-void CellularLife::randomizeTypesDistribution() {
-	Log::separationLine();
-	for (Cell cell : m_cells) {
-		cell.m_typeID = m_rand.Int(NB_TYPES);
-	}
-}
-
-void CellularLife::randomizeSettings() {
-	for (size_t i = 0; i < NB_TYPES; ++i) {
-		for (size_t j = 0; j < NB_TYPES; ++j) {
-			m_settings[i][j].attractionStrengthMax = m_rand.Float(attractionStrengthRange[0], attractionStrengthRange[1]);
-			m_settings[i][j].attractionDistanceMax = m_rand.Float(attractionDistanceRange[0], attractionDistanceRange[1]);
-			m_settings[i][j].repulsionStrengthMax  = m_rand.Float(repulsionStrengthRange [0], repulsionStrengthRange [1]);
-			m_settings[i][j].repulsionDistanceMax = 0.2f;// m_rand.Float(repulsionDistanceRange[0], repulsionDistanceRange[1]);
-
-		}
-	}
-}
-
-void CellularLife::saveSettings() {
-	std::ofstream os("C:\\Dev\\Tangram2\\MyTangramProjects\\CellsForAmanthilde\\settings.json");
+	const std::string path = "C:\\Dev\\Tangram2\\MyTangramProjects\\CellsForAmanthilde\\oneGroup.json";
+	std::ifstream is(path);
 	{
-		cereal::JSONOutputArchive archive(os);
+		cereal::JSONInputArchive archive(is);
 		archive(
-			CEREAL_NVP(m_settings),
-			CEREAL_NVP(m_multipliers)
+			m_settings,
+			m_multipliers
 		);
 	}
-}
 
-void CellularLife::loadSettings() {
-	const std::string path = FileBrowser::GetFileOpen();
-	if (!path.empty()) {
-		std::ifstream is(path);
-		{
-			cereal::JSONInputArchive archive(is);
-			archive(
-				m_settings,
-				m_multipliers
-			);
-		}
+	// Random value for each cell
+	//Cmp::Parameters& params = R.get<Cmp::Parameters>(m_layer);
+	//auto randParams = ((ListOfPoints2DParameter*)params.list[1].get())->getList();
+	//for (Point2DParameter& p : randParams) {
+	//	TNG::SetPosition(R, p.getEntity(), glm::vec2(m_rand.Float(), 0.));
+	//}
+	std::vector<Point2DParameter>& rands = getRandList(R);
+	for (Point2DParameter& rand : rands) {
+		TNG::SetPosition(R, rand.getEntity(), glm::vec2(m_rand.Float(), 0.));
 	}
 }
 
 void CellularLife::resetPositions(entt::registry& R) {
 	float ratio = DisplayInfos::Ratio();
-	for (Cell& cell : m_cells)
-		cell.setPosition(R, glm::vec2((m_rand.Float()-0.5f)*ratio, m_rand.Float()-0.5f));
+	for (Cell& cell : m_cells) {
+		glm::vec2 p = glm::vec2((m_rand.Float() - 0.5f) * ratio, (m_rand.Float() - 0.5f) * ratio);
+		while (glm::length(p) > 0.8f) {
+			p = glm::vec2((m_rand.Float() - 0.5f) * ratio, (m_rand.Float() - 0.5f) * ratio);
+		}
+		cell.setPosition(R, p);
+	}
 }
 
 void CellularLife::loopIteration(entt::registry& R, float dt) {
-	checkEntityValidity(R);
-	applyInteractions(R, dt);
-	for (Cell& cell : m_cells) {
-		cell.applyDamping(dt, m_dampingCoef);
-		cell.move(R, dt, m_maxRadius);
-	}
+	//if (m_bPlay) {
+		checkEntityValidity(R);
+		applyInteractions(R, dt);
+		for (Cell& cell : m_cells) {
+			cell.applyDamping(dt, m_dampingCoef);
+			cell.move(R, dt, m_maxRadius);
+		}
+		//m_bPlay = false;
+	//}
 }
 
 glm::vec2 CellularLife::computeForce(glm::vec2 p1, glm::vec2 p2, unsigned int id1, unsigned int id2) {
@@ -144,6 +131,7 @@ void CellularLife::applyInteractions(entt::registry& R, float dt) {
 
 void CellularLife::ImGui(entt::registry& R) {
 	ImGui::Begin("Cellular Life");
+	ImGui::Checkbox("Play", &m_bPlay);
 	if (ImGui::Button("Reset Positions")) {
 		resetPositions(R);
 	}
@@ -153,6 +141,15 @@ void CellularLife::ImGui(entt::registry& R) {
 	if (ImGui::Button("Randomize Types Distribution")) {
 		randomizeTypesDistribution();
 	}
+	ImGui::Separator();
+	if (ImGui::Button("Save Interaction Settings")) {
+		saveSettings();
+	}
+
+	if (ImGui::Button("Load Interaction Settings")) {
+		loadSettings();
+	}
+	ImGui::Separator();
 	ImGui::SliderFloat("Damping Coef", &m_dampingCoef, 0.0f, 13.0f);
 	ImGui::SliderFloat("Container Radius", &m_maxRadius, 0.8f, 1.0f);
 	ImGui::Separator();
@@ -172,20 +169,17 @@ void CellularLife::ImGui(entt::registry& R) {
 			ImGui::PopID();
 		}
 	}
-	ImGui::Separator();
-	if (ImGui::Button("Save Interaction Settings")) {
-		saveSettings();
-	}
-
-	if (ImGui::Button("Load Interaction Settings")) {
-		loadSettings();
-	}
 	ImGui::End();
 }
 
 std::vector<Point2DParameter>& CellularLife::getPointsList(entt::registry& R) {
 	Cmp::Parameters& params = R.get<Cmp::Parameters>(m_layer);
 	return ((ListOfPoints2DParameter*)params.list[0].get())->getList();
+}
+
+std::vector<Point2DParameter>& CellularLife::getRandList(entt::registry& R) {
+	Cmp::Parameters& params = R.get<Cmp::Parameters>(m_layer);
+	return ((ListOfPoints2DParameter*)params.list[1].get())->getList();
 }
 
 void CellularLife::checkEntityValidity(entt::registry& R) {
@@ -205,5 +199,50 @@ void CellularLife::checkEntityValidity(entt::registry& R) {
 	std::vector<Point2DParameter>& pts = getPointsList(R);
 	if (pts.size() < m_cells.size()) {
 		m_cells.resize(pts.size());
+	}
+}
+
+
+void CellularLife::randomizeTypesDistribution() {
+	Log::separationLine();
+	for (Cell cell : m_cells) {
+		cell.m_typeID = m_rand.Int(NB_TYPES);
+	}
+}
+
+void CellularLife::randomizeSettings() {
+	for (size_t i = 0; i < NB_TYPES; ++i) {
+		for (size_t j = 0; j < NB_TYPES; ++j) {
+			m_settings[i][j].attractionStrengthMax = m_rand.Float(attractionStrengthRange[0], attractionStrengthRange[1]);
+			m_settings[i][j].attractionDistanceMax = m_rand.Float(attractionDistanceRange[0], attractionDistanceRange[1]);
+			m_settings[i][j].repulsionStrengthMax = m_rand.Float(repulsionStrengthRange[0], repulsionStrengthRange[1]);
+			m_settings[i][j].repulsionDistanceMax = 0.2f;// m_rand.Float(repulsionDistanceRange[0], repulsionDistanceRange[1]);
+
+		}
+	}
+}
+
+void CellularLife::saveSettings() {
+	std::ofstream os("C:\\Dev\\Tangram2\\MyTangramProjects\\CellsForAmanthilde\\settings.json");
+	{
+		cereal::JSONOutputArchive archive(os);
+		archive(
+			CEREAL_NVP(m_settings),
+			CEREAL_NVP(m_multipliers)
+		);
+	}
+}
+
+void CellularLife::loadSettings() {
+	const std::string path = FileBrowser::GetFileOpen();
+	if (!path.empty()) {
+		std::ifstream is(path);
+		{
+			cereal::JSONInputArchive archive(is);
+			archive(
+				m_settings,
+				m_multipliers
+			);
+		}
 	}
 }

@@ -9,7 +9,7 @@ Rand::Rand()
 Rand::Rand(int seed)
 	: m_generator(seed), m_distributionFloat(0.0f, 1.0f)
 {
-	spdlog::info("[Rand::Rand] using seed : {}", seed);
+	//spdlog::info("[Rand::Rand] using seed : {}", seed);
 }
 
 float Rand::Float() {

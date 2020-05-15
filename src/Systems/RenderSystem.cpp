@@ -37,9 +37,9 @@ void RenderSystem::render(entt::registry& R, const std::vector<entt::entity>& la
 		glEnable(GL_BLEND);
 		R.view<entt::tag<"Point2D"_hs>>().each([this, &R, selectedLayer](auto entity, auto& tag) {
 			Cmp::Parent* parent = R.try_get<Cmp::Parent>(entity);
-			if (!parent || parent->id == selectedLayer)
-				renderSquare(R, { entity }, s_shaderPoint);
-			});
+			//if (!parent || parent->id == selectedLayer)
+				//renderSquare(R, { entity }, s_shaderPoint);
+		});
 		glDisable(GL_BLEND);
 	}
 }

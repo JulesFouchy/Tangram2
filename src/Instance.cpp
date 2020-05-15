@@ -145,22 +145,22 @@ Instance::Instance(const std::string& projectFolderpath)
 }
 
 void Instance::onLoopIteration(){
-	renderSystem().render(m_registry, m_layersManager.getLayersOrdered(), m_layersManager.getSelectedLayer(), GUISystem::ShouldShowGUI());
-	renderSystem().checkTexturesToRecompute(m_registry);
-	inputSystem().update();
-	m_scriptsManager.loopIteration(registry(), 1.0f/25);
-	m_scriptsManager.ImGui(registry());
-	GUISystem::Render(m_registry, m_layersManager.getLayersOrdered(), m_layersManager.selectedLayer());
+	//renderSystem().render(m_registry, m_layersManager.getLayersOrdered(), m_layersManager.getSelectedLayer(), GUISystem::ShouldShowGUI());
+	//renderSystem().checkTexturesToRecompute(m_registry);
+	//inputSystem().update();
+	m_scriptsManager.loopIteration(registry(), 1.0f/ 25);
+	//m_scriptsManager.ImGui(registry());
+	//GUISystem::Render(m_registry, m_layersManager.getLayersOrdered(), m_layersManager.selectedLayer());
 
-	static bool bRecord = false;
+	static bool bRecord = true;
 	static unsigned int frameNb = 0;
-	ImGui::Begin("Record");
-	ImGui::Checkbox("Recording", &bRecord);
-	ImGui::End();
+	//ImGui::Begin("Record");
+	//ImGui::Checkbox("Recording", &bRecord);
+	//ImGui::End();
 	if (bRecord) {
-		m_renderSystem.exportImage(m_registry, m_layersManager.getLayersOrdered(), 1080, 1080, "C:\\Users\\Pc\\Desktop\\ExportBouncyCells\\" + std::to_string(frameNb) + ".png");
+		m_renderSystem.exportImage(m_registry, m_layersManager.getLayersOrdered(), 1900, 1900, "C:\\render\\BouncyCells\\" + std::to_string(frameNb) + ".png");
 		frameNb++;
-		if (frameNb > 7500)
+		if (frameNb > 200)
 			bRecord = false;
 	}
 }

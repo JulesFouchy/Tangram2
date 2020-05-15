@@ -1,6 +1,6 @@
 #pragma once
 
-class Rand;
+#include "Helper/Random.hpp"
 
 class Cell {
 	friend class CellularLife;
@@ -18,7 +18,10 @@ public:
 	inline unsigned int getTypeID() { return m_typeID; }
 
 private:
+	int m_frameCount = 0;
 	entt::entity m_entity;
 	glm::vec2 m_speed;
 	unsigned int m_typeID;
+	glm::vec2 m_dir;
+	Rand m_rand;
 };

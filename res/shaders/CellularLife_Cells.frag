@@ -7,8 +7,8 @@ const vec3 green = vec3(51, 255, 195) / 255.;
 const vec3 violet = vec3(250, 19, 94) / 255.;
 
 struct Parameters {
-    vec2[u.pts.size] pts; // size 75
-    vec2[u.rand.size] rand; // size 75
+    vec2[u.pts.size] pts; // size 72
+    vec2[u.rand.size] rand; // size 72
     float transp; // default 0.813 min 0 max 0.813
     float cellRadius; // default 0.1 min 0 max 0.4
     float smoothMin; // min 16 max 500 default 116 OR 88

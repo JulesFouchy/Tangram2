@@ -20,11 +20,18 @@ Cell::Cell(Rand& rand, entt::entity e)
 
 void Cell::move(entt::registry& R, float dt, float maxRadius) {
 	m_frameCount++;
+
+	float thresh = 0.18f * ((200 - m_frameCount) / 200.0f);
+
+	float mag2 = glm::length(m_speed);
+	if (mag2 > thresh)
+		m_speed *= thresh / mag2;
+
 	glm::vec2 speed = m_speed + m_dir * 0.1f;
+
 	float mag = glm::length(speed);
-	float thresh = 0.2f * (200 - m_frameCount) / 200.0f;
-	if (mag > thresh)
-		speed *= thresh / mag;
+	if (mag > thresh * 2.0f)
+		speed *= thresh * 2.0f / mag;
 
 	glm::vec2 pos = getPosition(R);
 	pos += speed * dt;
@@ -42,7 +49,11 @@ void Cell::move(entt::registry& R, float dt, float maxRadius) {
 	glm::vec2 delta = pos - avoidZone;
 	float dist = glm::length(delta);
 	if (dist < 0.25) {
-		pos += delta / dist * (0.25f - dist);
+		pos += delta / dist * (0.25f - dist);		
+		if (m_rand.Float() < 0.005) {
+			float angle = m_rand.Float() * 6.28;
+			m_dir = glm::vec2(cos(angle), sin(angle));
+		}
 	}
 	//
 	setPosition(R, pos);

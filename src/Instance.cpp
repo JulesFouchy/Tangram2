@@ -158,7 +158,7 @@ void Instance::onLoopIteration(){
 	//ImGui::Checkbox("Recording", &bRecord);
 	//ImGui::End();
 	if (bRecord) {
-		m_renderSystem.exportImage(m_registry, m_layersManager.getLayersOrdered(), 1900, 1900, "C:\\render\\BouncyCells\\" + std::to_string(frameNb) + ".png");
+		m_renderSystem.exportImage(m_registry, m_layersManager.getLayersOrdered(), 2000, 2000, "C:\\render\\BouncyCells\\" + std::to_string(frameNb) + ".png");
 		frameNb++;
 		if (frameNb > 200)
 			bRecord = false;
